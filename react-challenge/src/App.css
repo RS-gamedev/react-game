@@ -1,0 +1,21 @@
+.App{
+  background-color:#292D3E;
+  height: 100vh;
+  width:100vw;
+  position: relative;
+}
+.actions{
+  position: absolute;
+  top:25px;
+  left:25px;
+  display: flex;
+  flex-direction: column;
+  gap:15px;
+  width:200px;
+  height: 500px;
+}
+
+.buttons{
+  display: flex;
+  gap:10px;
+}

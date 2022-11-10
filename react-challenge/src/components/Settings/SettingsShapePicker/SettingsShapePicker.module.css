@@ -1,0 +1,4 @@
+.shapePicker{
+    display: flex;
+    flex-direction: column;
+}
