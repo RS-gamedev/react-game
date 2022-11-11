@@ -15,3 +15,12 @@
 .disabled{
     background-color: #373c50;
 }
+
+.nothing{
+
+}
+
+.active{
+    background-color: #373c50;
+    color:white;
+}

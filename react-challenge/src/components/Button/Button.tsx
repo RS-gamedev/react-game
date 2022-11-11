@@ -18,7 +18,9 @@ export default function Button({onClick, text, disabled, active, width, height}:
         onClick(event);
     }
 
+
+
   return (
-    <button disabled={disabled} style={{width:width, height:height}} className={styles.button + " " + styles[`${(disabled) ? 'disabled' : ''}`] + " " + styles[`${(active) ? 'active' : ''}`]} onClick={handleClick}>{text}</button>
+    <button disabled={disabled} style={{width:width, height:height}} className={styles.button + " " + styles[`${(disabled) ? 'disabled' : 'nothing'}`] + " " + styles[`${(active) ? 'active' : 'nothing'}`]} onClick={handleClick}>{text}</button>
   )
 }

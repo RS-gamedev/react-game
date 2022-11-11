@@ -14,10 +14,33 @@ type State = {
   circles: Item[]
 }
 
+type Shape = {
+  name: string,
+  image: string,
+  selected: boolean
+}
+
 function App() {
 
   const [history, setHistory] = useState<State[]>([]);
   const [currentStateIndex, setCurrentStateIndex] = useState<number>(0);
+  const [allShapes, setAllShapes] = useState<Shape[]>([
+    {
+        name: "Circle",
+        image: "",
+        selected: true
+    },
+    {
+        name: "Square",
+        image: "",
+        selected: false
+    },
+    {
+        name: "Triangle",
+        image: "",
+        selected: false
+    }
+]);
   var currentState = history[currentStateIndex - 1];
   var canRedo = history[history.length - 1]?.circles.length < history[history.length - 2]?.circles.length;
   var canUndo = currentState?.circles?.length > 0;
@@ -70,6 +93,16 @@ function App() {
     setCurrentStateIndex(prev => prev + 1);
   }
 
+  function selectShape(shape: Shape){
+    let shapesCopy = [...allShapes];
+    shapesCopy.forEach(x => {
+      x.selected = false;
+    });
+    let selectedShape = allShapes.find(x => x.name == shape.name);
+    if(selectedShape) selectedShape.selected = true;
+    setAllShapes((prev) => shapesCopy);
+  }
+
   return (
     <div className="App" onClick={handleClick}>
       <div className='actions'>
@@ -77,7 +110,7 @@ function App() {
           <Button text='Undo' disabled={!canUndo} onClick={undo} active={false} width="100%" height='45px'></Button>
           <Button text='Redo' disabled={!canRedo} onClick={redo} active={false} width="100%" height='45px'></Button>
         </div>
-        <Settings></Settings>
+        <Settings onClick={selectShape} shapes={allShapes} ></Settings>
       </div>
       {(currentState) ? currentState.circles.map((circle, index) => {
         if (circle) {
