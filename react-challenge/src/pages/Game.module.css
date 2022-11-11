@@ -1,0 +1,27 @@
+
+.background{
+    background-color:#292D3E;
+    height: 100vh;
+    width:100vw;
+    position: relative;
+}
+.actions{
+    position: absolute;
+    top:25px;
+    left:25px;
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    width:240px;
+    height: 500px;
+  }
+  
+  .buttons{
+    display: flex;
+    gap:10px;
+  }
+  .resourceArea{
+    position: absolute;
+    top:25px;
+    left: 280px;
+  }

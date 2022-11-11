@@ -1,3 +1,5 @@
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { Shape } from '../../models/Shape';
 import Button from '../Button/Button';
 import styles from './Settings.module.css';
 
@@ -6,13 +8,6 @@ type Props = {
     onClick: (shape: Shape) => void
 }
 
-type Shape = {
-    name: string,
-    image: string,
-    selected: boolean
-}
-
-
 export default function Settings({shapes, onClick}: Props) {
     return (
         <div className={styles.settingsBox}>
@@ -20,7 +15,7 @@ export default function Settings({shapes, onClick}: Props) {
             <div className={styles.shapePicker}>
                 {
                     shapes.map(option => {
-                        return <Button active={option.selected} disabled={false} text={option.name} onClick={() => onClick(option)} width="80px" height='60px'></Button>
+                        return <Button key={option.id} price={option.price} active={option.selected} disabled={false} text={option.name} onClick={() => onClick(option)} width="100px" height='100px' icon={option.icon} iconColor={option.iconColor}></Button>
                     })
                 }
             </div>
