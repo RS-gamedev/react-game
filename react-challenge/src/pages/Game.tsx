@@ -17,7 +17,11 @@ import { v4 as uuidv4 } from 'uuid';
 import MapObject from '../components/MapObject/MapObject';
 import { VillagerProps } from '../models/VillagerProps';
 import Villager from '../components/Villager/Villager';
-import { getNewPosition } from '../utils/MovementUtils';
+import { findNearestStorage, findNearestTree, getNewPosition, moveVillagerToNearestRock, moveVillagerToPosition, reachedGoalPosition } from '../utils/MovementUtils';
+import { Status } from '../models/enums/Status';
+import { Position } from '../models/Position';
+import { VillagerType } from '../models/enums/VillagerType';
+import { resolve } from 'node:path/win32';
 
 type Item = {
     x: string,
@@ -39,27 +43,100 @@ function Game(map: any) {
     var selectedShape = allShapes.find(x => x.selected);
     var canRedo = history[history.length - 1]?.buildings.length < history[history.length - 2]?.buildings.length;
     var canUndo = currentState?.buildings?.length > 0;
-
-
     useInterval(() => {
-        moveVillagers();
-    }, 200);
+        let idleVillagersCopy = [...villagers].filter(x => x.status === Status.IDLE);
+        let otherVillagers = [...villagers].filter(x => x.status !== Status.IDLE);
+        idleVillagersCopy = setNewTaskForIdleVillagers(idleVillagersCopy);
+        setVillagers(idleVillagersCopy.concat(otherVillagers));
+        let walkingToTreeVillagers = [...villagers].filter(x => x.status === Status.WALKING_TO_TREE);
+        let notWalkingToTreeVillagers = [...villagers].filter(x => x.status !== Status.WALKING_TO_TREE);
+        walkingToTreeVillagers = walkingToTreeVillagers.map(villager => {
+            if (villager.goalPosition) {
+                let movedVillager = moveVillagerToPosition(villager, villager.goalPosition);
+                if (movedVillager.goalPosition && reachedGoalPosition(movedVillager.position, movedVillager.goalPosition)) {
+                    movedVillager.status = Status.IDLE;
+                    return movedVillager;
+                }
+                return movedVillager;
+            }
+            return villager;
+        });
+        setVillagers(walkingToTreeVillagers.concat(notWalkingToTreeVillagers));
+        // executeActions();
+    }, 100);
 
-    function moveVillagers(){
-        let villagersCopy = [...villagers];
-        villagersCopy = villagersCopy.map((x) => ({ ...x, position: getNewPosition(x.position, {x: 800, y: 800})}));
-        setVillagers(villagersCopy);
+
+    useEffect(() => {
+    }, [villagers])
+
+
+    function setNewTaskForIdleVillagers(villagers: VillagerProps[]) {
+        // let villagersCopy = [...villagers];
+        // let newIdles = idleVillagers.map(villager => villager.position = getNewPosition(villager.position, goalPosition) 
+        villagers.forEach(villager => {
+            switch (villager.type) {
+                case VillagerType.LUMBERJACK:
+                    if (villager.status === Status.WALKING_TO_TREE) {
+                        if (villager.goalPosition && villager.position.x == villager.goalPosition.x && villager.position.y == villager.goalPosition.y) {
+                            villager.status = Status.IDLE;
+                            return villager;
+                        }
+                        return villager;
+                    }
+                    else if (villager.status === Status.CUTTING_TREE) {
+                        // Cut tree
+                        // until tree is cut
+                        // set back to idle
+                        return villager;
+
+                    }
+                    else if (villager.status === Status.IDLE) {
+                        if(villager.inventoryItems && villager.inventoryItems.length == villager.inventorySlots - 1){
+                            villager.status = Status.RETURNING_RESOURCES;
+                            villager.goalPosition = findNearestStorage(villager.position);
+                        }
+                        else{
+                            villager.status = Status.WALKING_TO_TREE;
+                        }
+                        villager.goalPosition = findNearestTree(villager.position);
+                        // als inventory vol zit, 
+                        // set status naar RETURNING_RESOURCES
+                        return villager;
+                    }
+                    // Find nearest tree
+                    return villager;
+                case VillagerType.MINER:
+                    return moveVillagerToNearestRock(villager);
+                // Find nearest rock
+                default:
+                    return moveVillagerToNearestRock(villager);
+            }
+        });
+        return villagers;
+        // moveVillagers(idleVillagers, otherVillagers);
     }
 
 
-    useEffect(() => {
-        console.log(currentState);
-    }, [currentState]);
 
+    function moveVillager(villager: VillagerProps, goalPosition: Position) {
+        let villagerCopy = { ...villager };
+        villagerCopy.position = getNewPosition(villager.position, { x: goalPosition.x, y: goalPosition.y });
+        return villagerCopy;
+    }
+
+    // function moveVillagers(idleVillagers: VillagerProps[], otherVillagers: VillagerProps[]) {
+    //     idleVillagersCopy = idleVillagersCopy.map((x: any) => moveVillager(x));
+    //     setVillagers(idleVillagersCopy.concat(restVillagers));
+    // }
+
+    function findGoal(villager: VillagerProps) {
+        if (villager) {
+
+        }
+    }
 
     useEffect(() => {
-        console.log("Loaded game");
-        console.log(map);
+
         let wood = resources.find(x => x.name === 'Wood');
         let coins = resources.find(x => x.name === 'Coins');
         let gems = resources.find(x => x.name === 'Gems');
@@ -89,16 +166,13 @@ function Game(map: any) {
         newHistory.push(initState);
         setHistory(newHistory);
         setCurrentStateIndex(prev => prev + 1);
-        setVillagers([{ id: '1', name: 'villager', position: { x: 300, y: 200 } }]);
+        setVillagers([
+            { id: '1', name: 'villager', position: { x: 300, y: 200 }, status: Status.IDLE, inventoryItems: [], inventorySlots: 10, type: VillagerType.LUMBERJACK },
+            { id: '2', name: 'villager', position: { x: 700, y: 50 }, status: Status.IDLE, inventoryItems: [], inventorySlots: 10, type: VillagerType.LUMBERJACK }
+        ]);
     }, []);
 
-    function moveVillager(){
-
-    }
-
-
     useEffect(() => {
-        console.log(history);
     }, [history])
 
     function undo() {
@@ -152,11 +226,11 @@ function Game(map: any) {
 
     function selectShape(shape: Shape) {
         let shapesCopy = [...allShapes];
-        shapesCopy.forEach(x => {
-            x.selected = false;
-        });
-        let selectedShape = allShapes.find(x => x.name == shape.name);
-        if (selectedShape) selectedShape.selected = true;
+        let selectedShape = shapesCopy.find(x => x.name == shape.name);
+        if (selectedShape) {
+            selectedShape.selected = !selectedShape?.selected;
+        }
+        shapesCopy.filter(x => x.id !== shape.id).forEach(x => x.selected = false);
         setAllShapes((prev) => shapesCopy);
     }
 
@@ -185,9 +259,9 @@ function Game(map: any) {
                 }
             }) : <></>
             }
-            {(villagers) ? villagers?.map((mapObject, index) => {
-                if (mapObject) {
-                    return <Villager key={mapObject.id} {...mapObject}></Villager>
+            {(villagers) ? villagers?.map((villager, index) => {
+                if (villager) {
+                    return <Villager key={villager.id} {...villager}></Villager>
                 }
             }) : <></>
             }
