@@ -1,17 +1,18 @@
 import { Direction } from "../models/Direction";
 import { Status } from "../models/enums/Status";
+import { ObjectProps } from "../models/ObjectProps";
 import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
 
 function getBestDirection(startPosition: { x: number, y: number }, goalPosition: { x: number, y: number }): Direction {
-    let actualDistance = getDistance(startPosition.x, startPosition.y, goalPosition.x, goalPosition.y);
+    let actualDistance = getDistance(startPosition, goalPosition);
     return Direction.up;
 }
 
 
-function getDistance(x1: number, y1: number, x2: number, y2: number) {
-    let y = x2 - x1;
-    let x = y2 - y1;
+export function getDistance(startPosition: Position, goalPosition: Position) {
+    let y = goalPosition.x - startPosition.x;
+    let x = goalPosition.y - startPosition.y;
     return Math.sqrt(x * x + y * y);
 }
 
@@ -40,9 +41,19 @@ export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Po
 }
 
 
-export function findNearestTree(position: Position){
-    let goalPosition = { x: Math.floor(Math.random() * 800), y: Math.floor(Math.random() * 800) }; // nearest tree
-    return goalPosition;
+export function findNearestTree(position: Position, trees: ObjectProps[]) {
+    let closest: ObjectProps = trees[0];
+    let lowestDistance = -10000;
+    for (let tree of trees) {
+        let distance = getDistance(position, tree.position);
+        if (distance < lowestDistance) {
+            closest = tree;
+            lowestDistance = distance;
+        }
+    }
+
+    // let goalPosition = { x: Math.floor(Math.random() * 800), y: Math.floor(Math.random() * 800) }; // nearest tree
+    return closest.position;
 
 }
 
@@ -52,15 +63,23 @@ export function moveVillagerToNearestRock(villager: VillagerProps) {
     return { ...villager, position: getNewPosition(villager.position, goalPosition) };
 }
 
-export function findNearestStorage(position: Position){
-    let goalPosition = { x: 200, y: 200 }; // nearest tree
-    return goalPosition;
+export function findNearestStorage(position: Position, storages: ObjectProps[]) {
+    let closest: ObjectProps = storages[0];
+    let lowestDistance = -10000;
+    for (let storage of storages) {
+        let distance = getDistance(position, storage.position);
+        if (distance < lowestDistance) {
+            closest = storage;
+            lowestDistance = distance;
+        }
+    }
+
+    return (closest) ? closest.position : {x: 0, y: 0};
 }
 
 
-export function reachedGoalPosition(position: Position, goalPosition: Position){
-    let actualDistance = getDistance(position.x, position.y, goalPosition.x, goalPosition.y);
-    if(actualDistance < 21) return true;
+export function reachedGoalPosition(position: Position, goalPosition: Position) {
+    let actualDistance = getDistance(position, goalPosition);
+    if (actualDistance < 21) return true;
     return false;
-
 }
