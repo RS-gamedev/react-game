@@ -18,5 +18,5 @@ export type BuildingProps = {
     },
     level: number,
     type: BuildingType,
-    selected: boolean
+    selected: boolean,
 }

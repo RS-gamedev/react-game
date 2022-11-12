@@ -211,7 +211,9 @@ function Game(map: any) {
         let townCenter = shapes.find(x => x.type === BuildingType.TOWN_CENTER);
         if(townCenter){
             let initialBuildings: BuildingProps[] = [{id: "1", position: {x: 500, y:300}, color: '#ffffff', icon: townCenter.icon, level: 1, name: 'Town center', price: townCenter.price, type: townCenter.type, size: townCenter.size, selected: false}]
-            setBuildings(initialBuildings);
+            if(initialBuildings){
+                setBuildings(initialBuildings);
+            }
         }
         else{
             setBuildings([]);
@@ -232,7 +234,7 @@ function Game(map: any) {
         buildingsCopy.push(building);
         buildingsCopy.forEach(x => x.selected = false);
         shapesCopy.forEach(x => x.selected = false);
-        console.log(buildingsCopy);
+        setAllShapes(shapesCopy);
         setBuildings(buildingsCopy)
     }
 

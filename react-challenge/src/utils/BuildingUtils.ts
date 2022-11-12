@@ -5,6 +5,8 @@ import { Price } from "../models/Price";
 import { Shape } from "../models/Shape";
 import { v4 as uuidv4 } from 'uuid';
 import { BuildingType } from "../models/enums/BuildingType";
+import { BuildingOption } from "../models/BuildingOption";
+import { trainVillager } from "./BuildingOptionsUtil";
 
 function constructBuilding(position: { x: number, y: number }, shape: Shape) {
     let house: BuildingProps = {
@@ -55,4 +57,17 @@ export function createBuilding(position: { x: number, y: number }, type: Buildin
 
 export function getStorageBuildings(buildings: BuildingProps[]) {
     return buildings.filter(x => x.type === BuildingType.STORAGE || x.type === BuildingType.TENTS || x.type === BuildingType.TOWN_CENTER);
+}
+
+
+export function getBuildingOptions(building: BuildingProps): BuildingOption[]{
+    console.log("getting options");
+    switch (building.type) {
+        case BuildingType.TOWN_CENTER:
+            let wood = resources.find(x => x.name === 'Wood');
+            return [{icon: ['fas', 'house'], name: 'villager', price: [{amount: 100, type: wood}], toExecute: trainVillager}]
+        default:
+            break;
+    }
+    return [];
 }
