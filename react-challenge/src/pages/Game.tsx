@@ -22,6 +22,7 @@ import { Position } from '../models/Position';
 import { VillagerType } from '../models/enums/VillagerType';
 import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
 import { reduceResourcesFromInventory } from '../utils/ResourceUtils';
+import { BuildingType } from '../models/enums/BuildingType';
 
 
 type State = {
@@ -207,10 +208,16 @@ function Game(map: any) {
             ]
         }
         setInventory(inventoryInit);
-        let initialBuildings: BuildingProps[] = []
+        let townCenter = shapes.find(x => x.type === BuildingType.TOWN_CENTER);
+        if(townCenter){
+            let initialBuildings: BuildingProps[] = [{id: "1", position: {x: 500, y:300}, color: '#ffffff', icon: townCenter.icon, level: 1, name: 'Town center', price: townCenter.price, type: townCenter.type, size: townCenter.size, selected: false}]
+            setBuildings(initialBuildings);
+        }
+        else{
+            setBuildings([]);
+        }
         let initialMapObjects: ObjectProps[] = map.map.map((x: any) => { return { name: x.name, position: x.position } })
 
-        setBuildings(initialBuildings);
         setMapObjects(initialMapObjects);
         setVillagers([
             { id: '1', name: 'villager', position: { x: 300, y: 200 }, status: Status.IDLE, inventoryItems: [], inventorySlots: 10, type: VillagerType.LUMBERJACK },
@@ -221,7 +228,11 @@ function Game(map: any) {
     function addBuilding(building?: BuildingProps) {
         if (!building) return;
         let buildingsCopy = [...buildings];
+        let shapesCopy = [...shapes];
         buildingsCopy.push(building);
+        buildingsCopy.forEach(x => x.selected = false);
+        shapesCopy.forEach(x => x.selected = false);
+        console.log(buildingsCopy);
         setBuildings(buildingsCopy)
     }
 
@@ -239,7 +250,6 @@ function Game(map: any) {
             if(result[1]){
                 setInventory(result[0]);
                 addBuilding(building);
-
             }
         }
     }

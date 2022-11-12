@@ -10,5 +10,6 @@ export type Shape = {
     image: string,
     selected: boolean
     price: Price[];
-    type: BuildingType
+    type: BuildingType,
+    size: {width: string, height: string}
 }

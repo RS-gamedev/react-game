@@ -15,7 +15,8 @@ export const shapes: Shape[] = [
             { type: resources.find(x => x.name === "Wood"), amount: 100 },
             { type: resources.find(x => x.name === "Coins"), amount: 50 }
         ],
-        type: BuildingType.HOUSE
+        type: BuildingType.HOUSE,
+        size: {width:'3em', height:'3em'}
     },
     {
         id: uuidv4(),
@@ -27,7 +28,8 @@ export const shapes: Shape[] = [
         price: [
             { type: resources.find(x => x.name === "Coins"), amount: 50 }
         ],
-        type: BuildingType.TOWN_CENTER
+        type: BuildingType.TOWN_CENTER,
+        size: {width:'3em', height:'3em'}
     },
     {
         id: uuidv4(),
@@ -39,7 +41,8 @@ export const shapes: Shape[] = [
         price: [
             { type: resources.find(x => x.name === "Coins"), amount: 50 }
         ],
-        type: BuildingType.TENTS
+        type: BuildingType.TENTS,
+        size: {width:'3em', height:'3em'}
     },
 
     {
@@ -52,6 +55,7 @@ export const shapes: Shape[] = [
         price: [
             { type: resources.find(x => x.name === "Gems"), amount: 150 }
         ],
-        type: BuildingType.GUARD_TOWER
+        type: BuildingType.GUARD_TOWER,
+        size: {width:'3em', height:'3em'}
     }
 ]
