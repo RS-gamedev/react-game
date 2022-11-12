@@ -1,4 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
+import { BuildingType } from "./enums/BuildingType"
 import { Price } from "./Price"
 
 export type BuildingProps = {
@@ -9,10 +10,13 @@ export type BuildingProps = {
     color: string,
     size: {
         width: string,
-        heigth: string
+        height: string
     },
     position: {
         x: number,
         y: number
-    }
+    },
+    level: number,
+    type: BuildingType,
+    selected: boolean
 }

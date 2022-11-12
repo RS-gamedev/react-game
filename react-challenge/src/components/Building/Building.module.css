@@ -1,0 +1,8 @@
+.active{
+    border-radius: 10px;
+    border: 5px solid #80bd9f;
+}
+
+.building svg{
+    height:0.5em!important;
+}

@@ -6,7 +6,7 @@ import { Shape } from '../models/Shape';
 import { BuildingProps } from '../models/BuildingProps';
 import Building from '../components/Building/Building';
 import { shapes } from '../config/Shapes';
-import { createBuilding } from '../utils/BuildingUtils';
+import { createBuilding, getStorageBuildings } from '../utils/BuildingUtils';
 import Resources from '../components/Resources/Resources';
 import { Inventory } from '../models/Inventory';
 import { resources } from '../config/Resources';
@@ -20,6 +20,7 @@ import { findNearestStorage, findNearestTree, getDistance, getNewPosition, moveV
 import { Status } from '../models/enums/Status';
 import { Position } from '../models/Position';
 import { VillagerType } from '../models/enums/VillagerType';
+import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
 
 
 type State = {
@@ -27,16 +28,13 @@ type State = {
     buildings: BuildingProps[]
 }
 function Game(map: any) {
-    const [history, setHistory] = useState<State[]>([]);
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
-    const [currentStateIndex, setCurrentStateIndex] = useState<number>(0);
+    const [buildings, setBuildings] = useState<BuildingProps[]>([]);
+    const [mapObjects, setMapObjects] = useState<ObjectProps[]>([])
     const [allShapes, setAllShapes] = useState<Shape[]>(shapes);
     const [inventory, setInventory] = useState<Inventory>();
-
-    var currentState = history[currentStateIndex - 1];
     var selectedShape = allShapes.find(x => x.selected);
-    var canRedo = history[history.length - 1]?.buildings.length < history[history.length - 2]?.buildings.length;
-    var canUndo = currentState?.buildings?.length > 0;
+    var selectedBuilding = buildings.find(x => x.selected);
 
 
     useInterval(() => {
@@ -103,9 +101,9 @@ function Game(map: any) {
         let droppingResourcesVillagers = [...idleVillagersCopy].filter(x => x.status === Status.DROPPING_RESOURCES);
         let notDroppingResourcesVillagers = [...idleVillagersCopy].filter(x => x.status !== Status.DROPPING_RESOURCES);
         droppingResourcesVillagers = droppingResourcesVillagers.map(villager => {
-            let invCopy = {...inventory!};
+            let invCopy = { ...inventory! };
             villager.inventoryItems.forEach(invItem => {
-                if(invCopy && invCopy.resources){
+                if (invCopy && invCopy.resources) {
                     let invCopyItemsCopy = [...invCopy.resources];
                     let inventoryResource = invCopyItemsCopy.find(x => x.resource.name == invItem.resource.name);
                     if (inventoryResource) {
@@ -123,32 +121,20 @@ function Game(map: any) {
 
         // SAVE
         setVillagers(idleVillagersCopy);
-        // executeActions();
     }, 100);
 
-    // function moveVillagerToPosition(villager: VillagerProps, statusAfter){
-
-    // }
-
-
-    useEffect(() => {
-    }, [villagers])
-
-
     function setNewTaskForIdleVillagers(villagers: VillagerProps[]) {
-        // let villagersCopy = [...villagers];
-        // let newIdles = idleVillagers.map(villager => villager.position = getNewPosition(villager.position, goalPosition) 
         villagers.forEach(villager => {
             switch (villager.type) {
                 case VillagerType.LUMBERJACK:
-                    let distanceToNearestTree = getDistance(villager.position, findNearestTree(villager.position, currentState.mapObjects.filter(x => x.name == 'tree')));
-                    let distanceToNearestStorage = getDistance(villager.position, findNearestStorage(villager.position, currentState.buildings.filter(x => x.name == 'House')));
+                    let distanceToNearestTree = getDistance(villager.position, findNearestTree(villager.position, mapObjects.filter(x => x.name == 'tree')));
+                    let distanceToNearestStorage = getDistance(villager.position, findNearestStorage(villager.position, getStorageBuildings(buildings)));
                     if (villager.goalPosition && distanceToNearestTree < 25) {
                         // Als dichtsbijzijnde boom binnen 25px weg is (staat erop)
                         if (villager.inventoryItems && villager.inventoryItems[0] && villager.inventoryItems[0].amount >= villager.inventorySlots) {
                             // En inventory is vol
                             villager.status = Status.RETURNING_RESOURCES;
-                            villager.goalPosition = findNearestStorage(villager.position, currentState.buildings.filter(x => x.name == 'House'));
+                            villager.goalPosition = findNearestStorage(villager.position, getStorageBuildings(buildings));
                             // ga naar storage
                             return villagers;
                         }
@@ -163,13 +149,13 @@ function Game(map: any) {
                         if (villager.inventoryItems && villager.inventoryItems[0] && villager.inventoryItems[0].amount >= villager.inventorySlots) {
                             // En inventory is vol
                             villager.status = Status.DROPPING_RESOURCES;
-                            villager.goalPosition = findNearestStorage(villager.position, currentState.buildings.filter(x => x.name == 'House'));
+                            villager.goalPosition = findNearestStorage(villager.position, getStorageBuildings(buildings));
                             // Drop resources
                             return villagers;
                         }
                         else {
                             villager.status = Status.WALKING_TO_TREE;
-                            villager.goalPosition = findNearestTree(villager.position, currentState.mapObjects.filter(x => x.name == 'tree'));
+                            villager.goalPosition = findNearestTree(villager.position, mapObjects.filter(x => x.name == 'tree'));
                             return villagers;
                         }
 
@@ -178,7 +164,7 @@ function Game(map: any) {
                     else {
                         villager.status = Status.WALKING_TO_TREE;
                         console.log("Walking to trees last resort");
-                        villager.goalPosition = findNearestTree(villager.position, currentState.mapObjects.filter(x => x.name == 'tree'));
+                        villager.goalPosition = findNearestTree(villager.position, mapObjects.filter(x => x.name == 'tree'));
                         return villagers;
                     }
                 case VillagerType.MINER:
@@ -189,7 +175,6 @@ function Game(map: any) {
             }
         });
         return villagers;
-        // moveVillagers(idleVillagers, otherVillagers);
     }
 
 
@@ -200,19 +185,7 @@ function Game(map: any) {
         return villagerCopy;
     }
 
-    // function moveVillagers(idleVillagers: VillagerProps[], otherVillagers: VillagerProps[]) {
-    //     idleVillagersCopy = idleVillagersCopy.map((x: any) => moveVillager(x));
-    //     setVillagers(idleVillagersCopy.concat(restVillagers));
-    // }
-
-    function findGoal(villager: VillagerProps) {
-        if (villager) {
-
-        }
-    }
-
     useEffect(() => {
-
         let wood = resources.find(x => x.name === 'Wood');
         let coins = resources.find(x => x.name === 'Coins');
         let gems = resources.find(x => x.name === 'Gems');
@@ -234,70 +207,35 @@ function Game(map: any) {
             ]
         }
         setInventory(inventoryInit);
-        let initState: State = {
-            buildings: [],
-            mapObjects: map.map.map((x: any) => { return { name: x.name, position: x.position } })
-        }
-        let newHistory = [...history];
-        newHistory.push(initState);
-        setHistory(newHistory);
-        setCurrentStateIndex(prev => prev + 1);
+        let initialBuildings: BuildingProps[] = []
+        let initialMapObjects: ObjectProps[] = map.map.map((x: any) => { return { name: x.name, position: x.position } })
+
+        setBuildings(initialBuildings);
+        setMapObjects(initialMapObjects);
         setVillagers([
             { id: '1', name: 'villager', position: { x: 300, y: 200 }, status: Status.IDLE, inventoryItems: [], inventorySlots: 10, type: VillagerType.LUMBERJACK },
             { id: '2', name: 'villager', position: { x: 700, y: 50 }, status: Status.IDLE, inventoryItems: [], inventorySlots: 10, type: VillagerType.LUMBERJACK }
         ]);
     }, []);
 
-    useEffect(() => {
-    }, [history])
-
-    function undo() {
-        if (currentState.buildings.length == 0) return;
-        addBuilding(false);
-        setCurrentStateIndex(prev => prev + 1);
+    function addBuilding(building?: BuildingProps) {
+        if (!building) return;
+        let buildingsCopy = [...buildings];
+        buildingsCopy.push(building);
+        setBuildings(buildingsCopy)
     }
 
-    function redo() {
-        let historyCopy = history.slice();
-        if (historyCopy[historyCopy.length - 1].buildings.length > historyCopy[historyCopy.length - 2].buildings.length) return;
-        setHistory(historyCopy.slice(0, -1));
-        setCurrentStateIndex(prev => prev - 1);
-    }
-
-    function addBuilding(addBuilding: boolean, building?: BuildingProps) {
-        let historyCopy = history.slice();
-        let copyOfCurrent = { ...historyCopy[currentStateIndex - 1] };
-        copyOfCurrent.buildings = (copyOfCurrent.buildings) ? [...copyOfCurrent.buildings] : [];
-        copyOfCurrent.mapObjects = (copyOfCurrent.mapObjects) ? [...copyOfCurrent.mapObjects] : [];
-        if (addBuilding) {
-            // Add Building
-            if (historyCopy.length > 0) {
-                copyOfCurrent.buildings.push(building!);
-                historyCopy.push(copyOfCurrent);
-            }
-            else {
-                let newState: State = {
-                    mapObjects: copyOfCurrent.mapObjects,
-                    buildings: [building!]
-                }
-                historyCopy.push(newState);
-            }
-            setHistory(historyCopy);
-        }
-        else {
-            // remove building
-            copyOfCurrent.buildings = copyOfCurrent.buildings.slice(0, -1);
-            historyCopy.push(copyOfCurrent);
-            setHistory(historyCopy);
-        }
-    }
     function handleClick(event: any): any {
-        if (!selectedShape || !canAfford(inventory?.resources, selectedShape?.price)) return;
-        let building: BuildingProps | undefined = createBuilding({ x: event.clientX, y: event.clientY }, selectedShape?.name);
+        if (!selectedShape || !canAfford(inventory?.resources, selectedShape?.price)) {
+            let buildingsCopy = [...buildings];
+            buildingsCopy.forEach(x => x.selected = false);
+            setBuildings((prev) => buildingsCopy);
+            return;
+        };
+        let building: BuildingProps | undefined = createBuilding({ x: event.clientX, y: event.clientY }, selectedShape?.type);
         if (building) {
-            addBuilding(true, building);
+            addBuilding(building);
         }
-        setCurrentStateIndex(prev => prev + 1);
     }
 
     function selectShape(shape: Shape) {
@@ -310,26 +248,38 @@ function Game(map: any) {
         setAllShapes((prev) => shapesCopy);
     }
 
+    function selectBuilding(event: any, building: BuildingProps) {
+        event.preventDefault();
+        event.stopPropagation();
+        let buildingsCopy = [...buildings];
+        let selectedBuilding = buildingsCopy.find(x => x.id === building.id);
+        if (selectedBuilding) {
+            selectedBuilding.selected = true;
+        }
+        buildingsCopy.filter(x => x.id !== building.id).forEach(x => x.selected = false);
+        setBuildings(buildingsCopy);
+        return building;
+    }
+
     return (
         <div className={styles.background} onClick={handleClick}>
-            <div className={styles.actions}>
-                <div className={styles.buttons}>
-                    <Button text='Undo' disabled={!canUndo} onClick={undo} active={false} width="100%" height='45px'></Button>
-                    <Button text='Redo' disabled={!canRedo} onClick={redo} active={false} width="100%" height='45px'></Button>
-                </div>
-                <Settings onClick={selectShape} shapes={allShapes} ></Settings>
+            <div className={styles.actions} onClick={event => event.stopPropagation()}>
+                <Settings onClick={selectShape} shapes={allShapes}></Settings>
+                {(selectedBuilding) ? <UpgradeMenu selectedBuilding={selectedBuilding}></UpgradeMenu> : <></> }
+               
             </div>
             <div className={styles.resourceArea}>
                 {(inventory) ? <Resources resources={inventory.resources}></Resources> : <></>}
             </div>
 
-            {(currentState) ? currentState?.buildings?.map((building, index) => {
+            {(buildings) ? buildings?.map((building, index) => {
                 if (building) {
-                    return <Building key={building.id} {...building}></Building>
+                    let _building = { ...building };
+                    return <Building selected={building.selected} key={building.id} color={_building.color} position={_building.position} size={_building.size} icon={_building.icon} onClick={event => selectBuilding(event, building)}></Building>
                 }
             }) : <></>
             }
-            {(currentState) ? currentState?.mapObjects?.map((mapObject, index) => {
+            {(buildings) ? mapObjects?.map((mapObject, index) => {
                 if (mapObject) {
                     return <MapObject key={mapObject.id} {...mapObject}></MapObject>
                 }

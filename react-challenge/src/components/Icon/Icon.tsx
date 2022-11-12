@@ -4,7 +4,7 @@ import styles from './Icon.module.scss';
 // External
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library, icon, IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem } from '@fortawesome/free-solid-svg-icons';
+import { faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns } from '@fortawesome/free-solid-svg-icons';
 
 // var tree = {
 //     prefix: 'fab',
@@ -23,7 +23,7 @@ type props = {
   fontSize: string
 }
 
-library.add(faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem);
+library.add(faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns);
 
 const Icon = ({ name, color, fontSize }: props) => {
   return (

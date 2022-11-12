@@ -11,8 +11,8 @@ type Props = {
 export default function ResourceItem({resource, amount}: Props) {
   return (
     <div className={styles.resourceItem}>
-        <Icon color={resource.color} fontSize='1em' name={resource.icon}></Icon>
-        <span style={{fontSize: '0.8em'}}>{amount}</span>
+        <Icon color={resource.color} fontSize='2em' name={resource.icon}></Icon>
+        <span style={{fontSize: '1em', fontWeight:'600'}}>{amount}</span>
     </div>
 
   )

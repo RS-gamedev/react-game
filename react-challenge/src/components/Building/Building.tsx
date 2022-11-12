@@ -1,11 +1,23 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
 import { BuildingProps } from "../../models/BuildingProps"
+import { ObjectProps } from "../../models/ObjectProps"
 import Icon from "../Icon/Icon"
+import styles from './Building.module.css';
 
-export default function Building(props: BuildingProps) {
+
+type props = {
+  size: {width: string, height: string},
+  position: {x: number, y: number},
+  icon: IconProp,
+  color: string,
+  selected: boolean,
+  onClick: (event: any) => ObjectProps
+}
+
+export default function Building({size, position, icon, color, onClick, selected} : props) {
   return (
-    <div style={{width: props.size.width, height: props.size.heigth, left:props.position.x - 25, top:props.position.y - 25, position: 'absolute'}}>
-      <Icon fontSize={props.size.width} color={props.color} name={props.icon}></Icon>
+    <div className={styles[(selected) ? `active` : `not-active`] + " " + styles['building'] } style={{width: size.width, height: size.height, left:position.x - 25, top:position.y - 25, position: 'absolute', display:'flex', alignItems:'center', justifyContent: 'center'}} onClick={onClick}>
+      <Icon fontSize={size.width} color={color} name={icon}></Icon>
     </div>
   )
 }

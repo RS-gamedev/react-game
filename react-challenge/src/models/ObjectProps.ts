@@ -4,5 +4,6 @@ export type ObjectProps = {
         x: number,
         y: number
     },
-    name: string
+    name: string,
+    
 }

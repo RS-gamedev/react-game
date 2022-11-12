@@ -13,7 +13,8 @@
     flex-direction: column;
     gap:15px;
     width:240px;
-    height: 500px;
+    height: calc(100% - 50px);
+    align-items: stretch;
   }
   
   .buttons{

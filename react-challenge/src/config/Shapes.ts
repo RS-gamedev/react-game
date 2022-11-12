@@ -1,6 +1,7 @@
 import { Shape } from "../models/Shape";
 import { resources } from "./Resources";
 import { v4 as uuidv4 } from 'uuid';
+import { BuildingType } from "../models/enums/BuildingType";
 
 export const shapes: Shape[] = [
     {
@@ -13,7 +14,19 @@ export const shapes: Shape[] = [
         price: [
             { type: resources.find(x => x.name === "Wood"), amount: 100 }
         ],
-         
+        type: BuildingType.HOUSE
+    },
+    {
+        id: uuidv4(),
+        name: "Town Center",
+        icon: ['fas', 'building-columns'],
+        iconColor: '#373c50',
+        image: "",
+        selected: false,
+        price: [
+            { type: resources.find(x => x.name === "Coins"), amount: 50 }
+        ],
+        type: BuildingType.TOWN_CENTER
     },
     {
         id: uuidv4(),
@@ -24,8 +37,10 @@ export const shapes: Shape[] = [
         selected: false,
         price: [
             { type: resources.find(x => x.name === "Coins"), amount: 50 }
-        ]
+        ],
+        type: BuildingType.TENTS
     },
+
     {
         id: uuidv4(),
         name: "Guard tower",
@@ -35,6 +50,7 @@ export const shapes: Shape[] = [
         selected: false,
         price: [
             { type: resources.find(x => x.name === "Gems"), amount: 150 }
-        ]
+        ],
+        type: BuildingType.GUARD_TOWER
     }
 ]

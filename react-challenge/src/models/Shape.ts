@@ -1,4 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
+import { BuildingType } from "./enums/BuildingType";
 import { Price } from "./Price";
 
 export type Shape = {
@@ -9,4 +10,5 @@ export type Shape = {
     image: string,
     selected: boolean
     price: Price[];
+    type: BuildingType
 }
