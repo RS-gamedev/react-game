@@ -21,10 +21,6 @@ import { Status } from '../models/enums/Status';
 import { Position } from '../models/Position';
 import { VillagerType } from '../models/enums/VillagerType';
 
-type Item = {
-    x: string,
-    y: string
-}
 
 type State = {
     mapObjects: ObjectProps[],
@@ -69,13 +65,12 @@ function Game(map: any) {
         let cuttingTreeVillagers = [...idleVillagersCopy].filter(x => x.status === Status.CUTTING_TREE);
         let notCuttingTreeVillagers = [...idleVillagersCopy].filter(x => x.status !== Status.CUTTING_TREE);
         cuttingTreeVillagers = cuttingTreeVillagers.map(villager => {
-
             if (villager.inventoryItems[0] && villager.inventoryItems[0].amount >= villager.inventorySlots) {
                 villager.status = Status.IDLE;
                 return villager;
             }
             let toAddResource = villager.inventoryItems.find(x => x.resource.name == 'Wood');
-            if (toAddResource && toAddResource.amount) {
+            if (toAddResource && toAddResource) {
                 toAddResource.amount += 0.5;
             }
             else {

@@ -65,7 +65,7 @@ export function moveVillagerToNearestRock(villager: VillagerProps) {
 
 export function findNearestStorage(position: Position, storages: ObjectProps[]) {
     let closest: ObjectProps = storages[0];
-    let lowestDistance = -10000;
+    let lowestDistance = 10000;
     for (let storage of storages) {
         let distance = getDistance(position, storage.position);
         if (distance < lowestDistance) {
