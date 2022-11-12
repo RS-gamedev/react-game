@@ -4,7 +4,8 @@ import { Price } from "./Price"
 export type BuildingProps = {
     id: string,
     price: Price[],
-    icon: IconProp
+    icon: IconProp,
+    name: string,
     color: string,
     size: {
         width: string,

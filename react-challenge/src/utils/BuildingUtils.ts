@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 function constructBuilding(position: { x: number, y: number }, price: Price[], shape: Shape) {
     let house: BuildingProps = {
         id: uuidv4(),
+        name: shape.name,
         color: '#ffffff',
         icon: shape.icon,
         position: position,
