@@ -21,6 +21,7 @@ import { Status } from '../models/enums/Status';
 import { Position } from '../models/Position';
 import { VillagerType } from '../models/enums/VillagerType';
 import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
+import { reduceResourcesFromInventory } from '../utils/ResourceUtils';
 
 
 type State = {
@@ -163,7 +164,6 @@ function Game(map: any) {
 
                     else {
                         villager.status = Status.WALKING_TO_TREE;
-                        console.log("Walking to trees last resort");
                         villager.goalPosition = findNearestTree(villager.position, mapObjects.filter(x => x.name == 'tree'));
                         return villagers;
                     }
@@ -232,9 +232,15 @@ function Game(map: any) {
             setBuildings((prev) => buildingsCopy);
             return;
         };
+
         let building: BuildingProps | undefined = createBuilding({ x: event.clientX, y: event.clientY }, selectedShape?.type);
         if (building) {
-            addBuilding(building);
+            let result = reduceResourcesFromInventory(inventory!, building.price);
+            if(result[1]){
+                setInventory(result[0]);
+                addBuilding(building);
+
+            }
         }
     }
 

@@ -39,7 +39,7 @@ export default function Button({ onClick, text, disabled, active, width, height,
       <span className={styles.title}>{text}</span>
       {(price) ?
         <div style={{ width: '100%', height: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
-          {price.map((price, index) => { return <div key={text + index} ><Icon color={price.type?.color} fontSize='1em' name={price.type?.icon}></Icon> <span>{price.amount}</span></div> })}
+          {price.map((_price, index) => { return <div key={text + index} ><Icon color={_price.type?.color} fontSize='1em' name={_price.type?.icon}></Icon> <span>{_price.amount}</span></div> })}
         </div> :
         <></>
       }

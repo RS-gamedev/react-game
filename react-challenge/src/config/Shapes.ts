@@ -12,7 +12,8 @@ export const shapes: Shape[] = [
         image: "",
         selected: true,
         price: [
-            { type: resources.find(x => x.name === "Wood"), amount: 100 }
+            { type: resources.find(x => x.name === "Wood"), amount: 100 },
+            { type: resources.find(x => x.name === "Coins"), amount: 50 }
         ],
         type: BuildingType.HOUSE
     },
