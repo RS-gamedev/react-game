@@ -7,6 +7,7 @@ import { VillagerType } from "../models/enums/VillagerType";
 
 export function trainVillager(position: Position){
     let newVillager: VillagerProps = {
+        selected: false,
         currentTask: undefined,
         id: uuidv4(),
         inventoryItems: [],

@@ -17,7 +17,8 @@ export type VillagerProps = {
     status: Status;
     goalPosition?: Position;
     inventorySlots: number;
-    inventoryItems: InventoryItem[]
+    inventoryItems: InventoryItem[],
+    selected: boolean;
     currentTask?: (villager: VillagerProps, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => VillagerProps;
     // nextAction?: any
 }
