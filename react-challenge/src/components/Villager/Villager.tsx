@@ -20,7 +20,7 @@ export default function Villager({ id, name, position, onClick, selected}: props
   }, []);
 
   return (
-    <div className={styles.villager + " " + `${(selected) ? styles.selected: styles.nothing}`}style={{ left: position.x, top: position.y }} onClick={onClick}>
+    <div className={styles.villager + " " + `${(selected) ? styles.selected: styles.nothing}`} style={{ left: position.x, top: position.y }} onClick={onClick}>
       <img style={{ height: '100%' }} src={image}></img>
     </div>
   )

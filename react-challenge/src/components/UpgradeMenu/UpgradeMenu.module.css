@@ -48,10 +48,15 @@
 }
 
 .buildingOptionsSection{
-    height: calc(100% - 80px);
+    height: calc(100% - 140px);
     padding:15px;
     background-color: #787b8693;
     box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
   
     backdrop-filter: blur(15px);
+}
+
+.inventorySection{
+    height: 60px;
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
 }

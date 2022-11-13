@@ -5,14 +5,17 @@ import styles from './ResourceItem.module.css';
 
 type Props = {
     resource: Resource, 
-    amount: number
+    amount: number,
+    iconSize: string,
+    textSize: string;
+    textColor: string
 }
 
-export default function ResourceItem({resource, amount}: Props) {
+export default function ResourceItem({resource, amount, iconSize, textSize, textColor}: Props) {
   return (
     <div className={styles.resourceItem}>
-        <Icon color={resource.color} fontSize='2em' name={resource.icon}></Icon>
-        <span style={{fontSize: '1em', fontWeight:'600'}}>{amount}</span>
+        <Icon color={resource.color} fontSize={iconSize} name={resource.icon}></Icon>
+        <span style={{fontSize: textSize, fontWeight:'600', color: textColor}}>{amount}</span>
     </div>
 
   )

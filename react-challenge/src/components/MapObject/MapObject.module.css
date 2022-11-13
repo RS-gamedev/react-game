@@ -4,3 +4,12 @@
     position: absolute;
 
 }
+
+.selected{
+    border: 2px solid #80bd9f;
+    border-radius: 10px;
+}
+
+.nothing{
+
+}

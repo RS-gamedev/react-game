@@ -5,5 +5,6 @@ export type ObjectProps = {
         y: number
     },
     name: string,
+    selected: boolean
     
 }

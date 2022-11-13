@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BuildingOption } from '../../models/BuildingOption';
 import { BuildingProps } from '../../models/BuildingProps';
 import { VillagerProps } from '../../models/VillagerProps';
-import { trainVillager } from '../../utils/BuildingOptionsUtil';
 import { getBuildingOptions } from '../../utils/BuildingUtils';
-import { getImageUrl } from '../../utils/MapUtils';
 import Button from '../Button/Button';
+import ResourceItem from '../Resources/ResourceItem/ResourceItem';
 import styles from './UpgradeMenu.module.css';
 
 type Props = {
@@ -33,7 +32,6 @@ export default function UpgradeMenu({ selectedBuilding, onAddVillager, selectedV
         onAddVillager(villager);
     }
 
-
     if (selectedBuilding) {
         return <div className={styles.upgradeMenu}>
             <div className={styles.titleSection}>
@@ -42,7 +40,7 @@ export default function UpgradeMenu({ selectedBuilding, onAddVillager, selectedV
                     <span>{selectedBuilding.level}</span>
                 </div>
             </div>
-            <div className={styles.buildingOptionsSection}>
+            <div className={styles.buildingOptionsSection} style={{height: 'calc(100% - 80px)'}}>
                 {buildingOptions.map(x => {
                     return <Button icon={x.icon} active={false} disabled={false} height='75px' width='75px' onClick={() => trainVillager(x.toExecute(selectedBuilding.position))} text={x.name}></Button>
                 })}
@@ -55,8 +53,16 @@ export default function UpgradeMenu({ selectedBuilding, onAddVillager, selectedV
             <div className={styles.titleSection}>
                 <span className={styles.name}>{selectedVillager.name}</span>
                 <div className={styles.levelSection}>
-                    {/* <span>{selectedVillager.}</span> */}
                 </div>
+            </div>
+
+            <div className={styles.buildingOptionsSection}>
+                <span>{selectedVillager.currentTask?.toString()}</span>
+            </div>
+            <div className={styles.inventorySection}>
+                {selectedVillager.inventoryItems.map(x => {
+                    return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff'></ResourceItem>
+                })}
             </div>
         </div>
     }

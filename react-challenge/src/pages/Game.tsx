@@ -15,12 +15,13 @@ import { ObjectProps } from '../models/ObjectProps';
 import MapObject from '../components/MapObject/MapObject';
 import { VillagerProps } from '../models/VillagerProps';
 import Villager from '../components/Villager/Villager';
-import { Status } from '../models/enums/Status';
-import { VillagerType } from '../models/enums/VillagerType';
 import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
 import { reduceResourcesFromInventory } from '../utils/ResourceUtils';
 import { BuildingType } from '../models/enums/BuildingType';
-import { doWoodcutting } from '../utils/StatusUtils';
+import { doWoodcutting, moveToLocation } from '../utils/StatusUtils';
+import { Position } from '../models/Position';
+import { findNearestTree, getDistance } from '../utils/MovementUtils';
+import { v4 as uuidv4 } from 'uuid';
 
 
 type State = {
@@ -32,16 +33,16 @@ function Game(map: any) {
     const [buildings, setBuildings] = useState<BuildingProps[]>([]);
     const [mapObjects, setMapObjects] = useState<ObjectProps[]>([])
     const [allShapes, setAllShapes] = useState<Shape[]>(shapes);
-    const [inventory, setInventory] = useState<Inventory>({resources:[]});
+    const [inventory, setInventory] = useState<Inventory>({ resources: [] });
     var selectedShape = allShapes.find(x => x.selected);
     var selectedBuilding = buildings.find(x => x.selected);
     var selectedVillager = villagers.find(x => x.selected);
-
+    var selectedMapObject = mapObjects.find(x => x.selected);
 
     useInterval(() => {
         let newVillagers: VillagerProps[] | undefined = [...villagers];
         newVillagers = newVillagers.map(villager => {
-            if (villager.currentTask) {
+            if (villager.currentTask !== undefined) {
                 return villager.currentTask(villager, inventory, buildings, mapObjects);
             }
             return villager;
@@ -82,17 +83,8 @@ function Game(map: any) {
         else {
             setBuildings([]);
         }
-        let initialMapObjects: ObjectProps[] = map.map.map((x: any) => { return { name: x.name, position: x.position } })
+        let initialMapObjects: ObjectProps[] = map.map.map((x: any) => { return { id: uuidv4(), name: x.name, position: x.position, selected: false } })
         setMapObjects(initialMapObjects);
-        let initVillagers: VillagerProps[] = [
-            { id: '1', name: 'villager', position: { x: 300, y: 200 }, status: Status.IDLE, inventoryItems: [], inventorySlots: 10, type: VillagerType.LUMBERJACK, selected: false },
-            { id: '2', name: 'villager', position: { x: 700, y: 50 }, status: Status.IDLE, inventoryItems: [], inventorySlots: 10, type: VillagerType.LUMBERJACK, selected: false }
-        ]
-        initVillagers.map(villager => {
-            villager.currentTask = (villager: VillagerProps, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villager, inventory, buildings, mapObjects);        
-        })
-        setVillagers(initVillagers);
-
     }, []);
 
     function addBuilding(building?: BuildingProps) {
@@ -115,6 +107,10 @@ function Game(map: any) {
             let villagersCopy = [...villagers];
             villagersCopy.forEach(x => x.selected = false);
             setVillagers((prev) => villagersCopy);
+
+            let mapObjectsCopy = [...mapObjects];
+            mapObjectsCopy.forEach(x => x.selected = false);
+            setMapObjects((prev) => mapObjectsCopy);
             return;
         };
 
@@ -126,6 +122,21 @@ function Game(map: any) {
                 addBuilding(building);
             }
         }
+    }
+
+    function handleRightClick(event: any) {
+        let villagersCopy = [...villagers];
+        let _selectedVillager = villagersCopy.find(x => x.selected);
+        event.preventDefault();
+        if (_selectedVillager) {
+            if (getDistance({ x: event.clientX, y: event.clientY }, findNearestTree({ x: event.clientX, y: event.clientY }, mapObjects.filter(x => x.name === 'tree'))) < 25) {
+                _selectedVillager.currentTask = (villager: VillagerProps, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villager, inventory, buildings, mapObjects);
+            }
+            else {
+                _selectedVillager.currentTask = (villager: VillagerProps) => moveToLocation(villager, { x: event.clientX, y: event.clientY })
+            }
+        }
+        setVillagers(villagersCopy);
     }
 
     function addVillager(villager: VillagerProps) {
@@ -161,7 +172,7 @@ function Game(map: any) {
         return building;
     }
 
-    function selectVillager(event: any, villager: VillagerProps){
+    function selectVillager(event: any, villager: VillagerProps) {
         event.preventDefault();
         event.stopPropagation();
         let buildingsCopy = [...buildings];
@@ -178,13 +189,25 @@ function Game(map: any) {
         return villager;
     }
 
+    function selectMapObject(event: any, mapObject: ObjectProps) {
+        event.preventDefault();
+        event.stopPropagation();
+        let mapObjectsCopy = [...mapObjects];
+        let selectedMapObject = mapObjectsCopy.find(x => x.id === mapObject.id);
+        if (selectedMapObject) {
+            selectedMapObject.selected = true;
+        }
+        mapObjectsCopy.filter(x => x.id !== mapObject.id).forEach(x => x.selected = false);
+        setMapObjects(mapObjectsCopy);
+        return mapObject;
+    }
+
     return (
-        <div className={styles.background} onClick={handleClick}>
+        <div className={styles.background} onClick={handleClick} onContextMenu={handleRightClick}>
             <div className={styles.actions} onClick={event => event.stopPropagation()}>
                 <Settings onClick={selectShape} shapes={allShapes}></Settings>
                 {(selectedBuilding) ? <UpgradeMenu onAddVillager={(villager) => addVillager(villager)} selectedBuilding={selectedBuilding} selectedVillager={undefined}></UpgradeMenu> : <></>}
                 {(selectedVillager) ? <UpgradeMenu onAddVillager={(villager) => addVillager(villager)} selectedVillager={selectedVillager} selectedBuilding={undefined}></UpgradeMenu> : <></>}
-
             </div>
             <div className={styles.resourceArea}>
                 {(inventory) ? <Resources resources={inventory.resources}></Resources> : <></>}
@@ -199,7 +222,7 @@ function Game(map: any) {
             }
             {(buildings) ? mapObjects?.map((mapObject, index) => {
                 if (mapObject) {
-                    return <MapObject key={mapObject.id} {...mapObject}></MapObject>
+                    return <MapObject key={mapObject.id} {...mapObject} onClick={event => selectMapObject(event, mapObject)}></MapObject>
                 }
             }) : <></>
             }

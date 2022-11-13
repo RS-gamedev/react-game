@@ -4,6 +4,7 @@ import { BuildingType } from "../models/enums/BuildingType";
 import { Status } from "../models/enums/Status";
 import { Inventory } from "../models/Inventory";
 import { ObjectProps } from "../models/ObjectProps";
+import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
 import { getStorageBuildings } from "./BuildingUtils";
 import { findNearestStorage, findNearestTree, getDistance, moveVillagerToPosition, reachedGoalPosition } from "./MovementUtils";
@@ -12,7 +13,6 @@ export function doWoodcutting(villager: VillagerProps, inventory: Inventory, bui
     if (villager.status === Status.IDLE) {
         villager = handleIdle(villager, buildings, mapObjects);
     }
-
     switch (villager.status) {
         case Status.WALKING_TO_TREE:
             if (villager.goalPosition) {
@@ -111,3 +111,11 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
 }
 
 
+export function moveToLocation(villager: VillagerProps, goalPosition: Position): VillagerProps {
+    let newVillager = moveVillagerToPosition(villager, goalPosition);
+    if(reachedGoalPosition(newVillager.position, goalPosition)){
+        villager.status = Status.IDLE;
+        villager.currentTask =  undefined;
+    }
+    return newVillager;
+}

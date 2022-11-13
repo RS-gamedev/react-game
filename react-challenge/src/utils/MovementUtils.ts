@@ -36,8 +36,8 @@ export function getNewPosition(startPosition: { x: number, y: number }, goalPosi
 }
 
 export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Position) {
-    // goalposition = nearest tree
-    return { ...villager, position: getNewPosition(villager.position, goalPosition) };
+    villager.position = getNewPosition(villager.position, goalPosition);
+    return villager;
 }
 
 
@@ -54,7 +54,6 @@ export function findNearestTree(position: Position, trees: ObjectProps[]) {
 
     // let goalPosition = { x: Math.floor(Math.random() * 800), y: Math.floor(Math.random() * 800) }; // nearest tree
     return closest.position;
-
 }
 
 export function moveVillagerToNearestRock(villager: VillagerProps) {
