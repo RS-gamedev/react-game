@@ -10,7 +10,7 @@ export const shapes: Shape[] = [
         icon: ['fas', 'house'],
         iconColor: '#373c50',
         image: "",
-        selected: true,
+        selected: false,
         price: [
             { type: resources.find(x => x.name === "Wood"), amount: 100 },
             { type: resources.find(x => x.name === "Coins"), amount: 50 }

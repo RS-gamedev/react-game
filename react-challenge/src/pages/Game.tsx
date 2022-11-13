@@ -71,10 +71,10 @@ function Game(map: any) {
             }
             let toAddResource = villager.inventoryItems.find(x => x.resource.name == 'Wood');
             if (toAddResource && toAddResource) {
-                toAddResource.amount += 0.5;
+                toAddResource.amount = toAddResource.amount + 0.05;
             }
             else {
-                villager.inventoryItems.push({ resource: resources.find(x => x.name == 'Wood')!, amount: 0.5 });
+                villager.inventoryItems.push({ resource: resources.find(x => x.name == 'Wood')!, amount: 0 });
             }
             villager.status = Status.IDLE;
             return villager;
@@ -122,8 +122,8 @@ function Game(map: any) {
         idleVillagersCopy = droppingResourcesVillagers.concat(notDroppingResourcesVillagers);
 
         // SAVE
-        setVillagers(idleVillagersCopy);
-    }, 100);
+        setVillagers((prev) => idleVillagersCopy);
+    }, 50);
 
     function setNewTaskForIdleVillagers(villagers: VillagerProps[]) {
         villagers.forEach(villager => {
@@ -151,6 +151,7 @@ function Game(map: any) {
                         if (villager.inventoryItems && villager.inventoryItems[0] && villager.inventoryItems[0].amount >= villager.inventorySlots) {
                             // En inventory is vol
                             villager.status = Status.DROPPING_RESOURCES;
+                            console.log(villager);
                             villager.goalPosition = findNearestStorage(villager.position, getStorageBuildings(buildings));
                             // Drop resources
                             return villagers;
@@ -256,6 +257,13 @@ function Game(map: any) {
         }
     }
 
+    function addVillager(villager: VillagerProps){
+        let villagersCopy = [...villagers];
+        villagersCopy.push(villager);
+        setVillagers(villagersCopy);
+
+    }
+
     function selectShape(shape: Shape) {
         let shapesCopy = [...allShapes];
         let selectedShape = shapesCopy.find(x => x.name == shape.name);
@@ -283,7 +291,7 @@ function Game(map: any) {
         <div className={styles.background} onClick={handleClick}>
             <div className={styles.actions} onClick={event => event.stopPropagation()}>
                 <Settings onClick={selectShape} shapes={allShapes}></Settings>
-                {(selectedBuilding) ? <UpgradeMenu selectedBuilding={selectedBuilding}></UpgradeMenu> : <></> }
+                {(selectedBuilding) ? <UpgradeMenu onAddVillager={(villager) => addVillager(villager)} selectedBuilding={selectedBuilding}></UpgradeMenu> : <></> }
                
             </div>
             <div className={styles.resourceArea}>

@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { BuildingOption } from '../../models/BuildingOption';
 import { BuildingProps } from '../../models/BuildingProps';
+import { VillagerProps } from '../../models/VillagerProps';
+import { trainVillager } from '../../utils/BuildingOptionsUtil';
 import { getBuildingOptions } from '../../utils/BuildingUtils';
+import Button from '../Button/Button';
 import styles from './UpgradeMenu.module.css';
 
 type Props = {
-    selectedBuilding: BuildingProps
+    selectedBuilding: BuildingProps,
+    onAddVillager: (villager: VillagerProps) => void
 }
 
-export default function UpgradeMenu({ selectedBuilding }: Props) {
+export default function UpgradeMenu({ selectedBuilding, onAddVillager }: Props) {
 
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
 
@@ -18,7 +22,11 @@ export default function UpgradeMenu({ selectedBuilding }: Props) {
         let x = getBuildingOptions(selectedBuilding);
         setBuildingOptions(x);
         console.log(x);
-    }, [])
+    }, []);
+
+    function trainVillager(villager: VillagerProps){
+        onAddVillager(villager);
+    }
     
 
     return (
@@ -31,10 +39,9 @@ export default function UpgradeMenu({ selectedBuilding }: Props) {
             </div>
             <div className={styles.buildingOptionsSection}>
                 {buildingOptions.map(x => {
-                    return <div>{x.name}</div>
+                    return <Button active={false} disabled={false} height='75px' width='75px' onClick={() => trainVillager(x.toExecute(selectedBuilding.position))} text={x.name}></Button>
                 })}
             </div>
-
         </div>
     )
 }
