@@ -11,7 +11,7 @@ type Props = {
 export default function Settings({shapes, onClick}: Props) {
     return (
         <div className={styles.settingsBox}>
-            <h3 style={{ margin: 0 }}>Instellingen</h3>
+            <h3 className={styles.title} style={{ margin: 0 }}>Buildings</h3>
             <div className={styles.shapePicker}>
                 {
                     shapes.map(option => {

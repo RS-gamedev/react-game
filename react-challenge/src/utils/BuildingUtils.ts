@@ -60,8 +60,7 @@ export function getStorageBuildings(buildings: BuildingProps[]) {
 }
 
 
-export function getBuildingOptions(building: BuildingProps): BuildingOption[]{
-    console.log("getting options");
+export function getBuildingOptions(building: BuildingProps): BuildingOption[]{      
     switch (building.type) {
         case BuildingType.TOWN_CENTER:
             let wood = resources.find(x => x.name === 'Wood');

@@ -80,6 +80,6 @@ export function findNearestStorage(position: Position, storages: ObjectProps[]) 
 
 export function reachedGoalPosition(position: Position, goalPosition: Position) {
     let actualDistance = getDistance(position, goalPosition);
-    if (actualDistance < 21) return true;
+    if (actualDistance < 30) return true;
     return false;
 }

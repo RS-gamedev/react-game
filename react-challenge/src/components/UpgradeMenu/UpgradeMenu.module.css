@@ -1,9 +1,10 @@
 .upgradeMenu{
     width:240px;
-    background-color:white;
+    /* background-color:white; */
     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
     border-radius: 10px;
     flex: 1;
+    overflow:hidden;
 }
 
 .titleSection{
@@ -14,6 +15,10 @@
     align-items: center;
     justify-content: space-between;
     padding-left:20px;
+    background:white;
+    overflow:hidden;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+
 }
 
 .titleSection span{
@@ -25,7 +30,7 @@
     width:80px;
     background-color:#586599b2;
     /* border: 1px solid red; */
-    border-bottom-left-radius: 10px;
+    /* border-bottom-left-radius: 10px; */
     border-top-right-radius: 10px;
     display: flex;
     justify-content: center;
@@ -45,4 +50,8 @@
 .buildingOptionsSection{
     height: calc(100% - 80px);
     padding:15px;
+    background-color: #787b8693;
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+  
+    backdrop-filter: blur(15px);
 }

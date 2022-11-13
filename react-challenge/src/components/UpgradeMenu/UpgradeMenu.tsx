@@ -4,6 +4,7 @@ import { BuildingProps } from '../../models/BuildingProps';
 import { VillagerProps } from '../../models/VillagerProps';
 import { trainVillager } from '../../utils/BuildingOptionsUtil';
 import { getBuildingOptions } from '../../utils/BuildingUtils';
+import { getImageUrl } from '../../utils/MapUtils';
 import Button from '../Button/Button';
 import styles from './UpgradeMenu.module.css';
 
@@ -39,7 +40,7 @@ export default function UpgradeMenu({ selectedBuilding, onAddVillager }: Props) 
             </div>
             <div className={styles.buildingOptionsSection}>
                 {buildingOptions.map(x => {
-                    return <Button active={false} disabled={false} height='75px' width='75px' onClick={() => trainVillager(x.toExecute(selectedBuilding.position))} text={x.name}></Button>
+                    return <Button icon={x.icon} active={false} disabled={false} height='75px' width='75px' onClick={() => trainVillager(x.toExecute(selectedBuilding.position))} text={x.name}></Button>
                 })}
             </div>
         </div>
