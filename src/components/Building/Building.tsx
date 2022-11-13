@@ -1,5 +1,4 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
-import { BuildingProps } from "../../models/BuildingProps"
 import { ObjectProps } from "../../models/ObjectProps"
 import Icon from "../Icon/Icon"
 import styles from './Building.module.css';

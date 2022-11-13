@@ -1,4 +1,3 @@
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Shape } from '../../models/Shape';
 import Button from '../Button/Button';
 import styles from './Settings.module.css';

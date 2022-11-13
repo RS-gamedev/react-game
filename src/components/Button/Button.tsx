@@ -1,9 +1,5 @@
-import { url } from 'inspector';
-import React from 'react'
 import styles from './Button.module.css';
-import tree from '../../assets/tree.svg';
 import Icon from '../Icon/Icon';
-import { IconPrefix } from '@fortawesome/fontawesome-common-types';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Price } from '../../models/Price';
 
