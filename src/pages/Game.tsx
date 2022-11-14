@@ -31,9 +31,6 @@ const Game = (map: any) => {
     var selectedVillager = villagers.find(x => x.selected);
     var selectedMapObject = mapObjects.find(x => x.selected);
 
-    useEffect(() => {
-        console.log(buildings);
-    },[buildings] )
 
     useInterval(() => {
         // GAME LOOP

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InventoryItem } from '../../models/InventoryItem';
 import { Resource } from '../../models/Resource';
 import ResourceItem from './ResourceItem/ResourceItem';
@@ -7,7 +7,12 @@ type Props = {
     resources: InventoryItem[]
 }
 
- const Resources = ({ resources }: Props) => {
+ const Resources = React.memo(({ resources }: Props) => {
+    console.log("render");
+
+    useEffect(() => {
+        console.log("new resources");
+    }, [resources])
     return (
         <div className={styles.resources}>
             {resources.map((item, index) => {
@@ -16,6 +21,6 @@ type Props = {
             }
         </div>
     )
-}
+})
 
 export default Resources;
