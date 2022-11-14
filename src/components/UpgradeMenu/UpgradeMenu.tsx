@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { BuildingOption } from '../../models/BuildingOption';
 import { BuildingProps } from '../../models/BuildingProps';
 import { Status } from '../../models/enums/Status';
 import { VillagerType } from '../../models/enums/VillagerType';
+import { InventoryItem } from '../../models/InventoryItem';
 import { ObjectProps } from '../../models/ObjectProps';
 import { Position } from '../../models/Position';
 import { VillagerProps } from '../../models/VillagerProps';
@@ -15,38 +16,45 @@ type Props = {
     selectedVillager: VillagerProps | undefined;
     selectedMapObject: ObjectProps | undefined;
     onTrain: (villager: VillagerProps, type: VillagerType) => VillagerProps;
+    inStock?: InventoryItem[]
 }
 
-const UpgradeMenu = React.memo(({ selectedBuilding, selectedVillager, selectedMapObject, onTrain }: Props) => {
+const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock}: Props) => {
+    
+    console.log("rendering upgrademenu");
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
-    const [position, setPosition] = useState<Position>({x: 500, y: 500});
-
+    const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
     useEffect(() => {
-        console.log("STATUS CHAAANGE");
-    },[selectedVillager?.status])
-
-    useEffect(() => {
-        if(selectedBuilding){
+        if (selectedBuilding) {
             setBuildingOptions(selectedBuilding.buildingOptions);
             setPosition(selectedBuilding.position);
         }
-        if(selectedVillager){
+        if (selectedVillager) {
             setBuildingOptions(selectedVillager.buildingOptions);
             setPosition(selectedVillager.position);
         }
-        if(selectedMapObject){
+        if (selectedMapObject) {
             setBuildingOptions(selectedMapObject.buildingOptions);
             setPosition(selectedMapObject.position);
         }
     }, []);
 
     useEffect(() => {
+        console.log(inStock);
+    }, [inStock]);
+    useEffect(() => {
         console.log(selectedVillager);
-    }, [selectedVillager])
+    }, [selectedVillager]);
+    useEffect(() => {
+        console.log(selectedBuilding);
+    }, [selectedBuilding]);
 
-    function executeBuildingOption(buildingOption: BuildingOption, type: string){
-        if(type == 'train'){
-            console.log("executing");
+    useEffect(() => {
+        console.log(selectedMapObject);
+    }, [selectedMapObject]);
+
+    const executeBuildingOption = (buildingOption: BuildingOption, type: string) => {
+        if (type == 'train') {
             let entity = buildingOption.toExecute(position);
             onTrain(entity, buildingOption.type!);
         }
@@ -62,8 +70,7 @@ const UpgradeMenu = React.memo(({ selectedBuilding, selectedVillager, selectedMa
             </div>
             <div className={styles.buildingOptionsSection} style={{ height: 'calc(100% - 80px)' }}>
                 {buildingOptions.map(x => {
-                    console.log(x);
-                    return <Button icon={x.icon} active={false} disabled={false} height='75px' width='75px' onClick={() => executeBuildingOption(x, 'train')} text={x.name}></Button>
+                    return <Button key={x.id} icon={x.icon} active={false} disabled={false} height='75px' width='75px' onClick={() => executeBuildingOption(x, 'train')} text={x.name}></Button>
                 })}
             </div>
         </div>
@@ -74,7 +81,7 @@ const UpgradeMenu = React.memo(({ selectedBuilding, selectedVillager, selectedMa
             <div className={styles.titleSection}>
                 <div className={styles.titlePart}>
                     <span className={styles.name}>{selectedVillager.name}</span>
-                    <span style={{fontSize: '1em'}}>{Status[selectedVillager.status]}</span>
+                    <span style={{ fontSize: '1em' }}>{Status[selectedVillager.status]}</span>
                 </div>
 
                 <div className={styles.levelSection}>
@@ -84,9 +91,9 @@ const UpgradeMenu = React.memo(({ selectedBuilding, selectedVillager, selectedMa
             <div className={styles.buildingOptionsSection}>
             </div>
             <div className={styles.inventorySection}>
-                {selectedVillager.inventoryItems.map(x => {
+                {(inStock) ? inStock.map(x => {
                     return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff'></ResourceItem>
-                })}
+                }): <></>}
             </div>
         </div>
     }
@@ -98,12 +105,11 @@ const UpgradeMenu = React.memo(({ selectedBuilding, selectedVillager, selectedMa
                 <div className={styles.levelSection}>
                 </div>
             </div>
-
             <div className={styles.buildingOptionsSection}>
             </div>
         </div>
     }
     return <></>
-})
+}
 
 export default UpgradeMenu;

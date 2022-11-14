@@ -9,9 +9,9 @@ import { VillagerProps } from "../models/VillagerProps";
 import { getStorageBuildings } from "./BuildingUtils";
 import { findNearestStorage, findNearestTree, getDistance, moveVillagerToPosition, reachedGoalPosition } from "./MovementUtils";
 
-export function doWoodcutting(villager: VillagerProps, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) {
+export function doWoodcutting(villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>], buildings: BuildingProps[], mapObjects: ObjectProps[], location: Position) {
     if (villager.status === Status.IDLE) {
-        villager = handleIdle(villager, buildings, mapObjects);
+        villager = handleIdle(villager, buildings, mapObjects, location);
     }
     switch (villager.status) {
         case Status.WALKING_TO_TREE:
@@ -49,14 +49,15 @@ export function doWoodcutting(villager: VillagerProps, inventory: Inventory, bui
             return villager;
         case Status.DROPPING_RESOURCES:
             villager.inventoryItems.forEach(invItem => {
-                
-                if (inventory && inventory.resources) {
-                    let invCopyItemsCopy = [...inventory.resources];
+                if (invent && invent[0].resources) {
+                    let inventoryCopy = {...invent[0]};
+                    let invCopyItemsCopy = [...inventoryCopy.resources];
                     let inventoryResource = invCopyItemsCopy.find(x => x.resource.name == invItem.resource.name);
                     if (inventoryResource) {
                         inventoryResource.amount! += invItem.amount;
                         invItem.amount = 0;
-                        inventory.resources = invCopyItemsCopy;
+                        inventoryCopy.resources = invCopyItemsCopy;
+                        invent[1](inventoryCopy);
                         villager.status = Status.IDLE;
                     }
                 }
@@ -68,14 +69,14 @@ export function doWoodcutting(villager: VillagerProps, inventory: Inventory, bui
 }
 
 function inventoryIsFull(villager: VillagerProps): boolean {
-    if(villager.inventoryItems[0] && villager.inventoryItems[0].amount >= villager.inventorySlots){
+    if (villager.inventoryItems[0] && villager.inventoryItems[0].amount >= villager.inventorySlots) {
         return true;
     }
     return false;
 }
 
 function onTree(villager: VillagerProps, treeLocations: ObjectProps[]): boolean {
-    let distanceToNearestTree = getDistance(villager.position, findNearestTree(villager.position, treeLocations));
+    let distanceToNearestTree = getDistance(villager.position, findNearestTree(villager.position, treeLocations).position);
     if (distanceToNearestTree && distanceToNearestTree < 25) return true;
     return false;
 }
@@ -85,7 +86,7 @@ function onStorage(villager: VillagerProps, storageLocations: BuildingProps[]) {
     return false;
 }
 
-function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObjects: ObjectProps[]) {
+function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObjects: ObjectProps[], location: Position) {
     if (inventoryIsFull(villager)) {
         //Inventory vol
         if (onStorage(villager, buildings.filter(x => x.type === BuildingType.TENTS || x.type === BuildingType.TOWN_CENTER || x.type === BuildingType.STORAGE))) {
@@ -103,7 +104,12 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
         }
         else {
             villager.status = Status.WALKING_TO_TREE;
-            villager.goalPosition = findNearestTree(villager.position, mapObjects);
+            if(location){
+                villager.goalPosition = location;
+            }
+            else{
+                villager.goalPosition = findNearestTree(villager.position, mapObjects).position;
+            }
         }
     }
     return villager;
@@ -113,9 +119,9 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
 export function moveToLocation(villager: VillagerProps, goalPosition: Position): VillagerProps {
     let newVillager = moveVillagerToPosition(villager, goalPosition);
     newVillager.status = Status.WALKING;
-    if(reachedGoalPosition(newVillager.position, goalPosition)){
+    if (reachedGoalPosition(newVillager.position, goalPosition)) {
         villager.status = Status.IDLE;
-        villager.currentTask =  undefined;
+        villager.currentTask = undefined;
     }
     return newVillager;
 }

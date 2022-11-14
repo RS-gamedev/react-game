@@ -43,7 +43,7 @@ export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Po
 
 export function findNearestTree(position: Position, trees: ObjectProps[]) {
     let closest: ObjectProps = trees[0];
-    let lowestDistance = -10000;
+    let lowestDistance = 10000;
     for (let tree of trees) {
         let distance = getDistance(position, tree.position);
         if (distance < lowestDistance) {
@@ -53,7 +53,7 @@ export function findNearestTree(position: Position, trees: ObjectProps[]) {
     }
 
     // let goalPosition = { x: Math.floor(Math.random() * 800), y: Math.floor(Math.random() * 800) }; // nearest tree
-    return closest.position;
+    return closest;
 }
 
 export function moveVillagerToNearestRock(villager: VillagerProps) {

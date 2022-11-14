@@ -2,7 +2,7 @@ import styles from './Button.module.css';
 import Icon from '../Icon/Icon';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Price } from '../../models/Price';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 type Props = {
   onClick: any,

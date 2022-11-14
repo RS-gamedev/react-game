@@ -18,7 +18,6 @@ type props = {
 const Building = React.memo(({ id, size, position, icon, color, onClick, selected }: props) => {
   console.log("rendering building");
   useEffect(() => {
-    console.log("something changed in building");
   }, [id, size, position, icon, color, onClick, selected]);
 
 
