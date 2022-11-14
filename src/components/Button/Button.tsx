@@ -16,6 +16,7 @@ type Props = {
 }
 
 export default function Button({ onClick, text, disabled, active, width, height, icon, iconColor, price }: Props) {
+  console.log('rendered button');
 
   function handleClick(event: any): any {
     event.preventDefault();

@@ -8,7 +8,7 @@ type props = {
   id: string;
   name: string;
   position: Position;
-  onClick: (event: any) => VillagerProps;
+  onClick: (event: any, villagerId: string) => VillagerProps | undefined;
   selected:boolean;
 }
 
@@ -18,9 +18,10 @@ export default function Villager({ id, name, position, onClick, selected}: props
   useEffect(() => {
     setImage(getImageUrl('villager')!);
   }, []);
+  
 
   return (
-    <div className={styles.villager + " " + `${(selected) ? styles.selected: styles.nothing}`} style={{ left: position.x, top: position.y }} onClick={onClick}>
+    <div className={styles.villager + " " + `${(selected) ? styles.selected: styles.nothing}`} style={{ left: position.x, top: position.y }} onClick={(event) => onClick(event, id)}>
       <img style={{ height: '100%' }} src={image}></img>
     </div>
   )

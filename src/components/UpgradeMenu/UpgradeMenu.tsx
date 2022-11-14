@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BuildingOption } from '../../models/BuildingOption';
 import { BuildingProps } from '../../models/BuildingProps';
 import { VillagerProps } from '../../models/VillagerProps';
@@ -13,8 +13,8 @@ type Props = {
     onAddVillager: (villager: VillagerProps) => void
 }
 
-export default function UpgradeMenu({ selectedBuilding, onAddVillager, selectedVillager }: Props) {
-
+const UpgradeMenu = React.memo(({ selectedBuilding, onAddVillager, selectedVillager }: Props) => {
+    console.log("rendered upgrade Menu");
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function UpgradeMenu({ selectedBuilding, onAddVillager, selectedV
         if (selectedVillager) {
 
         }
-    }, []);
+    }, [selectedBuilding]);
 
     function trainVillager(villager: VillagerProps) {
         onAddVillager(villager);
@@ -67,4 +67,6 @@ export default function UpgradeMenu({ selectedBuilding, onAddVillager, selectedV
         </div>
     }
     return <></>
-}
+})
+
+export default UpgradeMenu;

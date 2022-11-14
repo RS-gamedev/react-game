@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { Shape } from '../../models/Shape';
 import Button from '../Button/Button';
 import styles from './Settings.module.css';
@@ -7,7 +8,8 @@ type Props = {
     onClick: (shape: Shape) => void
 }
 
-export default function Settings({shapes, onClick}: Props) {
+const Settings = React.memo(({shapes, onClick}: Props) => {
+    console.log('rendered settings');
     return (
         <div className={styles.settingsBox}>
             <h3 className={styles.title} style={{ margin: 0 }}>Buildings</h3>
@@ -20,4 +22,5 @@ export default function Settings({shapes, onClick}: Props) {
             </div>
         </div>
     )
-}
+})
+export default Settings;

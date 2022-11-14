@@ -1,3 +1,4 @@
+import React from 'react';
 import { InventoryItem } from '../../models/InventoryItem';
 import { Resource } from '../../models/Resource';
 import ResourceItem from './ResourceItem/ResourceItem';
@@ -6,7 +7,8 @@ type Props = {
     resources: InventoryItem[]
 }
 
-export default function Resources({ resources }: Props) {
+ const Resources = React.memo(({ resources }: Props) => {
+    console.log("Rendered resources");
     return (
         <div className={styles.resources}>
             {resources.map((item, index) => {
@@ -15,4 +17,6 @@ export default function Resources({ resources }: Props) {
             }
         </div>
     )
-}
+})
+
+export default Resources;
