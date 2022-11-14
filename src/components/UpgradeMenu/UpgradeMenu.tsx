@@ -1,35 +1,56 @@
 import React, { useEffect, useState } from 'react';
 import { BuildingOption } from '../../models/BuildingOption';
 import { BuildingProps } from '../../models/BuildingProps';
+import { Status } from '../../models/enums/Status';
+import { VillagerType } from '../../models/enums/VillagerType';
+import { ObjectProps } from '../../models/ObjectProps';
+import { Position } from '../../models/Position';
 import { VillagerProps } from '../../models/VillagerProps';
-import { getBuildingOptions } from '../../utils/BuildingUtils';
 import Button from '../Button/Button';
 import ResourceItem from '../Resources/ResourceItem/ResourceItem';
 import styles from './UpgradeMenu.module.css';
 
 type Props = {
-    selectedBuilding: BuildingProps | undefined,
-    selectedVillager: VillagerProps | undefined,
-    onAddVillager: (villager: VillagerProps) => void
+    selectedBuilding: BuildingProps | undefined;
+    selectedVillager: VillagerProps | undefined;
+    selectedMapObject: ObjectProps | undefined;
+    onTrain: (villager: VillagerProps, type: VillagerType) => VillagerProps;
 }
 
-const UpgradeMenu = React.memo(({ selectedBuilding, onAddVillager, selectedVillager }: Props) => {
+const UpgradeMenu = React.memo(({ selectedBuilding, selectedVillager, selectedMapObject, onTrain }: Props) => {
     console.log("rendered upgrade Menu");
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
+    const [position, setPosition] = useState<Position>({x: 500, y: 500});
 
     useEffect(() => {
-        // get building options for building.
-        if (selectedBuilding) {
-            let x = getBuildingOptions(selectedBuilding);
-            setBuildingOptions(x);
-        }
-        if (selectedVillager) {
+        console.log("STATUS CHAAANGE");
+    },[selectedVillager?.status])
 
+    useEffect(() => {
+        if(selectedBuilding){
+            setBuildingOptions(selectedBuilding.buildingOptions);
+            setPosition(selectedBuilding.position);
         }
-    }, [selectedBuilding]);
+        if(selectedVillager){
+            setBuildingOptions(selectedVillager.buildingOptions);
+            setPosition(selectedVillager.position);
+        }
+        if(selectedMapObject){
+            setBuildingOptions(selectedMapObject.buildingOptions);
+            setPosition(selectedMapObject.position);
+        }
+    }, []);
 
-    function trainVillager(villager: VillagerProps) {
-        onAddVillager(villager);
+    useEffect(() => {
+        console.log(selectedVillager);
+    }, [selectedVillager])
+
+    function executeBuildingOption(buildingOption: BuildingOption, type: string){
+        if(type == 'train'){
+            console.log("executing");
+            let entity = buildingOption.toExecute(position);
+            onTrain(entity, buildingOption.type!);
+        }
     }
 
     if (selectedBuilding) {
@@ -40,9 +61,10 @@ const UpgradeMenu = React.memo(({ selectedBuilding, onAddVillager, selectedVilla
                     <span>{selectedBuilding.level}</span>
                 </div>
             </div>
-            <div className={styles.buildingOptionsSection} style={{height: 'calc(100% - 80px)'}}>
+            <div className={styles.buildingOptionsSection} style={{ height: 'calc(100% - 80px)' }}>
                 {buildingOptions.map(x => {
-                    return <Button icon={x.icon} active={false} disabled={false} height='75px' width='75px' onClick={() => trainVillager(x.toExecute(selectedBuilding.position))} text={x.name}></Button>
+                    console.log(x);
+                    return <Button icon={x.icon} active={false} disabled={false} height='75px' width='75px' onClick={() => executeBuildingOption(x, 'train')} text={x.name}></Button>
                 })}
             </div>
         </div>
@@ -51,18 +73,34 @@ const UpgradeMenu = React.memo(({ selectedBuilding, onAddVillager, selectedVilla
     if (selectedVillager) {
         return <div className={styles.upgradeMenu}>
             <div className={styles.titleSection}>
-                <span className={styles.name}>{selectedVillager.name}</span>
+                <div className={styles.titlePart}>
+                    <span className={styles.name}>{selectedVillager.name}</span>
+                    <span style={{fontSize: '1em'}}>{Status[selectedVillager.status]}</span>
+                </div>
+
                 <div className={styles.levelSection}>
                 </div>
             </div>
 
             <div className={styles.buildingOptionsSection}>
-                <span>{selectedVillager.currentTask?.toString()}</span>
             </div>
             <div className={styles.inventorySection}>
                 {selectedVillager.inventoryItems.map(x => {
                     return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff'></ResourceItem>
                 })}
+            </div>
+        </div>
+    }
+
+    if (selectedMapObject) {
+        return <div className={styles.upgradeMenu}>
+            <div className={styles.titleSection}>
+                <span className={styles.name}>{selectedMapObject.name}</span>
+                <div className={styles.levelSection}>
+                </div>
+            </div>
+
+            <div className={styles.buildingOptionsSection}>
             </div>
         </div>
     }

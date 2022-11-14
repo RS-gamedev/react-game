@@ -10,7 +10,7 @@ type props = {
   name: string,
   position: Position,
   selected: boolean,
-  onClick: (event: any, id: string) => ObjectProps | undefined
+  onClick: (event: any, id: string) => void
 }
 
 const MapObject = React.memo(({ id, name, position, selected, onClick }: props) => {

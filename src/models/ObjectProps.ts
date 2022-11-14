@@ -1,3 +1,5 @@
+import { BuildingOption } from "./BuildingOption"
+
 export type ObjectProps = {
     id: string,
     position: {
@@ -5,6 +7,7 @@ export type ObjectProps = {
         y: number
     },
     name: string,
-    selected: boolean
+    selected: boolean;
+    buildingOptions: BuildingOption[];
     
 }

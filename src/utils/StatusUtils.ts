@@ -36,7 +36,6 @@ export function doWoodcutting(villager: VillagerProps, inventory: Inventory, bui
             else {
                 villager.inventoryItems.push({ resource: resources.find(x => x.name == 'Wood')!, amount: 0 });
             }
-            villager.status = Status.IDLE;
             return villager;
         case Status.RETURNING_RESOURCES:
             if (villager.goalPosition) {
@@ -113,6 +112,7 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
 
 export function moveToLocation(villager: VillagerProps, goalPosition: Position): VillagerProps {
     let newVillager = moveVillagerToPosition(villager, goalPosition);
+    newVillager.status = Status.WALKING;
     if(reachedGoalPosition(newVillager.position, goalPosition)){
         villager.status = Status.IDLE;
         villager.currentTask =  undefined;

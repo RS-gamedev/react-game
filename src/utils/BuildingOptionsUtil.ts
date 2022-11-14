@@ -15,7 +15,8 @@ export function trainVillager(position: Position){
         name: "Villager",
         position: position,
         status: Status.IDLE,
-        type: VillagerType.LUMBERJACK
+        type: VillagerType.LUMBERJACK,
+        buildingOptions: []
     } 
     return newVillager;
 }

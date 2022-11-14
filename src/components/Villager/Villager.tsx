@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Position } from '../../models/Position';
-import { VillagerProps } from '../../models/VillagerProps';
 import { getImageUrl } from '../../utils/MapUtils';
 import styles from './Villager.module.css';
 
@@ -8,7 +7,7 @@ type props = {
   id: string;
   name: string;
   position: Position;
-  onClick: (event: any, villagerId: string) => VillagerProps | undefined;
+  onClick: (event: any, villagerId: string) => void
   selected:boolean;
 }
 

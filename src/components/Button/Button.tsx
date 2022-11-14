@@ -2,6 +2,7 @@ import styles from './Button.module.css';
 import Icon from '../Icon/Icon';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Price } from '../../models/Price';
+import React from 'react';
 
 type Props = {
   onClick: any,
@@ -15,7 +16,7 @@ type Props = {
   price?: Price[]
 }
 
-export default function Button({ onClick, text, disabled, active, width, height, icon, iconColor, price }: Props) {
+const Button = React.memo(({ onClick, text, disabled, active, width, height, icon, iconColor, price }: Props)  => {
   console.log('rendered button');
 
   function handleClick(event: any): any {
@@ -43,4 +44,6 @@ export default function Button({ onClick, text, disabled, active, width, height,
 
     </button>
   )
-}
+})
+
+export default Button;

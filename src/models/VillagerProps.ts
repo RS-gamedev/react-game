@@ -1,3 +1,4 @@
+import { BuildingOption } from "./BuildingOption";
 import { BuildingProps } from "./BuildingProps";
 import { Status } from "./enums/Status"
 import { VillagerType } from "./enums/VillagerType";
@@ -20,5 +21,6 @@ export type VillagerProps = {
     inventoryItems: InventoryItem[],
     selected: boolean;
     currentTask?: (villager: VillagerProps, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition?: Position) => VillagerProps;
+    buildingOptions: BuildingOption[];
     // nextAction?: any
 }

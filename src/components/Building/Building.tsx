@@ -12,7 +12,7 @@ type props = {
   icon: IconProp,
   color: string,
   selected: boolean,
-  onClick: (event: any, buildingId: string) => ObjectProps | undefined
+  onClick: (event: any, buildingId: string) => void
 }
 
 const Building = React.memo(({ id, size, position, icon, color, onClick, selected }: props) => {

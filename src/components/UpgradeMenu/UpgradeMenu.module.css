@@ -21,6 +21,11 @@
 
 }
 
+.titlePart{
+    display:flex;
+    flex-direction: column;
+}
+
 .titleSection span{
     font-size: 1.5em;
 }
