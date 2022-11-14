@@ -18,7 +18,6 @@ type Props = {
 }
 
 const UpgradeMenu = React.memo(({ selectedBuilding, selectedVillager, selectedMapObject, onTrain }: Props) => {
-    console.log("rendered upgrade Menu");
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
     const [position, setPosition] = useState<Position>({x: 500, y: 500});
 

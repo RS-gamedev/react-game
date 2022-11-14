@@ -7,8 +7,7 @@ type Props = {
     resources: InventoryItem[]
 }
 
- const Resources = React.memo(({ resources }: Props) => {
-    console.log("Rendered resources");
+ const Resources = ({ resources }: Props) => {
     return (
         <div className={styles.resources}>
             {resources.map((item, index) => {
@@ -17,6 +16,6 @@ type Props = {
             }
         </div>
     )
-})
+}
 
 export default Resources;

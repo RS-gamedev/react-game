@@ -155,7 +155,6 @@ const Game = (map: any) => {
 
     function onTrain(entity: any, type: VillagerType){
         addVillager(entity);
-        console.log(entity);
         return entity
     }
 
