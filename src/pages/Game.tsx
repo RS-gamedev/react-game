@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './Game.module.css';
 import Settings from '../components/Settings/Settings';
 import { Shape } from '../models/Shape';
 import { BuildingProps } from '../models/BuildingProps';
 import Building from '../components/Building/Building';
 import { shapes } from '../config/Shapes';
-import { createBuilding, setSelectedBuilding } from '../utils/BuildingUtils';
+import { createBuilding } from '../utils/BuildingUtils';
 import Resources from '../components/Resources/Resources';
 import { Inventory } from '../models/Inventory';
 import useInterval from '../hooks/useInterval';
@@ -16,10 +16,8 @@ import Villager from '../components/Villager/Villager';
 import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
 import { reduceResourcesFromInventory, canAfford } from '../utils/ResourceUtils';
 import { doWoodcutting, moveToLocation } from '../utils/StatusUtils';
-import { findNearestTree, getDistance } from '../utils/MovementUtils';
 import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from '../utils/GameUtils';
 import { VillagerType } from '../models/enums/VillagerType';
-import { Position } from '../models/Position';
 import { Hitbox } from '../models/Hitbox';
 
 const Game = (map: any) => {
@@ -70,9 +68,10 @@ const Game = (map: any) => {
         setBuildings(buildingsCopy);
     }
 
-    const trainLumberJack = (villager: VillagerProps) => {
+    const trainVillager = (villager: VillagerProps) => {
         let villagersCopy = [...villagers];
         villagersCopy.push(villager);
+        console.log(villagersCopy);
         setVillagers((prev) => villagersCopy);
     }
 
@@ -147,21 +146,14 @@ const Game = (map: any) => {
         let villagersCopy = [...villagers];
         event.preventDefault();
         if (selectedVillager) {
-            // let nearestTreeToClick = findNearestTree({ x: event.clientX, y: event.clientY }, mapObjects.filter(x => x.name === 'tree'));
-            // let distanceToClosestTreeFromClickPosition = getDistance({ x: event.clientX, y: event.clientY }, nearestTreeToClick.position);
-            // if (distanceToClosestTreeFromClickPosition < 25) {
-            //     selectedVillager.currentTask = (villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>]) => doWoodcutting(villager, invent, buildings, mapObjects, nearestTreeToClick.position);
-            // }
-            // else {
                 selectedVillager.currentTask = (villager: VillagerProps) => moveToLocation(villager, { x: event.clientX, y: event.clientY })
-            // }
         }
         setVillagers(villagersCopy);
     }
 
     const onTrain = (entity: any, type: VillagerType) => {
-        if(type === VillagerType.LUMBERJACK){
-            trainLumberJack(entity);
+        if(type === VillagerType.VILLAGER){
+            trainVillager(entity);
         }
         return entity;
     }

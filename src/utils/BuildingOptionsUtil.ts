@@ -14,7 +14,7 @@ export function trainVillager(position: Position){
         inventorySlots: 10, 
         name: "Villager",
         status: Status.IDLE,
-        type: VillagerType.LUMBERJACK,
+        type: VillagerType.VILLAGER,
         buildingOptions: [],
         size: {
             width: '50px',

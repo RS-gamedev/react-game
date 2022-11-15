@@ -41,6 +41,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
 
     const executeBuildingOption = (buildingOption: BuildingOption, type: string) => {
         if (type == 'train') {
+            console.log(buildingOption);
             let entity = buildingOption.toExecute(position);
             onTrain(entity, buildingOption.type!);
         }
@@ -56,7 +57,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             </div>
             <div className={styles.buildingOptionsSection} style={{ height: 'calc(100% - 80px)' }}>
                 {buildingOptions.map(x => {
-                    return <Button key={x.id} icon={x.icon} active={false} disabled={false} height='75px' width='75px' onClick={() => executeBuildingOption(x, 'train')} text={x.name}></Button>
+                    return <Button type={x.type!} key={x.id} icon={x.icon} active={false} disabled={false} price={x.price} iconColor={'#ffffff'} height='100px' width='100px' onClick={() => executeBuildingOption(x, 'train')} text={x.name}></Button>
                 })}
             </div>
         </div>

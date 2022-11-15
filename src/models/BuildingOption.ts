@@ -7,7 +7,7 @@ import { VillagerProps } from "./VillagerProps"
 export type BuildingOption = {
     id: string;
     price: Price[],
-    icon: IconProp,
+    icon?: IconProp,
     name: string
     toExecute: (position: Position) => any,
     type?: VillagerType;

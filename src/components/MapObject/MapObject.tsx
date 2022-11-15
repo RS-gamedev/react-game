@@ -3,6 +3,8 @@ import { getImageUrl } from '../../utils/MapUtils';
 import React, { useEffect, useState } from 'react';
 import { Position } from '../../models/Position';
 import { Hitbox } from '../../models/Hitbox';
+import Icon from '../Icon/Icon';
+import { VillagerType } from '../../models/enums/VillagerType';
 
 
 type props = {
@@ -12,16 +14,11 @@ type props = {
   selected: boolean,
   onClick: (event: any, id: string) => void,
   onRightClick: (event: any, objectHitbox: Hitbox) => void,
-  hitBox: Hitbox
+  hitBox: Hitbox,
 }
 
 const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClick }: props) => {
-  const [image, setImage] = useState("");
   const [showTaskAssigned, setShowTaskAssigned] = useState<boolean>(false);
-
-  useEffect(() => {
-    setImage(getImageUrl(name)!);
-  }, []);
 
   function handleRightClick(event: any) {
     setShowTaskAssigned(() => true);
@@ -35,7 +32,7 @@ const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClic
     <>
       {(hitBox) ?
         <div className={styles.mapObject + " " + `${(selected) ? styles.selected : styles.nothing} ` + ((showTaskAssigned) ? styles.taskAssigned : styles.taskAssignedAfter)} style={{ left: hitBox.leftTop.x, top: hitBox.leftTop.y }} onClick={(event) => onClick(event, id)} onContextMenu={handleRightClick}>
-          <img className='noselect' alt={name} src={image}></img>
+          <Icon fontSize='1em' type={name}></Icon>
         </div> : <></>}
     </>
   )

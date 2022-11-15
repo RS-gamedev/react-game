@@ -1,4 +1,5 @@
 import { BuildingOption } from "./BuildingOption"
+import { VillagerType } from "./enums/VillagerType";
 import { Hitbox } from "./Hitbox";
 
 export type ObjectProps = {
@@ -10,5 +11,6 @@ export type ObjectProps = {
     name: string,
     selected: boolean;
     buildingOptions: BuildingOption[];
-    hitBox: Hitbox
+    hitBox: Hitbox,
+    type: VillagerType
 }
