@@ -11,10 +11,6 @@ import { Position } from "./Position";
 export type VillagerProps = {
     id: string,
     name: string,
-    position: {
-        x: number,
-        y: number
-    },
     type: VillagerType;
     status: Status;
     goalPosition?: Position;
@@ -24,6 +20,6 @@ export type VillagerProps = {
     currentTask?: (villager: VillagerProps, invent: [inventory: Inventory, setInventory: any], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition?: Position) => VillagerProps;
     buildingOptions: BuildingOption[];
     hitBox: Hitbox;
-    size: number;
+    size: {width: string, height: string};
     // nextAction?: any
 }

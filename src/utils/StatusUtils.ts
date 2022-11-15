@@ -7,10 +7,10 @@ import { Inventory } from "../models/Inventory";
 import { ObjectProps } from "../models/ObjectProps";
 import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
-import { findNearestStorage, findNearestTree, getDistance, getDistanceToHitBox, moveVillagerToPosition, reachedGoalPosition } from "./MovementUtils";
+import { findNearestStorage, findNearestTree, getDistance, getDistanceToHitBox, moveVillagerToPosition } from "./MovementUtils";
 
 export function doWoodcutting(villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>], buildings: BuildingProps[], mapObjects: ObjectProps[], objectHitbox: Hitbox) {
-    if (villager.status === Status.IDLE) {
+    if (villager.status === Status.IDLE || villager.status === Status.WALKING) {
         villager = handleIdle(villager, buildings, mapObjects, objectHitbox);
     }
     switch (villager.status) {
@@ -40,7 +40,7 @@ export function doWoodcutting(villager: VillagerProps, invent: [inventory: Inven
         case Status.RETURNING_RESOURCES:
             if (villager.goalPosition) {
                 let movedVillager = moveVillagerToPosition(villager, villager.goalPosition);
-                if (movedVillager.goalPosition && reachedGoalPosition(movedVillager.position, movedVillager.goalPosition)) {
+                if (movedVillager.goalPosition && onGoal(movedVillager.hitBox, movedVillager.goalPosition)) {
                     movedVillager.status = Status.IDLE;
                     return movedVillager;
                 }
@@ -74,20 +74,6 @@ function inventoryIsFull(villager: VillagerProps): boolean {
     }
     return false;
 }
-
-// function onTree(villager: VillagerProps, treeLocations: ObjectProps[]): boolean {
-//     for (let tree of treeLocations) {
-//         if (isOnHitBox(villager.hitBox, tree.hitBox)) {
-//             return true;
-//         }
-//     }
-
-
-//     let distanceToNearestTree = getDistance(villager.position, findNearestTree(villager.position, treeLocations).position);
-//     if (distanceToNearestTree && distanceToNearestTree < 25) return true;
-//     return false;
-// }
-
 function getStorageOnPosition(storages: BuildingProps[], goalPosition: Position | undefined) {
     if (!goalPosition) return undefined;
     let storage = storages.find(x => onGoal(x.hitBox, goalPosition));
@@ -101,11 +87,14 @@ function isOnHitBox(hitBox1: Hitbox, hitbox2: Hitbox): boolean {
 }
 
 export function getHitBoxCenter(hitbox: Hitbox): Position {
-    return { x: hitbox.rightBottom.x - (hitbox.rightBottom.x - hitbox.leftTop.x), y: hitbox.rightBottom.y - (hitbox.rightBottom.y - hitbox.leftTop.y) };
+    return {
+        x: hitbox.rightBottom.x - ((hitbox.rightBottom.x - hitbox.leftTop.x) / 2),
+        y: hitbox.rightBottom.y - ((hitbox.rightBottom.y - hitbox.leftTop.y) /2)
+    };
 }
 
 export function onGoal(hitbox: Hitbox, goalPosition?: Position) {
-    if(!goalPosition) return false;
+    if (!goalPosition) return false;
     if ((goalPosition.x > hitbox.leftTop.x && goalPosition.x < hitbox.rightBottom.x) && (goalPosition.y > hitbox.leftTop.y && goalPosition.y < hitbox.rightBottom.y)) return true;
     return false;
 }
@@ -118,7 +107,7 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
         }
         else {
             villager.status = Status.RETURNING_RESOURCES;
-            villager.goalPosition = findNearestStorage(villager.position, buildings);
+            villager.goalPosition = findNearestStorage(getHitBoxCenter(villager.hitBox), buildings);
         }
     }
     else {
@@ -136,7 +125,7 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
         else {
             // geen target
             villager.status = Status.WALKING_TO_TREE;
-            villager.goalPosition = findNearestTree(villager.position, mapObjects).position;
+            villager.goalPosition = findNearestTree(getHitBoxCenter(villager.hitBox), mapObjects).position;
         }
     }
     return villager;
@@ -146,7 +135,9 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
 export function moveToLocation(villager: VillagerProps, goalPosition: Position): VillagerProps {
     let newVillager = moveVillagerToPosition(villager, goalPosition);
     newVillager.status = Status.WALKING;
+    console.log(newVillager);
     if (onGoal(newVillager.hitBox, goalPosition)) {
+        console.log(getHitBoxCenter(newVillager.hitBox));
         villager.status = Status.IDLE;
         villager.currentTask = undefined;
     }

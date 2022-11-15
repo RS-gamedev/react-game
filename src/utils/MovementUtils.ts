@@ -30,21 +30,22 @@ export function getDistanceToHitBox(startPosition: Position, goalHitbox: Hitbox)
 export function getNewPosition(startPosition: Hitbox, goalPosition: Position): Hitbox{
     let newPosition: Hitbox = {...startPosition};
     let center = getHitBoxCenter(newPosition);
-    if(onGoal(newPosition, goalPosition)) return newPosition;
-    if (goalPosition.x - center.x > 10) {
+    console.log(newPosition);
+    console.log(goalPosition);
+    if (goalPosition.x - center.x >= 10) {
         newPosition.leftTop.x += 10;
         newPosition.rightBottom.x += 10;
     }
-    else if (goalPosition.x - center.x < 10) {
+    else if (goalPosition.x - center.x <= 10) {
         newPosition.leftTop.x -= 10;
         newPosition.rightBottom.x -= 10;
     }
 
-    if (goalPosition.y - center.y > 10) {
+    if (goalPosition.y - center.y >= 10) {
         newPosition.leftTop.y += 10;
         newPosition.rightBottom.y += 10;
     }
-    else if (goalPosition.y - center.y < 10) {
+    else if (goalPosition.y - center.y <= 10) {
         newPosition.leftTop.y -= 10;
         newPosition.rightBottom.y -= 10;
     }
@@ -88,11 +89,4 @@ export function findNearestStorage(position: Position, storages: BuildingProps[]
         }
     }
     return (closest) ? closest.position : {x: 0, y: 0};
-}
-
-
-export function reachedGoalPosition(position: Position, goalPosition: Position) {
-    let actualDistance = getDistance(position, goalPosition);
-    if (actualDistance < 30) return true;
-    return false;
 }

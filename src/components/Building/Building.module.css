@@ -1,11 +1,16 @@
-.active{
+.building{
+    border:1px solid transparent;
     border-radius: 10px;
-    border: 2px solid #80bd9f;
+    transition: border-color 300ms;
+}
+
+.active{
+    border-color: #80bd9f;
 }
 
 .building svg{
     height:0.5em!important;
 }
 .not-active{
-    
+    border-color: transparent;
 }

@@ -7,6 +7,7 @@ import { InventoryItem } from '../../models/InventoryItem';
 import { ObjectProps } from '../../models/ObjectProps';
 import { Position } from '../../models/Position';
 import { VillagerProps } from '../../models/VillagerProps';
+import { getHitBoxCenter } from '../../utils/StatusUtils';
 import Button from '../Button/Button';
 import ResourceItem from '../Resources/ResourceItem/ResourceItem';
 import styles from './UpgradeMenu.module.css';
@@ -22,18 +23,19 @@ type Props = {
 const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock}: Props) => {
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
     const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
+
     useEffect(() => {
         if (selectedBuilding) {
             setBuildingOptions(selectedBuilding.buildingOptions);
-            setPosition(selectedBuilding.position);
+            setPosition(getHitBoxCenter(selectedBuilding.hitBox));
         }
         if (selectedVillager) {
             setBuildingOptions(selectedVillager.buildingOptions);
-            setPosition(selectedVillager.position);
+            setPosition(getHitBoxCenter(selectedVillager.hitBox));
         }
         if (selectedMapObject) {
             setBuildingOptions(selectedMapObject.buildingOptions);
-            setPosition(selectedMapObject.position);
+            setPosition(getHitBoxCenter(selectedMapObject.hitBox));
         }
     }, []);
 

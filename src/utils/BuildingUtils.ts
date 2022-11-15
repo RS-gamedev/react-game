@@ -22,10 +22,7 @@ function constructBuilding(position: { x: number, y: number }, shape: Shape, bui
         icon: shape.icon,
         position: position,
         price: shape.price,
-        size: {
-            height: '3em',
-            width: '3em',
-        },
+        size: shape.size,
         type: shape.type,
         buildingOptions: buildingOptions,
         hitBox: hitbox

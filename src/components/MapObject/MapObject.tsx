@@ -16,7 +16,6 @@ type props = {
 }
 
 const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClick }: props) => {
-
   const [image, setImage] = useState("");
   const [showTaskAssigned, setShowTaskAssigned] = useState<boolean>(false);
 

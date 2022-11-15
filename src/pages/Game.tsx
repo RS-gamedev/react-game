@@ -38,17 +38,24 @@ const Game = (map: any) => {
     useInterval(() => {
         // GAME LOOP
         let villagersCopy: VillagerProps[] | undefined = [...villagers];
+        let somethingChanged: boolean = false;
+
         let newVillagers = villagersCopy.map(villager => {
             if (villager.currentTask) {
+                somethingChanged = true;
                 return villager.currentTask(villager, [inventory, setInventory], buildings, mapObjects);
             }
             return villager;
         });
-        if (newVillagers.length > 0) {
+        if (somethingChanged) {
             // SAVE
-            setVillagers((prev) => villagersCopy!);
+            setVillagers((prev) => newVillagers!);
         }
     }, 50);
+
+    useEffect(() => {
+        console.log(villagers);
+    }, [villagers]);
 
     useEffect(() => {
         setInventory(setInitialInventory()!);
