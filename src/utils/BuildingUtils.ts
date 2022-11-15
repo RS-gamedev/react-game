@@ -8,8 +8,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { BuildingType } from "../models/enums/BuildingType";
 import { BuildingOption } from "../models/BuildingOption";
 import { trainVillager } from "./BuildingOptionsUtil";
+import { Position } from "../models/Position";
+import { Hitbox } from "../models/Hitbox";
 
 function constructBuilding(position: { x: number, y: number }, shape: Shape, buildingOptions: BuildingOption[]) {
+    let hitbox = createHitbox(position);
     let house: BuildingProps = {
         id: uuidv4(),
         selected: false,
@@ -24,15 +27,13 @@ function constructBuilding(position: { x: number, y: number }, shape: Shape, bui
             width: '3em',
         },
         type: shape.type,
-        buildingOptions: buildingOptions
+        buildingOptions: buildingOptions,
+        hitBox: hitbox
     }
     return house;
 }
 
 export function createBuilding(position: { x: number, y: number }, type: BuildingType) {
-    let gems = resources.find(x => x.name === 'Gems');
-    let coins = resources.find(x => x.name === 'Coins');
-    let wood = resources.find(x => x.name === 'Wood');
     let shape: Shape | undefined;
     switch (type) {
         case BuildingType.HOUSE:
@@ -63,18 +64,18 @@ export function getStorageBuildings(buildings: BuildingProps[]) {
     return buildings.filter(x => x.type === BuildingType.STORAGE || x.type === BuildingType.TENTS || x.type === BuildingType.TOWN_CENTER);
 }
 
-
-// export function getBuildingOptions(building: BuildingProps): BuildingOption[]{      
-//     switch (building.type) {
-//         case BuildingType.TOWN_CENTER:
-//             let wood = resources.find(x => x.name === 'Wood');
-//             return [{icon: ['fas', 'house'], name: 'villager', price: [{amount: 100, type: wood}], toExecute: trainVillager}]
-//         default:
-//             break;
-//     }
-//     return [];
-// }
-
+function createHitbox(position: Position): Hitbox {
+    return {
+        leftTop: {
+            x: position.x - 25,
+            y: position.y - 25
+        },
+        rightBottom: {
+            x: position.x + 25,
+            y: position.y + 25
+        }
+    }
+}
 
 export function setSelectedBuilding(buildings: BuildingProps[], toSelectId: string) {
     let buildingsCopy = [...buildings];
@@ -84,8 +85,4 @@ export function setSelectedBuilding(buildings: BuildingProps[], toSelectId: stri
     }
     buildingsCopy.filter(x => x.id !== toSelectId).forEach(x => x.selected = false);
     return buildingsCopy;
-}
-
-export function deselectAllBuildings() {
-
 }

@@ -6,8 +6,9 @@ import { Inventory } from "../models/Inventory";
 import { ObjectProps } from "../models/ObjectProps";
 import { v4 as uuidv4 } from 'uuid';
 import { createBuilding } from "./BuildingUtils";
+import { Hitbox } from "../models/Hitbox";
 
-export function setInitialInventory(){
+export function setInitialInventory() {
     let wood = resources.find(x => x.name === 'Wood');
     let coins = resources.find(x => x.name === 'Coins');
     let gems = resources.find(x => x.name === 'Gems');
@@ -31,11 +32,11 @@ export function setInitialInventory(){
     return inventoryInit;
 }
 
-export function setInitialBuildings(){
+export function setInitialBuildings() {
     let townCenter = shapes.find(x => x.type === BuildingType.TOWN_CENTER);
     if (townCenter) {
-        
-        let initialBuildings: BuildingProps[] = [createBuilding({x: 500, y: 300}, BuildingType.TOWN_CENTER)!];
+
+        let initialBuildings: BuildingProps[] = [createBuilding({ x: 500, y: 300 }, BuildingType.TOWN_CENTER)!];
         if (initialBuildings) {
             return initialBuildings
         }
@@ -43,7 +44,14 @@ export function setInitialBuildings(){
     return [];
 }
 
-export function setInitialMapObjects(map: any){
-    let initialMapObjects: ObjectProps[] = map.map.map((x: any) => { return { id: uuidv4(), name: x.name, position: x.position, selected: false } });
+export function setInitialMapObjects(map: any) : ObjectProps[] {
+    let initialMapObjects: ObjectProps[] = map.map.map((mapObject: any) => {
+        let hitBox: Hitbox = {
+            leftTop: { x: mapObject.position.x - (mapObject.size / 2), y: mapObject.position.y - (mapObject.size / 2) },
+            rightBottom: { x: mapObject.position.x + (mapObject.size / 2), y: mapObject.position.y + (mapObject.size / 2) }
+        }
+        return { id: uuidv4(), name: mapObject.name, position: mapObject.position, selected: false, hitBox: hitBox }
+    });
     return initialMapObjects;
 }
+

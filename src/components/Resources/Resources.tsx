@@ -9,7 +9,7 @@ type Props = {
 }
 
  const Resources = React.memo(({ inventory }: Props) => {
-    console.log("render");
+    console.log("resource render");
 
     return (
         <div className={styles.resources}>

@@ -6,6 +6,7 @@ import { VillagerType } from "../models/enums/VillagerType";
 
 
 export function trainVillager(position: Position){
+    let size = 50;
     let newVillager: VillagerProps = {
         selected: false,
         currentTask: undefined,
@@ -16,7 +17,18 @@ export function trainVillager(position: Position){
         position: position,
         status: Status.IDLE,
         type: VillagerType.LUMBERJACK,
-        buildingOptions: []
+        buildingOptions: [],
+        size: size,
+        hitBox: {
+            leftTop: {
+                x: position.x - (size / 2),
+                y: position.y - (size / 2)
+            },
+            rightBottom: {
+                x: position.x + (size / 2),
+                y: position.y + (size / 2)
+            }
+        }
     } 
     return newVillager;
 }

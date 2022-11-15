@@ -19,6 +19,8 @@ import { doWoodcutting, moveToLocation } from '../utils/StatusUtils';
 import { findNearestTree, getDistance } from '../utils/MovementUtils';
 import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from '../utils/GameUtils';
 import { VillagerType } from '../models/enums/VillagerType';
+import { Position } from '../models/Position';
+import { Hitbox } from '../models/Hitbox';
 
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
@@ -36,7 +38,7 @@ const Game = (map: any) => {
     useInterval(() => {
         // GAME LOOP
         let villagersCopy: VillagerProps[] | undefined = [...villagers];
-        let newVillagers = villagersCopy.filter(x => x.currentTask !== undefined).map(villager => {
+        let newVillagers = villagersCopy.map(villager => {
             if (villager.currentTask) {
                 return villager.currentTask(villager, [inventory, setInventory], buildings, mapObjects);
             }
@@ -48,14 +50,10 @@ const Game = (map: any) => {
         }
     }, 50);
 
-    // useEffect(() => {
-    //     console.log(villagers);
-    // }, [villagers])
-
     useEffect(() => {
         setInventory(setInitialInventory()!);
         setBuildings(setInitialBuildings()!);
-        setMapObjects(setInitialMapObjects(map)!);
+        setMapObjects((prev) => setInitialMapObjects(map));
     }, [map]);
 
     function addBuilding(building?: BuildingProps) {
@@ -146,15 +144,14 @@ const Game = (map: any) => {
         let villagersCopy = [...villagers];
         event.preventDefault();
         if (selectedVillager) {
-            let nearestTreeToClick = findNearestTree({ x: event.clientX, y: event.clientY }, mapObjects.filter(x => x.name === 'tree'));
-            let distanceToClosestTreeFromClickPosition = getDistance({ x: event.clientX, y: event.clientY }, nearestTreeToClick.position);
-            console.log(distanceToClosestTreeFromClickPosition);
-            if (distanceToClosestTreeFromClickPosition < 25) {
-                selectedVillager.currentTask = (villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>]) => doWoodcutting(villager, invent, buildings, mapObjects, nearestTreeToClick.position);
-            }
-            else {
+            // let nearestTreeToClick = findNearestTree({ x: event.clientX, y: event.clientY }, mapObjects.filter(x => x.name === 'tree'));
+            // let distanceToClosestTreeFromClickPosition = getDistance({ x: event.clientX, y: event.clientY }, nearestTreeToClick.position);
+            // if (distanceToClosestTreeFromClickPosition < 25) {
+            //     selectedVillager.currentTask = (villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>]) => doWoodcutting(villager, invent, buildings, mapObjects, nearestTreeToClick.position);
+            // }
+            // else {
                 selectedVillager.currentTask = (villager: VillagerProps) => moveToLocation(villager, { x: event.clientX, y: event.clientY })
-            }
+            // }
         }
         setVillagers(villagersCopy);
     }
@@ -165,6 +162,23 @@ const Game = (map: any) => {
         }
         return entity;
     }
+
+    function handleVillagerRightClick(){
+
+    }
+
+    const handleMapObjectRightClick = useCallback((event: any, objectHitbox: Hitbox) => {
+        event.stopPropagation();
+        event.preventDefault();
+        if(selectedVillager){
+            selectedVillager.currentTask = (villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>]) => doWoodcutting(villager, invent, buildings, mapObjects, objectHitbox);
+        }
+
+    }, [selectedVillager])
+
+    const handleBuildingRightClick = useCallback((event: any) => {
+        console.log(selectedBuilding);
+    }, [selectedBuilding])
 
 
     return (
@@ -182,13 +196,13 @@ const Game = (map: any) => {
 
             {(buildings) ? buildings?.map((building, index) => {
                 if (building) {
-                    return <Building key={building.id} {...building} onClick={deselectAllBut}></Building>
+                    return <Building key={building.id} {...building} onClick={deselectAllBut} onRightClick={handleBuildingRightClick}></Building>
                 }
             }) : <></>
             }
             {(mapObjects) ? mapObjects?.map((mapObject, index) => {
                 if (mapObject) {
-                    return <MapObject key={mapObject.id} {...mapObject} onClick={deselectAllBut}></MapObject>
+                    return <MapObject key={mapObject.id} {...mapObject} onClick={deselectAllBut} onRightClick={handleMapObjectRightClick}></MapObject>
                 }
             }) : <></>
             }

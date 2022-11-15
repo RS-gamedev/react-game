@@ -2,22 +2,22 @@ import { resources } from "../config/Resources";
 import { BuildingProps } from "../models/BuildingProps";
 import { BuildingType } from "../models/enums/BuildingType";
 import { Status } from "../models/enums/Status";
+import { Hitbox } from "../models/Hitbox";
 import { Inventory } from "../models/Inventory";
 import { ObjectProps } from "../models/ObjectProps";
 import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
-import { getStorageBuildings } from "./BuildingUtils";
-import { findNearestStorage, findNearestTree, getDistance, moveVillagerToPosition, reachedGoalPosition } from "./MovementUtils";
+import { findNearestStorage, findNearestTree, getDistance, getDistanceToHitBox, moveVillagerToPosition, reachedGoalPosition } from "./MovementUtils";
 
-export function doWoodcutting(villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>], buildings: BuildingProps[], mapObjects: ObjectProps[], location: Position) {
+export function doWoodcutting(villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>], buildings: BuildingProps[], mapObjects: ObjectProps[], objectHitbox: Hitbox) {
     if (villager.status === Status.IDLE) {
-        villager = handleIdle(villager, buildings, mapObjects, location);
+        villager = handleIdle(villager, buildings, mapObjects, objectHitbox);
     }
     switch (villager.status) {
         case Status.WALKING_TO_TREE:
             if (villager.goalPosition) {
                 let movedVillager = moveVillagerToPosition(villager, villager.goalPosition);
-                if (movedVillager.goalPosition && reachedGoalPosition(movedVillager.position, movedVillager.goalPosition)) {
+                if (movedVillager.goalPosition && onGoal(movedVillager.hitBox, movedVillager.goalPosition)) {
                     movedVillager.status = Status.IDLE;
                     return movedVillager;
                 }
@@ -50,7 +50,7 @@ export function doWoodcutting(villager: VillagerProps, invent: [inventory: Inven
         case Status.DROPPING_RESOURCES:
             villager.inventoryItems.forEach(invItem => {
                 if (invent && invent[0].resources) {
-                    let inventoryCopy = {...invent[0]};
+                    let inventoryCopy = { ...invent[0] };
                     let invCopyItemsCopy = [...inventoryCopy.resources];
                     let inventoryResource = invCopyItemsCopy.find(x => x.resource.name == invItem.resource.name);
                     if (inventoryResource) {
@@ -75,21 +75,45 @@ function inventoryIsFull(villager: VillagerProps): boolean {
     return false;
 }
 
-function onTree(villager: VillagerProps, treeLocations: ObjectProps[]): boolean {
-    let distanceToNearestTree = getDistance(villager.position, findNearestTree(villager.position, treeLocations).position);
-    if (distanceToNearestTree && distanceToNearestTree < 25) return true;
-    return false;
+// function onTree(villager: VillagerProps, treeLocations: ObjectProps[]): boolean {
+//     for (let tree of treeLocations) {
+//         if (isOnHitBox(villager.hitBox, tree.hitBox)) {
+//             return true;
+//         }
+//     }
+
+
+//     let distanceToNearestTree = getDistance(villager.position, findNearestTree(villager.position, treeLocations).position);
+//     if (distanceToNearestTree && distanceToNearestTree < 25) return true;
+//     return false;
+// }
+
+function getStorageOnPosition(storages: BuildingProps[], goalPosition: Position | undefined) {
+    if (!goalPosition) return undefined;
+    let storage = storages.find(x => onGoal(x.hitBox, goalPosition));
+    return storage;
 }
-function onStorage(villager: VillagerProps, storageLocations: BuildingProps[]) {
-    let distanceToNearestStorage = getDistance(villager.position, findNearestStorage(villager.position, storageLocations));
-    if (distanceToNearestStorage && distanceToNearestStorage < 25) return true;
+
+function isOnHitBox(hitBox1: Hitbox, hitbox2: Hitbox): boolean {
+    let hitboxCenterPoint: Position = getHitBoxCenter(hitBox1);
+    if ((hitboxCenterPoint.x > hitbox2.leftTop.x && hitboxCenterPoint.x < hitbox2.rightBottom.x) && (hitboxCenterPoint.y > hitbox2.leftTop.y && hitboxCenterPoint.y < hitbox2.rightBottom.y)) return true;
     return false;
 }
 
-function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObjects: ObjectProps[], location: Position) {
+export function getHitBoxCenter(hitbox: Hitbox): Position {
+    return { x: hitbox.rightBottom.x - (hitbox.rightBottom.x - hitbox.leftTop.x), y: hitbox.rightBottom.y - (hitbox.rightBottom.y - hitbox.leftTop.y) };
+}
+
+export function onGoal(hitbox: Hitbox, goalPosition?: Position) {
+    if(!goalPosition) return false;
+    if ((goalPosition.x > hitbox.leftTop.x && goalPosition.x < hitbox.rightBottom.x) && (goalPosition.y > hitbox.leftTop.y && goalPosition.y < hitbox.rightBottom.y)) return true;
+    return false;
+}
+
+function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObjects: ObjectProps[], objectHitbox: Hitbox) {
     if (inventoryIsFull(villager)) {
         //Inventory vol
-        if (onStorage(villager, buildings.filter(x => x.type === BuildingType.TENTS || x.type === BuildingType.TOWN_CENTER || x.type === BuildingType.STORAGE))) {
+        if (onGoal(villager.hitBox, getStorageOnPosition(buildings.filter(x => x.type === BuildingType.TOWN_CENTER), villager.goalPosition)?.position)) {
             villager.status = Status.DROPPING_RESOURCES;
         }
         else {
@@ -98,18 +122,21 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
         }
     }
     else {
-        // Inventory leegfconso
-        if (onTree(villager, mapObjects.filter(x => x.name === 'tree'))) {
-            villager.status = Status.CUTTING_TREE;
+        // Inventory leeg
+        if (objectHitbox) {
+            // Target is set
+            if (onGoal(villager.hitBox, getHitBoxCenter(objectHitbox))) {
+                villager.status = Status.CUTTING_TREE;
+            }
+            else {
+                villager.goalPosition = getHitBoxCenter(objectHitbox);
+                villager.status = Status.WALKING_TO_TREE;
+            }
         }
         else {
+            // geen target
             villager.status = Status.WALKING_TO_TREE;
-            if(location){
-                villager.goalPosition = location;
-            }
-            else{
-                villager.goalPosition = findNearestTree(villager.position, mapObjects).position;
-            }
+            villager.goalPosition = findNearestTree(villager.position, mapObjects).position;
         }
     }
     return villager;
@@ -119,7 +146,7 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
 export function moveToLocation(villager: VillagerProps, goalPosition: Position): VillagerProps {
     let newVillager = moveVillagerToPosition(villager, goalPosition);
     newVillager.status = Status.WALKING;
-    if (reachedGoalPosition(newVillager.position, goalPosition)) {
+    if (onGoal(newVillager.hitBox, goalPosition)) {
         villager.status = Status.IDLE;
         villager.currentTask = undefined;
     }

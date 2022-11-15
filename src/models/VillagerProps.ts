@@ -2,6 +2,7 @@ import { BuildingOption } from "./BuildingOption";
 import { BuildingProps } from "./BuildingProps";
 import { Status } from "./enums/Status"
 import { VillagerType } from "./enums/VillagerType";
+import { Hitbox } from "./Hitbox";
 import { Inventory } from "./Inventory";
 import { InventoryItem } from "./InventoryItem";
 import { ObjectProps } from "./ObjectProps";
@@ -22,5 +23,7 @@ export type VillagerProps = {
     selected: boolean;
     currentTask?: (villager: VillagerProps, invent: [inventory: Inventory, setInventory: any], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition?: Position) => VillagerProps;
     buildingOptions: BuildingOption[];
+    hitBox: Hitbox;
+    size: number;
     // nextAction?: any
 }

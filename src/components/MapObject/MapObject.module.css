@@ -2,7 +2,12 @@
     height: 50px;
     width:50px;
     position: absolute;
-
+    border:1px solid transparent;
+    border-radius: 10px;
+}
+.taskAssignedAfter{
+    transition: border-color 300ms;
+    border-color: transparent;
 }
 
 .selected{
@@ -11,5 +16,10 @@
 }
 
 .nothing{
-
 }
+
+.taskAssigned{
+    border-color: #80bd9f;
+    transition: border-color 300ms;
+}
+

@@ -20,8 +20,6 @@ type Props = {
 }
 
 const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock}: Props) => {
-    
-    console.log("rendering upgrademenu");
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
     const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
     useEffect(() => {
@@ -38,20 +36,6 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             setPosition(selectedMapObject.position);
         }
     }, []);
-
-    useEffect(() => {
-        console.log(inStock);
-    }, [inStock]);
-    useEffect(() => {
-        console.log(selectedVillager);
-    }, [selectedVillager]);
-    useEffect(() => {
-        console.log(selectedBuilding);
-    }, [selectedBuilding]);
-
-    useEffect(() => {
-        console.log(selectedMapObject);
-    }, [selectedMapObject]);
 
     const executeBuildingOption = (buildingOption: BuildingOption, type: string) => {
         if (type == 'train') {

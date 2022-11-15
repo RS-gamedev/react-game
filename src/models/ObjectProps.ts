@@ -1,4 +1,5 @@
 import { BuildingOption } from "./BuildingOption"
+import { Hitbox } from "./Hitbox";
 
 export type ObjectProps = {
     id: string,
@@ -9,5 +10,5 @@ export type ObjectProps = {
     name: string,
     selected: boolean;
     buildingOptions: BuildingOption[];
-    
+    hitBox: Hitbox
 }

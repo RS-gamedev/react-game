@@ -1,6 +1,4 @@
 import { VillagerProps } from "../models/VillagerProps";
-import { deselectAllBuildings } from "./BuildingUtils";
-import { deselectAllMapObjects } from "./MapObjectUtils";
 
 export function setSelectedVillager(villagers: VillagerProps[], toSelect: VillagerProps) {
     let villagersCopy = [...villagers];
