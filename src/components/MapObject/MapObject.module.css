@@ -4,14 +4,20 @@
     position: absolute;
     border:1px solid transparent;
     border-radius: 10px;
-}
-.taskAssignedAfter{
+    padding:5px;
     transition: border-color 300ms;
+}
+
+.mapObject:hover{
+    border-color:#80bd9e36;
+}
+
+.taskAssignedAfter{
     border-color: transparent;
 }
 
 .selected{
-    border-color:#80bd9f;
+    border-color:#80bd9f!important;
     border-radius: 10px;
 }
 
@@ -19,7 +25,6 @@
 }
 
 .taskAssigned{
-    border-color: #80bd9f;
-    transition: border-color 300ms;
+    border-color: #80bd9f!important;
 }
 

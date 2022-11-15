@@ -29,7 +29,7 @@ export const shapes: Shape[] = [
             { type: resources.find(x => x.name === "Coins"), amount: 50 }
         ],
         type: BuildingType.TOWN_CENTER,
-        size: {width:'50px', height:'50px'}
+        size: {width:'75px', height:'75px'}
     },
     {
         id: uuidv4(),

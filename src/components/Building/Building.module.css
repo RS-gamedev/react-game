@@ -5,8 +5,12 @@
     padding:5px;
 }
 
+.building:hover{
+    border-color:#80bd9e36;
+}
+
 .active{
-    border-color: #80bd9f;
+    border-color: #80bd9f!important;
 }
 
 .building svg{

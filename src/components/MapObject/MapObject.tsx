@@ -35,7 +35,7 @@ const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClic
     <>
       {(hitBox) ?
         <div className={styles.mapObject + " " + `${(selected) ? styles.selected : styles.nothing} ` + ((showTaskAssigned) ? styles.taskAssigned : styles.taskAssignedAfter)} style={{ left: hitBox.leftTop.x, top: hitBox.leftTop.y }} onClick={(event) => onClick(event, id)} onContextMenu={handleRightClick}>
-          <img alt={name} src={image}></img>
+          <img className='noselect' alt={name} src={image}></img>
         </div> : <></>}
     </>
   )
