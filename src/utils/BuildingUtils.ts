@@ -24,6 +24,7 @@ function constructBuilding(position: { x: number, y: number }, shape: Shape, bui
         price: shape.price,
         size: shape.size,
         type: shape.type,
+        image: shape.image,
         buildingOptions: buildingOptions,
         hitBox: hitbox
     }
@@ -36,19 +37,19 @@ export function createBuilding(position: { x: number, y: number }, type: Buildin
         case BuildingType.HOUSE:
             shape = shapes.find(x => x.type === BuildingType.HOUSE);
             if (!shape) return;
-            return constructBuilding(position, shape, []);
+            return constructBuilding({...position, x: position.x - (50 / 2), y: position.y - (50 / 2)}, shape, []);
         case BuildingType.TENTS:
             shape = shapes.find(x => x.type === BuildingType.TENTS);
             if (!shape) return;
-            return constructBuilding(position, shape, []);
+            return constructBuilding({...position, x: position.x - (50 / 2), y: position.y - (50 / 2)}, shape, []);
         case BuildingType.GUARD_TOWER:
             shape = shapes.find(x => x.type === BuildingType.GUARD_TOWER);
             if (!shape) return;
-            return constructBuilding(position, shape, []);
+            return constructBuilding({...position, x: position.x - (50 / 2), y: position.y - (50 / 2)}, shape, []);
         case BuildingType.TOWN_CENTER:
             shape = shapes.find(x => x.type === BuildingType.TOWN_CENTER);
             if (!shape) return;
-            return constructBuilding(position, shape, [
+            return constructBuilding({...position, x: position.x - (50 / 2), y: position.y - (50 / 2)}, shape, [
                 buildingOptions.find(x => x.name == 'Train Villager')!
             ]);
         default:

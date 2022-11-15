@@ -21,9 +21,9 @@ const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClic
 
   useEffect(() => {
     setImage(getImageUrl(name)!);
-  }, [name]);
+  }, []);
 
-  function handleRightClick(event: any){
+  function handleRightClick(event: any) {
     setShowTaskAssigned(() => true);
     setTimeout(() => {
       setShowTaskAssigned(() => false);
@@ -31,13 +31,13 @@ const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClic
     onRightClick(event, hitBox);
   }
 
-  if(hitBox){
-    return (
-      <div className={styles.mapObject + " " + `${(selected) ? styles.selected : styles.nothing} ` + ((showTaskAssigned) ? styles.taskAssigned : styles.taskAssignedAfter) } style={{ left: hitBox.leftTop.x, top: hitBox.leftTop.y }} onClick={(event) => onClick(event, id)} onContextMenu={handleRightClick}>
-        <img alt={name} src={image}></img>
-      </div>
-    )
-  }
-  return <></>
+  return (
+    <>
+      {(hitBox) ?
+        <div className={styles.mapObject + " " + `${(selected) ? styles.selected : styles.nothing} ` + ((showTaskAssigned) ? styles.taskAssigned : styles.taskAssignedAfter)} style={{ left: hitBox.leftTop.x, top: hitBox.leftTop.y }} onClick={(event) => onClick(event, id)} onContextMenu={handleRightClick}>
+          <img alt={name} src={image}></img>
+        </div> : <></>}
+    </>
+  )
 })
 export default MapObject;

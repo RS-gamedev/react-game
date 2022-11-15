@@ -135,9 +135,7 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
 export function moveToLocation(villager: VillagerProps, goalPosition: Position): VillagerProps {
     let newVillager = moveVillagerToPosition(villager, goalPosition);
     newVillager.status = Status.WALKING;
-    console.log(newVillager);
     if (onGoal(newVillager.hitBox, goalPosition)) {
-        console.log(getHitBoxCenter(newVillager.hitBox));
         villager.status = Status.IDLE;
         villager.currentTask = undefined;
     }

@@ -30,24 +30,22 @@ export function getDistanceToHitBox(startPosition: Position, goalHitbox: Hitbox)
 export function getNewPosition(startPosition: Hitbox, goalPosition: Position): Hitbox{
     let newPosition: Hitbox = {...startPosition};
     let center = getHitBoxCenter(newPosition);
-    console.log(newPosition);
-    console.log(goalPosition);
     if (goalPosition.x - center.x >= 10) {
-        newPosition.leftTop.x += 10;
-        newPosition.rightBottom.x += 10;
+        newPosition.leftTop.x += 8;
+        newPosition.rightBottom.x += 8;
     }
     else if (goalPosition.x - center.x <= 10) {
-        newPosition.leftTop.x -= 10;
-        newPosition.rightBottom.x -= 10;
+        newPosition.leftTop.x -= 8;
+        newPosition.rightBottom.x -= 8;
     }
 
     if (goalPosition.y - center.y >= 10) {
-        newPosition.leftTop.y += 10;
-        newPosition.rightBottom.y += 10;
+        newPosition.leftTop.y += 8;
+        newPosition.rightBottom.y += 8;
     }
     else if (goalPosition.y - center.y <= 10) {
-        newPosition.leftTop.y -= 10;
-        newPosition.rightBottom.y -= 10;
+        newPosition.leftTop.y -= 8;
+        newPosition.rightBottom.y -= 8;
     }
     return newPosition;
 }

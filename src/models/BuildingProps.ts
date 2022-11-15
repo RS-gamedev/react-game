@@ -22,5 +22,6 @@ export type BuildingProps = {
     type: BuildingType,
     selected: boolean,
     buildingOptions: BuildingOption[];
-    hitBox: Hitbox
+    hitBox: Hitbox,
+    image: string
 }

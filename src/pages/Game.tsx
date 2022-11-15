@@ -54,10 +54,6 @@ const Game = (map: any) => {
     }, 50);
 
     useEffect(() => {
-        console.log(villagers);
-    }, [villagers]);
-
-    useEffect(() => {
         setInventory(setInitialInventory()!);
         setBuildings(setInitialBuildings()!);
         setMapObjects((prev) => setInitialMapObjects(map));

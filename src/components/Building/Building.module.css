@@ -2,6 +2,7 @@
     border:1px solid transparent;
     border-radius: 10px;
     transition: border-color 300ms;
+    padding:5px;
 }
 
 .active{

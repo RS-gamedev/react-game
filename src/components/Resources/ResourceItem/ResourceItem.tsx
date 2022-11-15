@@ -15,8 +15,7 @@ export default function ResourceItem({resource, amount, iconSize, textSize, text
   return (
     <div className={styles.resourceItem}>
         <Icon color={resource.color} fontSize={iconSize} name={resource.icon}></Icon>
-        <span style={{fontSize: textSize, fontWeight:'600', color: textColor}}>{amount}</span>
+        <span style={{fontSize: textSize, fontWeight:'600', color: textColor}}>{Math.round(amount)}</span>
     </div>
-
   )
 }
