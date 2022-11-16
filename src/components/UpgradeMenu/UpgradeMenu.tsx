@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BuildingOption } from '../../models/BuildingOption';
 import { BuildingProps } from '../../models/BuildingProps';
 import { Status } from '../../models/enums/Status';
@@ -7,7 +7,7 @@ import { InventoryItem } from '../../models/InventoryItem';
 import { ObjectProps } from '../../models/ObjectProps';
 import { Position } from '../../models/Position';
 import { VillagerProps } from '../../models/VillagerProps';
-import { getHitBoxCenter } from '../../utils/StatusUtils';
+import { getHitBoxCenter } from '../../utils/HitboxUtils';
 import Button from '../Button/Button';
 import ResourceItem from '../Resources/ResourceItem/ResourceItem';
 import styles from './UpgradeMenu.module.css';
@@ -41,7 +41,6 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
 
     const executeBuildingOption = (buildingOption: BuildingOption, type: string) => {
         if (type == 'train') {
-            console.log(buildingOption);
             let entity = buildingOption.toExecute(position);
             onTrain(entity, buildingOption.type!);
         }
@@ -93,6 +92,13 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
                 </div>
             </div>
             <div className={styles.buildingOptionsSection}>
+            <span>{selectedMapObject.id}</span>
+
+            </div>
+            <div className={styles.inventorySection}>
+            {(inStock) ? inStock.map(x => {
+                    return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff'></ResourceItem>
+                }): <></>}
             </div>
         </div>
     }

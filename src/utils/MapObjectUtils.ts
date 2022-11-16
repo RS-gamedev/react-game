@@ -1,4 +1,8 @@
+import { BuildingProps } from "../models/BuildingProps";
 import { ObjectProps } from "../models/ObjectProps";
+import { Position } from "../models/Position";
+import { onGoal } from "./HitboxUtils";
+import { getDistance } from "./MovementUtils";
 
 export function setSelectedMapObject(mapObjects: ObjectProps[], toSelect: ObjectProps){
     let mapObjectsCopy = [...mapObjects];
@@ -14,4 +18,24 @@ export function deselectAllMapObjects(mapObjects: ObjectProps[]){
     let mapObjectsCopy = [...mapObjects];
     mapObjectsCopy.forEach(x => x.selected = false);
     return mapObjectsCopy;
+}
+
+export function getStorageOnPosition(storages: BuildingProps[], goalPosition: Position | undefined) {
+    if (!goalPosition) return undefined;
+    let storage = storages.find(x => onGoal(x.hitBox, goalPosition));
+    return storage;
+}
+
+
+export function findNearestTree(position: Position, trees: ObjectProps[]) {
+    let closest: ObjectProps = trees[0];
+    let lowestDistance = 10000;
+    for (let tree of trees) {
+        let distance = getDistance({x: position.x, y: position.y}, {x: tree.position.x + 25, y: tree.position.y + 25});
+        if (distance < lowestDistance) {
+            closest = tree;
+            lowestDistance = distance;
+        }
+    }
+    return closest;
 }

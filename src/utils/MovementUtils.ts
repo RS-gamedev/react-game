@@ -1,11 +1,13 @@
 import { BuildingProps } from "../models/BuildingProps";
 import { Direction } from "../models/Direction";
 import { Status } from "../models/enums/Status";
+import { GameTickResult } from "../models/GameTickResult";
 import { Hitbox } from "../models/Hitbox";
 import { ObjectProps } from "../models/ObjectProps";
 import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
-import { getHitBoxCenter, onGoal } from "./StatusUtils";
+import { getHitBoxCenter, onGoal } from "./HitboxUtils";
+import { getEmptyGameTickResultObject } from "./StatusUtils";
 
 function getBestDirection(startPosition: { x: number, y: number }, goalPosition: { x: number, y: number }): Direction {
     let actualDistance = getDistance(startPosition, goalPosition);
@@ -55,21 +57,6 @@ export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Po
     return villager;
 }
 
-
-export function findNearestTree(position: Position, trees: ObjectProps[]) {
-    let closest: ObjectProps = trees[0];
-    let lowestDistance = 10000;
-    for (let tree of trees) {
-        let distance = getDistance({x: position.x, y: position.y}, {x: tree.position.x + 25, y: tree.position.y + 25});
-        if (distance < lowestDistance) {
-            closest = tree;
-            lowestDistance = distance;
-        }
-    }
-    return closest;
-}
-
-
 export function moveVillagerToNearestRock(villager: VillagerProps) {
     let goalPosition = { x: 800, y: 800 };
     // goalposition = nearest rock
@@ -87,4 +74,26 @@ export function findNearestStorage(position: Position, storages: BuildingProps[]
         }
     }
     return (closest) ? closest.position : {x: 0, y: 0};
+}
+
+export function doMoveToLocation(villagers: VillagerProps[], villagerId: string, goalPosition: Position): GameTickResult {
+    let villagersCopy = [...villagers];
+    let updatedVillager = villagersCopy.find( x=> x.id === villagerId);
+    let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
+
+    if(updatedVillager){
+        if (onGoal(updatedVillager.hitBox, goalPosition)) {
+            updatedVillager.status = Status.IDLE;
+            updatedVillager.currentTask = undefined;
+        }
+        else{
+            updatedVillager = {...moveVillagerToPosition(updatedVillager, goalPosition)};
+        }
+        let villagersResult = gameTickResult.newState.find(x => x.name === 'villagers');
+
+        if(!villagersResult) return gameTickResult;
+        villagersResult.changed = true;
+        villagersResult.stateObject = villagersCopy;
+    }
+    return gameTickResult;
 }

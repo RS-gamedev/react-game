@@ -1,6 +1,7 @@
 import { BuildingOption } from "./BuildingOption"
 import { VillagerType } from "./enums/VillagerType";
 import { Hitbox } from "./Hitbox";
+import { InventoryItem } from "./InventoryItem";
 
 export type ObjectProps = {
     id: string,
@@ -12,5 +13,6 @@ export type ObjectProps = {
     selected: boolean;
     buildingOptions: BuildingOption[];
     hitBox: Hitbox,
-    type: VillagerType
+    type: VillagerType,
+    inventory: InventoryItem[]
 }

@@ -15,10 +15,11 @@ import { VillagerProps } from '../models/VillagerProps';
 import Villager from '../components/Villager/Villager';
 import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
 import { reduceResourcesFromInventory, canAfford } from '../utils/ResourceUtils';
-import { doWoodcutting, moveToLocation } from '../utils/StatusUtils';
 import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from '../utils/GameUtils';
 import { VillagerType } from '../models/enums/VillagerType';
-import { Hitbox } from '../models/Hitbox';
+import { GameTickResult } from '../models/GameTickResult';
+import { doMoveToLocation } from '../utils/MovementUtils';
+import { doWoodcutting } from '../utils/villagerUtils/LumberjackUtils';
 
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
@@ -26,30 +27,54 @@ const Game = (map: any) => {
     const [mapObjects, setMapObjects] = useState<ObjectProps[]>([])
     const [allShapes, setAllShapes] = useState<Shape[]>(shapes);
     const [inventory, setInventory] = useState<Inventory>({ resources: [] });
+    const [gameTick, setGameTick] = useState(0);
 
     var selectedShape = allShapes.find(x => x.selected);
     var selectedBuilding = buildings.find(x => x.selected);
     var selectedVillager = villagers.find(x => x.selected);
     var selectedMapObject = mapObjects.find(x => x.selected);
 
+    useEffect(() => {
+        let villagersCopy: VillagerProps[] = [...villagers];
+        villagersCopy.forEach(villager => {
+            let gameTickResult: GameTickResult | undefined;
+            if(villager.currentTask === undefined) return;
+            gameTickResult = villager.currentTask(villagersCopy, villager.id, inventory, buildings, mapObjects);
+            gameTickResult?.newState.forEach(item => {
+                if(!item.changed) return;
+                switch (item.name) {
+                    case 'villagers':
+                        console.log("Setting new villagers");
+                        setVillagers(item.stateObject);
+                    break;
+                    case 'buildings':
+                        setBuildings(item.stateObject)
+                    break;
+                    case 'mapObjects':
+                        setMapObjects(item.stateObject)
+                    break;
+                    case 'inventory':
+                        setInventory(item.stateObject)
+    
+                    break;
+                        
+                    default:
+                        break;
+                }
+            })
+        });
+    }, [gameTick]);
+
 
     useInterval(() => {
         // GAME LOOP
-        let villagersCopy: VillagerProps[] | undefined = [...villagers];
-        let somethingChanged: boolean = false;
-
-        let newVillagers = villagersCopy.map(villager => {
-            if (villager.currentTask) {
-                somethingChanged = true;
-                return villager.currentTask(villager, [inventory, setInventory], buildings, mapObjects);
-            }
-            return villager;
-        });
-        if (somethingChanged) {
-            // SAVE
-            setVillagers((prev) => newVillagers!);
-        }
+        setGameTick((prev) => prev + 1);
     }, 50);
+
+
+    // useEffect(() => {
+    //     console.log(mapObjects);
+    // }, [mapObjects])
 
     useEffect(() => {
         setInventory(setInitialInventory()!);
@@ -71,7 +96,6 @@ const Game = (map: any) => {
     const trainVillager = (villager: VillagerProps) => {
         let villagersCopy = [...villagers];
         villagersCopy.push(villager);
-        console.log(villagersCopy);
         setVillagers((prev) => villagersCopy);
     }
 
@@ -83,7 +107,7 @@ const Game = (map: any) => {
         }
         shapesCopy.filter(x => x.id !== shape.id).forEach(x => x.selected = false);
         setAllShapes((prev) => shapesCopy);
-    }, [shapes]);
+    }, [allShapes]);
 
     // Deselect other, and select given
     const deselectAllBut = useCallback((event: any, toSelectId: string) => {
@@ -142,14 +166,15 @@ const Game = (map: any) => {
     }
 
     // Right click handler
-    function handleRightClick(event: any) {
+    const handleRightClick = useCallback((event: any) => {
         let villagersCopy = [...villagers];
+        // let _selectedVillager = 
         event.preventDefault();
         if (selectedVillager) {
-                selectedVillager.currentTask = (villager: VillagerProps) => moveToLocation(villager, { x: event.clientX, y: event.clientY })
+                selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doMoveToLocation(villagersCopy, selectedVillager!.id, { x: event.clientX, y: event.clientY })
         }
         setVillagers(villagersCopy);
-    }
+    }, [selectedVillager, villagers])
 
     const onTrain = (entity: any, type: VillagerType) => {
         if(type === VillagerType.VILLAGER){
@@ -162,17 +187,16 @@ const Game = (map: any) => {
 
     }
 
-    const handleMapObjectRightClick = useCallback((event: any, objectHitbox: Hitbox) => {
+    const handleMapObjectRightClick = useCallback((event: any, mapObjectId: string) => {
         event.stopPropagation();
         event.preventDefault();
-        if(selectedVillager){
-            selectedVillager.currentTask = (villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>]) => doWoodcutting(villager, invent, buildings, mapObjects, objectHitbox);
+        let mapObject = mapObjects.find(object => object.id === mapObjectId);
+        if(mapObject && selectedVillager){
+            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventory, buildings, mapObjects, mapObject!);
         }
-
-    }, [selectedVillager])
+    }, [mapObjects, selectedVillager])
 
     const handleBuildingRightClick = useCallback((event: any) => {
-        console.log(selectedBuilding);
     }, [selectedBuilding])
 
 
@@ -182,7 +206,7 @@ const Game = (map: any) => {
                 <Settings onClick={selectShape} shapes={allShapes}></Settings>
                 {(selectedBuilding) ? <UpgradeMenu inStock={undefined} onTrain={onTrain} selectedBuilding={selectedBuilding} selectedVillager={undefined} selectedMapObject={undefined}></UpgradeMenu> : <></>}
                 {(selectedVillager) ? <UpgradeMenu inStock={selectedVillager.inventoryItems} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={selectedVillager} selectedMapObject={undefined}></UpgradeMenu> : <></>}
-                {(selectedMapObject) ? <UpgradeMenu inStock={undefined} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={undefined} selectedMapObject={selectedMapObject}></UpgradeMenu> : <></>}
+                {(selectedMapObject) ? <UpgradeMenu inStock={selectedMapObject.inventory} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={undefined} selectedMapObject={selectedMapObject}></UpgradeMenu> : <></>}
 
             </div>
             <div className={styles.resourceArea}>
