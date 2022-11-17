@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/react-game/static/css/main.4f30ab45.css",
-    "main.js": "/react-game/static/js/main.2aa86510.js",
+    "main.css": "/react-game/static/css/main.0c93e363.css",
+    "main.js": "/react-game/static/js/main.30569e20.js",
     "static/media/background.jpg": "/react-game/static/media/background.c63ca0c047cc8ea7af09.jpg",
     "static/media/villager.png": "/react-game/static/media/villager.5bf3665c2e4544f4875e.png",
     "static/media/tree.svg": "/react-game/static/media/tree.06a9c1f0adfb382c5514ebea78889adf.svg",
     "static/media/townCenter.svg": "/react-game/static/media/townCenter.b1bf9e0061c39c927ce286eb1ba42562.svg",
     "index.html": "/react-game/index.html",
-    "main.4f30ab45.css.map": "/react-game/static/css/main.4f30ab45.css.map",
-    "main.2aa86510.js.map": "/react-game/static/js/main.2aa86510.js.map"
+    "main.0c93e363.css.map": "/react-game/static/css/main.0c93e363.css.map",
+    "main.30569e20.js.map": "/react-game/static/js/main.30569e20.js.map"
   },
   "entrypoints": [
-    "static/css/main.4f30ab45.css",
-    "static/js/main.2aa86510.js"
+    "static/css/main.0c93e363.css",
+    "static/js/main.30569e20.js"
   ]
 }
