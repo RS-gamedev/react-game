@@ -18,7 +18,7 @@ export function executeTasks(villagers: VillagerProps[], inventory: Inventory, m
     let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
     let villagersCopy = [...villagers];
     let inventoryCopy = { ...inventory };
-    let mapObjectsCopy = { ...mapObjects };
+    let mapObjectsCopy = [...mapObjects];
     let buildingsCopy = [...buildings]
 
     villagersCopy.forEach(villager => {

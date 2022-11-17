@@ -15,7 +15,7 @@ export type VillagerProps = {
     type: VillagerType;
     status: Status;
     goalPosition?: Position;
-    goalObject?: ObjectProps;
+    goalObjectId?: string;
     inventorySlots: number;
     inventoryItems: InventoryItem[],
     selected: boolean;

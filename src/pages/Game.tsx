@@ -153,7 +153,7 @@ const Game = (map: any) => {
     const handleRightClick = useCallback((event: any) => {
         event.preventDefault();
         if (selectedVillager) {
-                selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doMoveToLocation(villagers, selectedVillager!.id, { x: event.clientX, y: event.clientY })
+                selectedVillager.currentTask = (villagers: VillagerProps[]) => doMoveToLocation(villagers, selectedVillager!.id, { x: event.clientX, y: event.clientY })
         }
     }, [selectedVillager, villagers])
 
@@ -171,9 +171,8 @@ const Game = (map: any) => {
     const handleMapObjectRightClick = useCallback((event: any, mapObjectId: string) => {
         event.stopPropagation();
         event.preventDefault();
-        let mapObject = mapObjects.find(object => object.id === mapObjectId);
-        if(mapObject && selectedVillager){
-            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventory, buildings, mapObjects, mapObject!);
+        if(selectedVillager){
+            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventory, buildings, mapObjects, mapObjectId);
         }
     }, [mapObjects, selectedVillager])
 
