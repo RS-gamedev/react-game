@@ -2,7 +2,7 @@
 name: Build and Deploy game to Github Pages
 on:
   push:
-    branches: [main]
+    branches: [master]
 jobs:
   build-and-deploy:
     name: Build and Deploy
