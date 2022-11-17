@@ -2,8 +2,8 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core"
 import React, { useEffect, useState } from "react";
 import { Hitbox } from "../../models/Hitbox";
 import { Position } from "../../models/Position";
+import { getHitBoxCenter } from "../../utils/HitboxUtils";
 import { getImageUrl } from "../../utils/MapUtils";
-import { getHitBoxCenter } from "../../utils/StatusUtils";
 import Icon from "../Icon/Icon";
 import styles from './Building.module.css';
 

@@ -1,10 +1,9 @@
 import styles from './MapObject.module.css';
-import { getImageUrl } from '../../utils/MapUtils';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Position } from '../../models/Position';
 import { Hitbox } from '../../models/Hitbox';
 import Icon from '../Icon/Icon';
-import { VillagerType } from '../../models/enums/VillagerType';
+import { ObjectProps } from '../../models/ObjectProps';
 
 
 type props = {
@@ -13,7 +12,7 @@ type props = {
   position: Position,
   selected: boolean,
   onClick: (event: any, id: string) => void,
-  onRightClick: (event: any, objectHitbox: Hitbox) => void,
+  onRightClick: (event: any, mapObjectId: string) => void,
   hitBox: Hitbox,
 }
 
@@ -25,7 +24,7 @@ const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClic
     setTimeout(() => {
       setShowTaskAssigned(() => false);
     }, 300);
-    onRightClick(event, hitBox);
+    onRightClick(event, id);
   }
 
   return (

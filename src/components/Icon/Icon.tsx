@@ -20,7 +20,6 @@ const Icon = ({ name, color, fontSize, type }: props) => {
   const [imagePath, setImagePath] = useState("");
 
   useEffect(() => {
-    console.log(type);
     if(type){
       switch (type) {
         case VillagerType.VILLAGER:

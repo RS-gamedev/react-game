@@ -1,11 +1,14 @@
 import { BuildingProps } from "../models/BuildingProps";
 import { Direction } from "../models/Direction";
 import { Status } from "../models/enums/Status";
+import { GameTickResult } from "../models/GameTickResult";
 import { Hitbox } from "../models/Hitbox";
+import { InventoryItem } from "../models/InventoryItem";
 import { ObjectProps } from "../models/ObjectProps";
 import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
-import { getHitBoxCenter, onGoal } from "./StatusUtils";
+import { getHitBoxCenter, onGoal } from "./HitboxUtils";
+import { getEmptyGameTickResultObject } from "./StatusUtils";
 
 function getBestDirection(startPosition: { x: number, y: number }, goalPosition: { x: number, y: number }): Direction {
     let actualDistance = getDistance(startPosition, goalPosition);
@@ -50,25 +53,11 @@ export function getNewPosition(startPosition: Hitbox, goalPosition: Position): H
     return newPosition;
 }
 
-export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Position) {
-    villager.hitBox = getNewPosition(villager.hitBox, goalPosition);
-    return villager;
-}
-
-
-export function findNearestTree(position: Position, trees: ObjectProps[]) {
-    let closest: ObjectProps = trees[0];
-    let lowestDistance = 10000;
-    for (let tree of trees) {
-        let distance = getDistance({x: position.x, y: position.y}, {x: tree.position.x + 25, y: tree.position.y + 25});
-        if (distance < lowestDistance) {
-            closest = tree;
-            lowestDistance = distance;
-        }
-    }
-    return closest;
-}
-
+// export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Position) {
+//     let villagerCopy = {...villager};
+//     villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, goalPosition);
+//     return villagerCopy;
+// }
 
 export function moveVillagerToNearestRock(villager: VillagerProps) {
     let goalPosition = { x: 800, y: 800 };
@@ -76,15 +65,26 @@ export function moveVillagerToNearestRock(villager: VillagerProps) {
     return { ...villager, position: getNewPosition(villager.hitBox, goalPosition) };
 }
 
-export function findNearestStorage(position: Position, storages: BuildingProps[]) {
-    let closest: BuildingProps = storages[0];
-    let lowestDistance = 10000;
-    for (let storage of storages) {
-        let distance = getDistance({x: position.x, y: position.y}, {x: storage.position.x, y: storage.position.y});
-        if (distance < lowestDistance) {
-            closest = storage;
-            lowestDistance = distance;
+export function doMoveToLocation(villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition: Position): GameTickResult {
+    let villagersCopy = [...villagers];
+    let updatedVillager = villagersCopy.find( x=> x.id === villagerId);
+    let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
+    if(updatedVillager){
+        updatedVillager.status = Status.WALKING;
+        if (onGoal(updatedVillager.hitBox, goalPosition)) {
+            updatedVillager.status = Status.IDLE;
+            updatedVillager.currentTask = undefined;
         }
+        else{
+            updatedVillager.hitBox = getNewPosition(updatedVillager.hitBox, goalPosition)
+        }
+        villagersCopy = villagersCopy.map(vill => {
+            if(updatedVillager && vill.id === updatedVillager.id){
+                return updatedVillager;
+            }
+            return vill;
+        });
     }
-    return (closest) ? closest.position : {x: 0, y: 0};
+    gameTickResult.villagers = villagersCopy;
+    return gameTickResult;
 }

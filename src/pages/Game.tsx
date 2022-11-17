@@ -15,10 +15,13 @@ import { VillagerProps } from '../models/VillagerProps';
 import Villager from '../components/Villager/Villager';
 import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
 import { reduceResourcesFromInventory, canAfford } from '../utils/ResourceUtils';
-import { doWoodcutting, moveToLocation } from '../utils/StatusUtils';
 import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from '../utils/GameUtils';
 import { VillagerType } from '../models/enums/VillagerType';
-import { Hitbox } from '../models/Hitbox';
+import { GameTickResult } from '../models/GameTickResult';
+import { doMoveToLocation } from '../utils/MovementUtils';
+import { doWoodcutting } from '../utils/villagerUtils/LumberjackUtils';
+import { executeTasks } from '../utils/StatusUtils';
+import { InventoryItem } from '../models/InventoryItem';
 
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
@@ -26,30 +29,34 @@ const Game = (map: any) => {
     const [mapObjects, setMapObjects] = useState<ObjectProps[]>([])
     const [allShapes, setAllShapes] = useState<Shape[]>(shapes);
     const [inventory, setInventory] = useState<Inventory>({ resources: [] });
+    const [gameTick, setGameTick] = useState(0);
+
+    useInterval(() => {
+        // GAME LOOP
+        setGameTick((prev) => prev + 1);
+    }, 50);
 
     var selectedShape = allShapes.find(x => x.selected);
     var selectedBuilding = buildings.find(x => x.selected);
     var selectedVillager = villagers.find(x => x.selected);
     var selectedMapObject = mapObjects.find(x => x.selected);
 
-
-    useInterval(() => {
-        // GAME LOOP
-        let villagersCopy: VillagerProps[] | undefined = [...villagers];
-        let somethingChanged: boolean = false;
-
-        let newVillagers = villagersCopy.map(villager => {
-            if (villager.currentTask) {
-                somethingChanged = true;
-                return villager.currentTask(villager, [inventory, setInventory], buildings, mapObjects);
-            }
-            return villager;
-        });
-        if (somethingChanged) {
-            // SAVE
-            setVillagers((prev) => newVillagers!);
+    useEffect(() => {
+        let result = executeTasks(villagers, inventory.resources, mapObjects, buildings);
+        if(result.buildings){
+            setBuildings(result.buildings);
         }
-    }, 50);
+        if(result.inventoryItems){
+            setInventory((prev) => {return {...prev, resources: result.inventoryItems!}});
+        }
+        if(result.mapObjects){
+            setMapObjects(result.mapObjects);
+        }
+        if(result.villagers){
+            setVillagers(result.villagers);
+        }
+    }, [gameTick]);
+
 
     useEffect(() => {
         setInventory(setInitialInventory()!);
@@ -68,12 +75,11 @@ const Game = (map: any) => {
         setBuildings(buildingsCopy);
     }
 
-    const trainVillager = (villager: VillagerProps) => {
+    const trainVillager = useCallback((villager: VillagerProps) => {
         let villagersCopy = [...villagers];
         villagersCopy.push(villager);
-        console.log(villagersCopy);
         setVillagers((prev) => villagersCopy);
-    }
+    }, [villagers])
 
     const selectShape = useCallback((shape: Shape) => {
         let shapesCopy = [...allShapes];
@@ -83,7 +89,7 @@ const Game = (map: any) => {
         }
         shapesCopy.filter(x => x.id !== shape.id).forEach(x => x.selected = false);
         setAllShapes((prev) => shapesCopy);
-    }, [shapes]);
+    }, [allShapes]);
 
     // Deselect other, and select given
     const deselectAllBut = useCallback((event: any, toSelectId: string) => {
@@ -112,7 +118,7 @@ const Game = (map: any) => {
             toSelectBuilding.selected = true;
         }
         setBuildings(buildingsCopy);
-    }, [buildings.length, villagers.length, mapObjects.length])
+    }, [buildings, villagers, mapObjects])
 
     // Left click handler
     function handleClick(event: any): any {
@@ -142,14 +148,12 @@ const Game = (map: any) => {
     }
 
     // Right click handler
-    function handleRightClick(event: any) {
-        let villagersCopy = [...villagers];
+    const handleRightClick = useCallback((event: any) => {
         event.preventDefault();
         if (selectedVillager) {
-                selectedVillager.currentTask = (villager: VillagerProps) => moveToLocation(villager, { x: event.clientX, y: event.clientY })
+                selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[] ) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: event.clientX, y: event.clientY })
         }
-        setVillagers(villagersCopy);
-    }
+    }, [selectedVillager, villagers])
 
     const onTrain = (entity: any, type: VillagerType) => {
         if(type === VillagerType.VILLAGER){
@@ -162,17 +166,15 @@ const Game = (map: any) => {
 
     }
 
-    const handleMapObjectRightClick = useCallback((event: any, objectHitbox: Hitbox) => {
+    const handleMapObjectRightClick = useCallback((event: any, mapObjectId: string) => {
         event.stopPropagation();
         event.preventDefault();
         if(selectedVillager){
-            selectedVillager.currentTask = (villager: VillagerProps, invent: [inventory: Inventory, setInventory: React.Dispatch<React.SetStateAction<Inventory>>]) => doWoodcutting(villager, invent, buildings, mapObjects, objectHitbox);
+            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventoryItems, buildings, mapObjects, mapObjectId);
         }
-
-    }, [selectedVillager])
+    }, [mapObjects, selectedVillager])
 
     const handleBuildingRightClick = useCallback((event: any) => {
-        console.log(selectedBuilding);
     }, [selectedBuilding])
 
 
@@ -182,7 +184,7 @@ const Game = (map: any) => {
                 <Settings onClick={selectShape} shapes={allShapes}></Settings>
                 {(selectedBuilding) ? <UpgradeMenu inStock={undefined} onTrain={onTrain} selectedBuilding={selectedBuilding} selectedVillager={undefined} selectedMapObject={undefined}></UpgradeMenu> : <></>}
                 {(selectedVillager) ? <UpgradeMenu inStock={selectedVillager.inventoryItems} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={selectedVillager} selectedMapObject={undefined}></UpgradeMenu> : <></>}
-                {(selectedMapObject) ? <UpgradeMenu inStock={undefined} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={undefined} selectedMapObject={selectedMapObject}></UpgradeMenu> : <></>}
+                {(selectedMapObject) ? <UpgradeMenu inStock={selectedMapObject.inventory} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={undefined} selectedMapObject={selectedMapObject}></UpgradeMenu> : <></>}
 
             </div>
             <div className={styles.resourceArea}>

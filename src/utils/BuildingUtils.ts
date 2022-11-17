@@ -1,13 +1,10 @@
 import { BuildingProps } from "../models/BuildingProps";
 import { shapes } from '../config/Shapes';
-import { resources } from '../config/Resources';
 import { buildingOptions } from '../config/BuildingOptions';
-
 import { Shape } from "../models/Shape";
 import { v4 as uuidv4 } from 'uuid';
 import { BuildingType } from "../models/enums/BuildingType";
 import { BuildingOption } from "../models/BuildingOption";
-import { trainVillager } from "./BuildingOptionsUtil";
 import { Position } from "../models/Position";
 import { Hitbox } from "../models/Hitbox";
 import { VillagerType } from "../models/enums/VillagerType";
@@ -29,7 +26,6 @@ function constructBuilding(position: { x: number, y: number }, shape: Shape, bui
         buildingOptions: buildingOptions,
         hitBox: hitbox
     }
-    console.log(house);
     return house;
 }
 
