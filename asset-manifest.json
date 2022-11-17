@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/react-game/static/css/main.fc8532dd.css",
-    "main.js": "/react-game/static/js/main.446a0068.js",
+    "main.js": "/react-game/static/js/main.72f18f4b.js",
     "static/media/villager.png": "/react-game/static/media/villager.5bf3665c2e4544f4875e.png",
     "static/media/tree.svg": "/react-game/static/media/tree.06a9c1f0adfb382c5514ebea78889adf.svg",
     "static/media/townCenter.svg": "/react-game/static/media/townCenter.c86387be88fa022f24f936b167207902.svg",
     "index.html": "/react-game/index.html",
     "main.fc8532dd.css.map": "/react-game/static/css/main.fc8532dd.css.map",
-    "main.446a0068.js.map": "/react-game/static/js/main.446a0068.js.map"
+    "main.72f18f4b.js.map": "/react-game/static/js/main.72f18f4b.js.map"
   },
   "entrypoints": [
     "static/css/main.fc8532dd.css",
-    "static/js/main.446a0068.js"
+    "static/js/main.72f18f4b.js"
   ]
 }
