@@ -17,11 +17,11 @@ export function setInitialInventory() {
 		resources: [
 			{
 				resource: coins,
-				amount: 500,
+				amount: 0,
 			},
 			{
 				resource: wood,
-				amount: 200,
+				amount: 100,
 			},
 			{
 				resource: gems,

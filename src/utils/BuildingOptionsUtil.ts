@@ -3,6 +3,7 @@ import { VillagerProps } from "../models/VillagerProps";
 import { v4 as uuidv4 } from 'uuid';
 import { Status } from "../models/enums/Status";
 import { VillagerType } from "../models/enums/VillagerType";
+import { resources } from "../config/Resources";
 
 
 export function trainVillager(position: Position){
@@ -16,6 +17,9 @@ export function trainVillager(position: Position){
         status: Status.IDLE,
         type: VillagerType.VILLAGER,
         buildingOptions: [],
+        price: [
+            { type: resources.find(x => x.name === "Wood"), amount: 50 }
+        ],
         size: {
             width: '50px',
             height: '50px'
