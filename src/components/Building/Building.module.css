@@ -3,6 +3,7 @@
     border-radius: 10px;
     transition: border-color 300ms;
     padding:5px;
+    color:red;
 }
 
 .building:hover{
