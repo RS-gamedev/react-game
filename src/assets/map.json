@@ -54,5 +54,86 @@
             "y": 500
         },
         "size": 50
+    },
+
+    {
+        "name": "tree",
+        "position": {
+            "x": 820,
+            "y": 520
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 850,
+            "y": 550
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 850,
+            "y": 480
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 900,
+            "y": 600
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 880,
+            "y": 600
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 850,
+            "y": 200
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 320,
+            "y": 320
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 320,
+            "y": 350
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 340,
+            "y": 470
+        },
+        "size": 50
+    },
+    {
+        "name": "tree",
+        "position": {
+            "x": 480,
+            "y": 800
+        },
+        "size": 50
     }
 ]

@@ -8,6 +8,7 @@ import { InventoryItem } from "./InventoryItem";
 import { ObjectProps } from "./ObjectProps";
 import { Position } from "./Position";
 import {GameTickResult} from "./GameTickResult";
+import { Price } from "./Price";
 
 export type VillagerProps = {
     id: string,
@@ -17,6 +18,7 @@ export type VillagerProps = {
     goalObjectId?: string;
     inventorySlots: number;
     inventoryItems: InventoryItem[],
+    price: Price[];
     selected: boolean;
     currentTask?: (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition?: Position) => GameTickResult;
     buildingOptions: BuildingOption[];

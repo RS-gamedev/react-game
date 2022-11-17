@@ -157,7 +157,11 @@ const Game = (map: any) => {
 
     const onTrain = (entity: any, type: VillagerType) => {
         if(type === VillagerType.VILLAGER){
-            trainVillager(entity);
+            let result = reduceResourcesFromInventory(inventory, entity.price);
+            if(result[1]){
+                setInventory(result[0]);
+                trainVillager(entity);
+            }
         }
         return entity;
     }
