@@ -1,28 +1,40 @@
-
-.background{
-    background-color:#292D3E;
-    height: 100vh;
-    width:100vw;
-    position: relative;
+.background {
+  background-color: #292D3E;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
 }
-.actions{
-    position: absolute;
-    top:25px;
-    left:25px;
-    display: flex;
-    flex-direction: column;
-    gap:15px;
-    width:240px;
-    height: calc(100% - 50px);
-    align-items: stretch;
-  }
-  
-  .buttons{
-    display: flex;
-    gap:10px;
-  }
-  .resourceArea{
-    position: absolute;
-    top:25px;
-    left: 280px;
-  }
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 240px;
+  height: calc(100% - 50px);
+  align-items: stretch;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.resourceArea {
+  position: absolute;
+  margin:20px;
+}
+
+.actionsArea {
+  margin: 25px;
+}
+
+.gameArea{
+  background: url('../assets/background.jpg');
+  position: relative;
+  background-size: contain;
+  min-height: 800px;
+  min-width:1071px;
+    max-height: 800px;
+  max-width:1071px;
+}

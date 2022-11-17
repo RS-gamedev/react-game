@@ -43,16 +43,16 @@ const Game = (map: any) => {
 
     useEffect(() => {
         let result = executeTasks(villagers, inventory.resources, mapObjects, buildings);
-        if(result.buildings){
+        if (result.buildings) {
             setBuildings(result.buildings);
         }
-        if(result.inventoryItems){
-            setInventory((prev) => {return {...prev, resources: result.inventoryItems!}});
+        if (result.inventoryItems) {
+            setInventory((prev) => { return { ...prev, resources: result.inventoryItems! } });
         }
-        if(result.mapObjects){
+        if (result.mapObjects) {
             setMapObjects(result.mapObjects);
         }
-        if(result.villagers){
+        if (result.villagers) {
             setVillagers(result.villagers);
         }
     }, [gameTick]);
@@ -151,14 +151,14 @@ const Game = (map: any) => {
     const handleRightClick = useCallback((event: any) => {
         event.preventDefault();
         if (selectedVillager) {
-                selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[] ) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: event.clientX, y: event.clientY })
+            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: event.clientX, y: event.clientY })
         }
     }, [selectedVillager, villagers])
 
     const onTrain = (entity: any, type: VillagerType) => {
-        if(type === VillagerType.VILLAGER){
+        if (type === VillagerType.VILLAGER) {
             let result = reduceResourcesFromInventory(inventory, entity.price);
-            if(result[1]){
+            if (result[1]) {
                 setInventory(result[0]);
                 trainVillager(entity);
             }
@@ -166,14 +166,14 @@ const Game = (map: any) => {
         return entity;
     }
 
-    function handleVillagerRightClick(){
+    function handleVillagerRightClick() {
 
     }
 
     const handleMapObjectRightClick = useCallback((event: any, mapObjectId: string) => {
         event.stopPropagation();
         event.preventDefault();
-        if(selectedVillager){
+        if (selectedVillager) {
             selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventoryItems, buildings, mapObjects, mapObjectId);
         }
     }, [mapObjects, selectedVillager])
@@ -183,37 +183,40 @@ const Game = (map: any) => {
 
 
     return (
-        <div className={styles.background} onClick={handleClick} onContextMenu={handleRightClick}>
-            <div className={styles.actions} onClick={event => event.stopPropagation()}>
-                <Settings onClick={selectShape} shapes={allShapes}></Settings>
-                {(selectedBuilding) ? <UpgradeMenu inStock={undefined} onTrain={onTrain} selectedBuilding={selectedBuilding} selectedVillager={undefined} selectedMapObject={undefined}></UpgradeMenu> : <></>}
-                {(selectedVillager) ? <UpgradeMenu inStock={selectedVillager.inventoryItems} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={selectedVillager} selectedMapObject={undefined}></UpgradeMenu> : <></>}
-                {(selectedMapObject) ? <UpgradeMenu inStock={selectedMapObject.inventory} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={undefined} selectedMapObject={selectedMapObject}></UpgradeMenu> : <></>}
+        <div className={styles.background}>
+            <div className={styles.actionsArea}>
+                <div className={styles.actions} onClick={event => event.stopPropagation()}>
+                    <Settings onClick={selectShape} shapes={allShapes}></Settings>
+                    {(selectedBuilding) ? <UpgradeMenu inStock={undefined} onTrain={onTrain} selectedBuilding={selectedBuilding} selectedVillager={undefined} selectedMapObject={undefined}></UpgradeMenu> : <></>}
+                    {(selectedVillager) ? <UpgradeMenu inStock={selectedVillager.inventoryItems} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={selectedVillager} selectedMapObject={undefined}></UpgradeMenu> : <></>}
+                    {(selectedMapObject) ? <UpgradeMenu inStock={selectedMapObject.inventory} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={undefined} selectedMapObject={selectedMapObject}></UpgradeMenu> : <></>}
 
+                </div>
             </div>
-            <div className={styles.resourceArea}>
-                {(inventory) ? <Resources inventory={inventory}></Resources> : <></>}
+            <div className={styles.gameArea}  onClick={handleClick} onContextMenu={handleRightClick}>
+                <div className={styles.resourceArea}>
+                    {(inventory) ? <Resources inventory={inventory}></Resources> : <></>}
+                </div>
+
+                {(buildings) ? buildings?.map((building, index) => {
+                    if (building) {
+                        return <Building key={building.id} {...building} onClick={deselectAllBut} onRightClick={handleBuildingRightClick}></Building>
+                    }
+                }) : <></>
+                }
+                {(mapObjects) ? mapObjects?.map((mapObject, index) => {
+                    if (mapObject) {
+                        return <MapObject key={mapObject.id} {...mapObject} onClick={deselectAllBut} onRightClick={handleMapObjectRightClick}></MapObject>
+                    }
+                }) : <></>
+                }
+                {(villagers) ? villagers?.map((villager, index) => {
+                    if (villager) {
+                        return <Villager key={villager.id} {...villager} onClick={deselectAllBut}></Villager>
+                    }
+                }) : <></>
+                }
             </div>
-
-            {(buildings) ? buildings?.map((building, index) => {
-                if (building) {
-                    return <Building key={building.id} {...building} onClick={deselectAllBut} onRightClick={handleBuildingRightClick}></Building>
-                }
-            }) : <></>
-            }
-            {(mapObjects) ? mapObjects?.map((mapObject, index) => {
-                if (mapObject) {
-                    return <MapObject key={mapObject.id} {...mapObject} onClick={deselectAllBut} onRightClick={handleMapObjectRightClick}></MapObject>
-                }
-            }) : <></>
-            }
-            {(villagers) ? villagers?.map((villager, index) => {
-                if (villager) {
-                    return <Villager key={villager.id} {...villager} onClick={deselectAllBut}></Villager>
-                }
-            }) : <></>
-            }
-
         </div>
     );
 }
