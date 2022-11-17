@@ -55,7 +55,6 @@ const Game = (map: any) => {
             setMapObjects(result.mapObjects);
         }
         if(result.villagers){
-            console.log("setting villagers")
             setVillagers(result.villagers);
         }
     }, [gameTick]);
@@ -121,7 +120,7 @@ const Game = (map: any) => {
             toSelectBuilding.selected = true;
         }
         setBuildings(buildingsCopy);
-    }, [buildings.length, villagers.length, mapObjects.length])
+    }, [buildings, villagers, mapObjects])
 
     // Left click handler
     function handleClick(event: any): any {

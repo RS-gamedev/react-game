@@ -45,21 +45,25 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
                 let mapObjectsWoodResource = mapObjectCopy.inventory.find(x => x.resource.name === "Wood");
                 if(mapObjectsWoodResource){
                     if(mapObjectsWoodResource.amount - 0.05 >= 0){
+                        // can cut a log
                         mapObjectsWoodResource.amount -= 0.05;
+                        let toAddResource = villagerCopy.inventoryItems.find(x => x.resource.name === 'Wood');
+                        if (toAddResource && toAddResource) {
+                            toAddResource.amount = toAddResource.amount + 0.05;
+                        }
+                        else {
+                            villagerCopy.inventoryItems.push({ resource: resources.find(x => x.name === 'Wood')!, amount: 0 });
+                        }
                     }
                     else{
+                        // cannot cut more logs, tree is empty
                         villagerCopy.status = Status.IDLE;
+                        // set tree to seed
+                        villagerCopy.currentTask = undefined;
                     }
                 }
             }
 
-            let toAddResource = villagerCopy.inventoryItems.find(x => x.resource.name === 'Wood');
-            if (toAddResource && toAddResource) {
-                toAddResource.amount = toAddResource.amount + 0.05;
-            }
-            else {
-                villagerCopy.inventoryItems.push({ resource: resources.find(x => x.name === 'Wood')!, amount: 0 });
-            }
             break;
         case Status.RETURNING_RESOURCES:
             if (villagerCopy.goalPosition) {
