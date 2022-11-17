@@ -20,6 +20,7 @@ import { VillagerType } from '../models/enums/VillagerType';
 import { GameTickResult } from '../models/GameTickResult';
 import { doMoveToLocation } from '../utils/MovementUtils';
 import { doWoodcutting } from '../utils/villagerUtils/LumberjackUtils';
+import { executeTasks } from '../utils/StatusUtils';
 
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
@@ -29,52 +30,36 @@ const Game = (map: any) => {
     const [inventory, setInventory] = useState<Inventory>({ resources: [] });
     const [gameTick, setGameTick] = useState(0);
 
+    useInterval(() => {
+        // GAME LOOP
+        setGameTick((prev) => prev + 1);
+    }, 50);
+
     var selectedShape = allShapes.find(x => x.selected);
     var selectedBuilding = buildings.find(x => x.selected);
     var selectedVillager = villagers.find(x => x.selected);
     var selectedMapObject = mapObjects.find(x => x.selected);
 
     useEffect(() => {
-        let villagersCopy: VillagerProps[] = [...villagers];
-        villagersCopy.forEach(villager => {
-            let gameTickResult: GameTickResult | undefined;
-            if(villager.currentTask === undefined) return;
-            gameTickResult = villager.currentTask(villagersCopy, villager.id, inventory, buildings, mapObjects);
-            gameTickResult?.newState.forEach(item => {
-                if(!item.changed) return;
-                switch (item.name) {
-                    case 'villagers':
-                        console.log("Setting new villagers");
-                        setVillagers(item.stateObject);
-                    break;
-                    case 'buildings':
-                        setBuildings(item.stateObject)
-                    break;
-                    case 'mapObjects':
-                        setMapObjects(item.stateObject)
-                    break;
-                    case 'inventory':
-                        setInventory(item.stateObject)
-    
-                    break;
-                        
-                    default:
-                        break;
-                }
-            })
-        });
+        let result = executeTasks(villagers, inventory, mapObjects, buildings);
+        if(result.buildings){
+            console.log("setting buildings")
+            setBuildings(result.buildings);
+        }
+        if(result.inventory){
+            console.log("setting inventory")
+            setInventory(result.inventory);
+        }
+        if(result.mapObjects){
+            console.log("setting mapObjects")
+            setMapObjects(result.mapObjects);
+        }
+        if(result.villagers){
+            console.log("setting villagers")
+            setVillagers(result.villagers);
+        }
     }, [gameTick]);
 
-
-    useInterval(() => {
-        // GAME LOOP
-        setGameTick((prev) => prev + 1);
-    }, 50);
-
-
-    // useEffect(() => {
-    //     console.log(mapObjects);
-    // }, [mapObjects])
 
     useEffect(() => {
         setInventory(setInitialInventory()!);
@@ -167,13 +152,10 @@ const Game = (map: any) => {
 
     // Right click handler
     const handleRightClick = useCallback((event: any) => {
-        let villagersCopy = [...villagers];
-        // let _selectedVillager = 
         event.preventDefault();
         if (selectedVillager) {
-                selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doMoveToLocation(villagersCopy, selectedVillager!.id, { x: event.clientX, y: event.clientY })
+                selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doMoveToLocation(villagers, selectedVillager!.id, { x: event.clientX, y: event.clientY })
         }
-        setVillagers(villagersCopy);
     }, [selectedVillager, villagers])
 
     const onTrain = (entity: any, type: VillagerType) => {

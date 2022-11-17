@@ -53,8 +53,9 @@ export function getNewPosition(startPosition: Hitbox, goalPosition: Position): H
 }
 
 export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Position) {
-    villager.hitBox = getNewPosition(villager.hitBox, goalPosition);
-    return villager;
+    let villagerCopy = {...villager};
+    villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, goalPosition);
+    return villagerCopy;
 }
 
 export function moveVillagerToNearestRock(villager: VillagerProps) {
@@ -80,20 +81,22 @@ export function doMoveToLocation(villagers: VillagerProps[], villagerId: string,
     let villagersCopy = [...villagers];
     let updatedVillager = villagersCopy.find( x=> x.id === villagerId);
     let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
-
     if(updatedVillager){
+        updatedVillager.status = Status.WALKING;
         if (onGoal(updatedVillager.hitBox, goalPosition)) {
             updatedVillager.status = Status.IDLE;
             updatedVillager.currentTask = undefined;
         }
         else{
-            updatedVillager = {...moveVillagerToPosition(updatedVillager, goalPosition)};
+            updatedVillager.hitBox = getNewPosition(updatedVillager.hitBox, goalPosition)
         }
-        let villagersResult = gameTickResult.newState.find(x => x.name === 'villagers');
-
-        if(!villagersResult) return gameTickResult;
-        villagersResult.changed = true;
-        villagersResult.stateObject = villagersCopy;
+        villagersCopy = villagersCopy.map(vill => {
+            if(updatedVillager && vill.id === updatedVillager.id){
+                return updatedVillager;
+            }
+            return vill;
+        });
     }
+    gameTickResult.villagers = villagersCopy;
     return gameTickResult;
 }

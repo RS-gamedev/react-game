@@ -19,10 +19,7 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
     let mapObjectsCopy = {...mapObjects};
     let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
 
-    let villagersResult = gameTickResult.newState.find(x => x.name === 'villagers');
-    let inventoryResult = gameTickResult.newState.find(x => x.name === 'inventory');
-
-    if(!villagersResult || !inventoryResult || !villagerCopy) return gameTickResult;
+    if(!villagerCopy) return gameTickResult;
 
     if (villagerCopy.status === Status.IDLE || villagerCopy.status === Status.WALKING) {
         villagerCopy = handleIdle(villagerCopy, buildings, mapObjectsCopy, targetObject);
@@ -86,21 +83,18 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
                 }
                 villagerCopy!.status = Status.IDLE;
             });
-            inventoryResult.changed = true;
-            inventoryResult.stateObject = inventoryCopy;
+            gameTickResult.inventory = inventoryCopy;
             break;
         default:
             break;
     }
-
-    villagersResult.changed = true;
     villagersCopy = villagersCopy.map(vill => {
         if(villagerCopy && vill.id === villagerCopy.id){
             return villagerCopy;
         }
         return vill;
-    })
-    villagersResult.stateObject = villagersCopy;
+    });
+    gameTickResult.villagers = villagersCopy;
     return gameTickResult;
 }
 

@@ -1,9 +1,11 @@
-export type GameTickResult = {
-    newState: GameTickResultItem[]; 
-}
+import { BuildingProps } from "./BuildingProps";
+import { Inventory } from "./Inventory";
+import { ObjectProps } from "./ObjectProps";
+import { VillagerProps } from "./VillagerProps";
 
-export type GameTickResultItem = {
-    name: string;
-    changed: boolean;
-    stateObject: any;
+export type GameTickResult = {
+    villagers: VillagerProps[] | undefined;
+    buildings: BuildingProps[] | undefined;
+    mapObjects: ObjectProps[] | undefined;
+    inventory: Inventory | undefined;
 }
