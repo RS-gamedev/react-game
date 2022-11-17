@@ -4,18 +4,20 @@ import { BuildingType } from "../../models/enums/BuildingType";
 import { Status } from "../../models/enums/Status";
 import { GameTickResult } from "../../models/GameTickResult";
 import { Inventory } from "../../models/Inventory";
+import { InventoryItem } from "../../models/InventoryItem";
 import { ObjectProps } from "../../models/ObjectProps";
 import { VillagerProps } from "../../models/VillagerProps";
 import { getHitBoxCenter, onGoal } from "../HitboxUtils";
-import { findNearestStorage, findNearestTree, getStorageOnPosition } from "../MapObjectUtils";
-import { moveVillagerToPosition } from "../MovementUtils";
+import { findNearestStorage, findNearestTree } from "../MapObjectUtils";
+import { getNewPosition } from "../MovementUtils";
+import { add, retract } from "../ResourceUtils";
 import { getEmptyGameTickResultObject } from "../StatusUtils";
 import { inventoryIsFull } from "../VillagerUtils";
 
-export function doWoodcutting(villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[], initialTargetId: string): GameTickResult {
+export function doWoodcutting(villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[], initialTargetId: string): GameTickResult {
     let villagersCopy = [...villagers];
     let villagerCopy = villagersCopy.find(x => x.id === villagerId);
-    let inventoryCopy = { ...inventory };
+    let inventoryItemsCopy = [...inventoryItems];
     let mapObjectsCopy = [...mapObjects];
     let targetObjectCopy = mapObjectsCopy.find(x => x.id === initialTargetId);
     if (!targetObjectCopy) {
@@ -24,6 +26,7 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
     }
     let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
     let mapObjectsChanged: boolean = false;
+    let inventoryItemsChanged: boolean = false;
     if (!villagerCopy) return gameTickResult;
     let closestStorage = findNearestStorage(getHitBoxCenter(villagerCopy?.hitBox), buildings.filter(x => x.type === BuildingType.TOWN_CENTER))
 
@@ -31,12 +34,14 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
 
     switch (villagerCopy.status) {
         case Status.WALKING_TO_TREE:
-            if (villagerCopy.goalPosition) {
-                let movedVillager = moveVillagerToPosition(villagerCopy, getHitBoxCenter(targetObjectCopy?.hitBox!));
-                if (targetObjectCopy && onGoal(movedVillager.hitBox, getHitBoxCenter(targetObjectCopy?.hitBox))) {
-                    movedVillager.status = Status.IDLE;
-                    villagerCopy = movedVillager;
+            if (targetObjectCopy) {
+                villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, getHitBoxCenter(targetObjectCopy?.hitBox!));
+                if (targetObjectCopy && onGoal(villagerCopy.hitBox, getHitBoxCenter(targetObjectCopy?.hitBox))) {
+                    villagerCopy.status = Status.IDLE;
                 }
+            }
+            else {
+                villagerCopy.status = Status.IDLE;
             }
             break;
         case Status.CUTTING_TREE:
@@ -68,32 +73,31 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
                     mapObjectsCopy = mapObjectsCopy.filter(x => x.id !== villagerCopy?.goalObjectId)
                     mapObjectsChanged = true;
                     villagerCopy.status = Status.IDLE;
-                    villagerCopy.goalObjectId = findNearestTree(getHitBoxCenter(villagerCopy.hitBox), mapObjectsCopy.filter(x => x.name === "tree")).id;
                 }
+            }
+            else {
+                villagerCopy.status = Status.IDLE;
             }
 
             break;
         case Status.RETURNING_RESOURCES:
-            let movedVillager = moveVillagerToPosition(villagerCopy, closestStorage.position);
-            if (onGoal(movedVillager.hitBox, closestStorage.position)) {
-                movedVillager.status = Status.IDLE;
-                villagerCopy = movedVillager;
+            villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, closestStorage.position);
+            if (onGoal(villagerCopy.hitBox, closestStorage.position)) {
+                villagerCopy.status = Status.IDLE;
             }
             break;
         case Status.DROPPING_RESOURCES:
-            let invCopyItemsCopy = [...inventoryCopy.resources];
             villagerCopy.inventoryItems.forEach(invItem => {
-                if (inventoryCopy && invCopyItemsCopy) {
-                    let inventoryResource = invCopyItemsCopy.find(x => x.resource.name == invItem.resource.name);
+                if (inventoryItemsCopy) {
+                    let inventoryResource = inventoryItemsCopy.find(x => x.resource.name == invItem.resource.name);
                     if (inventoryResource) {
-                        inventoryResource.amount! += invItem.amount;
+                        inventoryItemsChanged = true;
+                        inventoryResource.amount = add(inventoryResource.amount, invItem.amount);
                         invItem.amount = 0;
-                        inventoryCopy.resources = invCopyItemsCopy;
                     }
                 }
-                villagerCopy!.status = Status.IDLE;
             });
-            gameTickResult.inventory = inventoryCopy;
+            villagerCopy.status = Status.IDLE;
             break;
         default:
             break;
@@ -108,19 +112,12 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
     if (mapObjectsChanged) {
         gameTickResult.mapObjects = mapObjectsCopy;
     }
-
+    if (inventoryItemsChanged) {
+        gameTickResult.inventoryItems = inventoryItemsCopy;
+    }
     gameTickResult.villagers = villagersCopy;
     return gameTickResult;
 }
-
-function add(start: number, by: number): number {
-    return ((start * 10) + (by * 10)) / 10;
-}
-
-function retract(start: number, by: number) {
-    return ((start * 10) - (by * 10)) / 10;
-}
-
 
 function treeHasWood(tree: ObjectProps) {
     let woodOfTree = tree.inventory.find(x => x.resource.name === "Wood");
@@ -133,9 +130,11 @@ function treeHasWood(tree: ObjectProps) {
 function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObjects: ObjectProps[], closestStorage: BuildingProps, targetObject?: ObjectProps) {
     if (!targetObject) {
         // find nearest tree and set target
-        console.log("No target");
-
-        villager.currentTask = undefined;
+        villager.goalObjectId = findNearestTree(getHitBoxCenter(villager.hitBox), mapObjects.filter(x => x.name === "tree"))?.id;
+        if (!villager.goalObjectId) {
+            villager.currentTask = undefined;
+            villager.status = Status.IDLE;
+        }
         return villager;
     }
     if (inventoryIsFull(villager)) {
@@ -161,7 +160,6 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
             else {
                 // Walking to target
                 villager.status = Status.WALKING_TO_TREE;
-                villager.goalPosition = getHitBoxCenter(targetObject.hitBox);
                 villager.goalObjectId = targetObject.id;
             }
         }
@@ -169,7 +167,6 @@ function handleIdle(villager: VillagerProps, buildings: BuildingProps[], mapObje
             // geen target
             villager.status = Status.WALKING_TO_TREE;
             let nearestTree = findNearestTree(getHitBoxCenter(villager.hitBox), mapObjects.filter(x => x.name === "tree"));
-            villager.goalPosition = nearestTree.position;
             villager.goalObjectId = nearestTree.id;
         }
     }

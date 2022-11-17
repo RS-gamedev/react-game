@@ -3,6 +3,7 @@ import { Direction } from "../models/Direction";
 import { Status } from "../models/enums/Status";
 import { GameTickResult } from "../models/GameTickResult";
 import { Hitbox } from "../models/Hitbox";
+import { InventoryItem } from "../models/InventoryItem";
 import { ObjectProps } from "../models/ObjectProps";
 import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
@@ -52,11 +53,11 @@ export function getNewPosition(startPosition: Hitbox, goalPosition: Position): H
     return newPosition;
 }
 
-export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Position) {
-    let villagerCopy = {...villager};
-    villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, goalPosition);
-    return villagerCopy;
-}
+// export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Position) {
+//     let villagerCopy = {...villager};
+//     villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, goalPosition);
+//     return villagerCopy;
+// }
 
 export function moveVillagerToNearestRock(villager: VillagerProps) {
     let goalPosition = { x: 800, y: 800 };
@@ -64,7 +65,7 @@ export function moveVillagerToNearestRock(villager: VillagerProps) {
     return { ...villager, position: getNewPosition(villager.hitBox, goalPosition) };
 }
 
-export function doMoveToLocation(villagers: VillagerProps[], villagerId: string, goalPosition: Position): GameTickResult {
+export function doMoveToLocation(villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition: Position): GameTickResult {
     let villagersCopy = [...villagers];
     let updatedVillager = villagersCopy.find( x=> x.id === villagerId);
     let gameTickResult: GameTickResult = getEmptyGameTickResultObject();

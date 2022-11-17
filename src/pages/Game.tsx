@@ -21,6 +21,7 @@ import { GameTickResult } from '../models/GameTickResult';
 import { doMoveToLocation } from '../utils/MovementUtils';
 import { doWoodcutting } from '../utils/villagerUtils/LumberjackUtils';
 import { executeTasks } from '../utils/StatusUtils';
+import { InventoryItem } from '../models/InventoryItem';
 
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
@@ -41,17 +42,14 @@ const Game = (map: any) => {
     var selectedMapObject = mapObjects.find(x => x.selected);
 
     useEffect(() => {
-        let result = executeTasks(villagers, inventory, mapObjects, buildings);
+        let result = executeTasks(villagers, inventory.resources, mapObjects, buildings);
         if(result.buildings){
-            console.log("setting buildings")
             setBuildings(result.buildings);
         }
-        if(result.inventory){
-            console.log("setting inventory")
-            setInventory(result.inventory);
+        if(result.inventoryItems){
+            setInventory((prev) => {return {...prev, resources: result.inventoryItems!}});
         }
         if(result.mapObjects){
-            console.log("setting mapObjects")
             setMapObjects(result.mapObjects);
         }
         if(result.villagers){
@@ -77,11 +75,11 @@ const Game = (map: any) => {
         setBuildings(buildingsCopy);
     }
 
-    const trainVillager = (villager: VillagerProps) => {
+    const trainVillager = useCallback((villager: VillagerProps) => {
         let villagersCopy = [...villagers];
         villagersCopy.push(villager);
         setVillagers((prev) => villagersCopy);
-    }
+    }, [villagers])
 
     const selectShape = useCallback((shape: Shape) => {
         let shapesCopy = [...allShapes];
@@ -153,7 +151,7 @@ const Game = (map: any) => {
     const handleRightClick = useCallback((event: any) => {
         event.preventDefault();
         if (selectedVillager) {
-                selectedVillager.currentTask = (villagers: VillagerProps[]) => doMoveToLocation(villagers, selectedVillager!.id, { x: event.clientX, y: event.clientY })
+                selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[] ) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: event.clientX, y: event.clientY })
         }
     }, [selectedVillager, villagers])
 
@@ -172,7 +170,7 @@ const Game = (map: any) => {
         event.stopPropagation();
         event.preventDefault();
         if(selectedVillager){
-            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventory, buildings, mapObjects, mapObjectId);
+            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventoryItems, buildings, mapObjects, mapObjectId);
         }
     }, [mapObjects, selectedVillager])
 

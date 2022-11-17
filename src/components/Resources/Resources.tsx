@@ -10,7 +10,6 @@ type Props = {
 
  const Resources = React.memo(({ inventory }: Props) => {
     console.log("resource render");
-
     return (
         <div className={styles.resources}>
             {inventory.resources.map((item, index) => {

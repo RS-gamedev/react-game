@@ -45,3 +45,10 @@ export function canAfford(inventoryItems?: InventoryItem[], price?: Price[]) : b
     return toReturn;
 }
 
+export function add(start: number, by: number): number {
+    return ((start * 10) + (by * 10)) / 10;
+}
+
+export function retract(start: number, by: number) {
+    return ((start * 10) - (by * 10)) / 10;
+}

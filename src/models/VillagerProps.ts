@@ -14,12 +14,11 @@ export type VillagerProps = {
     name: string,
     type: VillagerType;
     status: Status;
-    goalPosition?: Position;
     goalObjectId?: string;
     inventorySlots: number;
     inventoryItems: InventoryItem[],
     selected: boolean;
-    currentTask?: (villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition?: Position) => GameTickResult;
+    currentTask?: (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition?: Position) => GameTickResult;
     buildingOptions: BuildingOption[];
     hitBox: Hitbox;
     size: {width: string, height: string};
