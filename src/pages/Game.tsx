@@ -150,8 +150,11 @@ const Game = (map: any) => {
     // Right click handler
     const handleRightClick = useCallback((event: any) => {
         event.preventDefault();
+        let clientRect = event.currentTarget.getBoundingClientRect();
+        let xPos = event.pageX - clientRect.left;
+        let yPos = event.pageY - clientRect.top;
         if (selectedVillager) {
-            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: event.clientX, y: event.clientY })
+            selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: xPos, y: yPos })
         }
     }, [selectedVillager, villagers])
 
