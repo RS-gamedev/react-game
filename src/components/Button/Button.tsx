@@ -15,10 +15,11 @@ type Props = {
   icon?: IconProp,
   iconColor?: string,
   price?: Price[],
-  type?: VillagerType
+  imageName?: string,
+  imageHeight: string
 }
 
-const Button = React.memo(({ onClick, text, disabled, active, width, height, icon, iconColor, price, type }: Props) => {
+const Button = React.memo(({ onClick, text, disabled, active, width, height, icon, iconColor, price, imageName, imageHeight }: Props) => {
   function handleClick(event: any): any {
     event.preventDefault();
     event.stopPropagation();
@@ -31,15 +32,15 @@ const Button = React.memo(({ onClick, text, disabled, active, width, height, ico
       onClick={handleClick}>
       <div className={styles.itemIcon}>
         {(icon && iconColor) ?
-          <Icon fontSize={'1.5em'} name={icon} color={iconColor}></Icon> :
+          <Icon fontSize={'1.5em'} name={icon} color={iconColor} height={height}></Icon> :
           <></>
         }
-        {(type) ?
-          <Icon fontSize={'1em'} type={type}></Icon> :
+        {(imageName) ?
+          <Icon fontSize={'1em'} imageName={imageName} height={'50px'}></Icon> :
           <></>
         }
       </div>
-      {(!type) ?
+      {(!imageName) ?
         <span className={styles.title}>{text}</span> :
         <></>
       }
@@ -47,7 +48,7 @@ const Button = React.memo(({ onClick, text, disabled, active, width, height, ico
         <div style={{ width: '100%', height: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
           {price.map((_price, index) => {
             return <div key={text + index} >
-              <Icon color={_price.type?.color} fontSize='1em' name={_price.type?.icon}></Icon>
+              <Icon color={_price.type?.color} fontSize='1em' name={_price.type?.icon} height={imageHeight}></Icon>
               <span>{_price.amount}</span>
             </div>
           })}

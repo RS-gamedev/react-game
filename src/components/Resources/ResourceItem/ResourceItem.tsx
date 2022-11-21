@@ -14,7 +14,7 @@ type Props = {
 export default function ResourceItem({resource, amount, iconSize, textSize, textColor}: Props) {
   return (
     <div className={styles.resourceItem}>
-        <Icon color={resource.color} fontSize={iconSize} name={resource.icon}></Icon>
+        <Icon color={resource.color} fontSize={iconSize} name={resource.icon} height={'100%'}></Icon>
         <span style={{fontSize: textSize, fontWeight:'600', color: textColor}}>{Math.round(amount)}</span>
     </div>
   )

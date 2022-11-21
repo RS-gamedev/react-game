@@ -66,6 +66,7 @@ export function setInitialMapObjects(map: any): ObjectProps[] {
 			position: mapObject.position,
 			selected: false,
 			hitBox: hitBox,
+			size: mapObject.size,
             inventory: [
                 {
                     amount: 20,

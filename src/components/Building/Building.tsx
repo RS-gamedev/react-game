@@ -22,16 +22,10 @@ type props = {
 
 const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: props) => {
   const position: Position = getHitBoxCenter(hitBox);
-  const [_image, setImage] = useState('');
-  useEffect(() => {
-    if (image) {
-      setImage(getImageUrl(image!));
-    }
-  }, []);
 
   return (
-    <div className={styles[(selected) ? `active` : `not-active`] + " " + styles['building']} style={{ width: size.width, height: size.width, left: hitBox.leftTop.x - (hitBox.leftTop.x - position.x), top: hitBox.leftTop.y - (hitBox.leftTop.y - position.y), position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(event) => onClick(event, id)} onContextMenu={onRightClick}>
-      {(_image !== '') ? <img src={_image}></img> : <Icon fontSize={size.width} color={color} name={icon}></Icon>}
+    <div className={styles[(selected) ? `active` : `not-active`] + " " + styles['building']} style={{ width: size.width, height: size.height, left: hitBox.leftTop.x - (hitBox.leftTop.x - position.x), top: hitBox.leftTop.y - (hitBox.leftTop.y - position.y), position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(event) => onClick(event, id)} onContextMenu={onRightClick}>
+      <Icon fontSize={size.width} color={color} imageName={image} height={'100%'}></Icon>
     </div>
   )
 

@@ -21,10 +21,6 @@
 .button:not(.disabled):hover .itemIcon svg {
     color:white;
   }
-
-  .button:not(.disabled) .itemIcon img{
-    max-width: 30%;
-  }
 .disabled{
     background-color: #373c50;
 }

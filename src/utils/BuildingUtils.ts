@@ -48,7 +48,7 @@ export function createBuilding(position: { x: number, y: number }, type: Buildin
             shape = shapes.find(x => x.type === BuildingType.TOWN_CENTER);
             if (!shape) return;
             return constructBuilding({...position, x: position.x - (75 / 2), y: position.y - (75 / 2)}, shape, [
-                buildingOptions.find(x => x.type === VillagerType.VILLAGER)!
+                buildingOptions.find(x => x.name === 'Train Villager')!
             ]);
         default:
             return undefined;

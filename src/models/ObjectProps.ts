@@ -14,5 +14,9 @@ export type ObjectProps = {
     buildingOptions: BuildingOption[];
     hitBox: Hitbox,
     type: VillagerType,
-    inventory: InventoryItem[]
+    inventory: InventoryItem[],
+    size: {
+        height: string,
+        width: string
+    }
 }

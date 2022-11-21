@@ -15,7 +15,7 @@ export const buildingOptions: BuildingOption[] = [
         price: [
             { type: resources.find(x => x.name === "Wood"), amount: 50 }
         ],
-        type: VillagerType.VILLAGER
+        imageName: 'villager'
     },
     {
         id: uuidv4(),
@@ -25,6 +25,7 @@ export const buildingOptions: BuildingOption[] = [
         price: [
             { type: resources.find(x => x.name === "Coins"), amount: 100 }
         ],
+        imageName: 'none'
     },
     {
         id: uuidv4(),
@@ -34,5 +35,6 @@ export const buildingOptions: BuildingOption[] = [
         price: [
             { type: resources.find(x => x.name === "Gem"), amount: 100 }
         ],
+        imageName: 'none'
     }
 ]

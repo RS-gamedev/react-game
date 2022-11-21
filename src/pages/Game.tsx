@@ -22,6 +22,8 @@ import { doMoveToLocation } from '../utils/MovementUtils';
 import { doWoodcutting } from '../utils/villagerUtils/LumberjackUtils';
 import { executeTasks } from '../utils/StatusUtils';
 import { InventoryItem } from '../models/InventoryItem';
+import ProfessionPicker from '../components/ProfessionPicker/ProfessionPicker';
+import { VillagerProfession } from '../models/VillagerProfession';
 
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
@@ -158,13 +160,11 @@ const Game = (map: any) => {
         }
     }, [selectedVillager, villagers])
 
-    const onTrain = (entity: any, type: VillagerType) => {
-        if (type === VillagerType.VILLAGER) {
-            let result = reduceResourcesFromInventory(inventory, entity.price);
-            if (result[1]) {
-                setInventory(result[0]);
-                trainVillager(entity);
-            }
+    const onTrain = (entity: any) => {
+        let result = reduceResourcesFromInventory(inventory, entity.price);
+        if (result[1]) {
+            setInventory(result[0]);
+            trainVillager(entity);
         }
         return entity;
     }
@@ -185,18 +185,27 @@ const Game = (map: any) => {
     }, [selectedBuilding])
 
 
+    const handleChangeProfessionClick = (updatedVillager: VillagerProps) => {
+        let villagersCopy = [...villagers];
+        villagersCopy = villagersCopy.map(vill => {
+            if(vill.id === updatedVillager.id) return updatedVillager;
+            return vill;
+        });
+        setVillagers((prev) => villagersCopy);
+    }
+
+
     return (
         <div className={styles.background}>
             <div className={styles.actionsArea}>
                 <div className={styles.actions} onClick={event => event.stopPropagation()}>
                     <Settings onClick={selectShape} shapes={allShapes}></Settings>
                     {(selectedBuilding) ? <UpgradeMenu inStock={undefined} onTrain={onTrain} selectedBuilding={selectedBuilding} selectedVillager={undefined} selectedMapObject={undefined}></UpgradeMenu> : <></>}
-                    {(selectedVillager) ? <UpgradeMenu inStock={selectedVillager.inventoryItems} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={selectedVillager} selectedMapObject={undefined}></UpgradeMenu> : <></>}
+                    {(selectedVillager) ? <UpgradeMenu onProfessionChange={handleChangeProfessionClick} inStock={selectedVillager.inventoryItems} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={selectedVillager} selectedMapObject={undefined}></UpgradeMenu> : <></>}
                     {(selectedMapObject) ? <UpgradeMenu inStock={selectedMapObject.inventory} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={undefined} selectedMapObject={selectedMapObject}></UpgradeMenu> : <></>}
-
                 </div>
             </div>
-            <div className={styles.gameArea}  onClick={handleClick} onContextMenu={handleRightClick}>
+            <div className={styles.gameArea} onClick={handleClick} onContextMenu={handleRightClick}>
                 <div className={styles.resourceArea}>
                     {(inventory) ? <Resources inventory={inventory}></Resources> : <></>}
                 </div>
