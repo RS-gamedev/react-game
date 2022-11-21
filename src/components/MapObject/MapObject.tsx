@@ -17,7 +17,6 @@ type props = {
 }
 
 const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClick, size }: props) => {
-  console.log("Rendered mapobject");
   const [showTaskAssigned, setShowTaskAssigned] = useState<boolean>(false);
 
   function handleRightClick(event: any) {

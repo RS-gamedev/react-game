@@ -9,7 +9,6 @@ type Props = {
 }
 
 const Settings = React.memo(({shapes, onClick}: Props) => {
-    console.log('rendered settings');
     return (
         <div className={styles.settingsBox}>
             <h3 className={styles.title} style={{ margin: 0 }}>Buildings</h3>

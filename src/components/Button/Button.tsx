@@ -19,7 +19,6 @@ type Props = {
 }
 
 const Button = React.memo(({ onClick, text, disabled, active, width, height, icon, iconColor, price, imageName, imageHeight }: Props) => {
-  console.log("Rendered Button");
   function handleClick(event: any): any {
     event.preventDefault();
     event.stopPropagation();

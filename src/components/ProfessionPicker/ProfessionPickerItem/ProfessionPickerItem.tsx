@@ -6,13 +6,13 @@ type Props = {
     name: string,
     level: number,
     active: boolean,
-    onClick?: () => void
+    id: string,
+    onClick: (villagerProfessionId: string) => void
 }
 
-export default function ProfessionPickerItem({ image, name, level, active, onClick }: Props) {
-    console.log("Rendered ProfessionPickerItem");
+export default function ProfessionPickerItem({ image, name, level, active, onClick, id }: Props) {
     return (
-        <div className={`${styles.professionPickerItem} ${(active) ? styles.active : ""}`} onClick={onClick}>
+        <div className={`${styles.professionPickerItem} ${(active) ? styles.active : ""}`} onClick={() => onClick(id)}>
             <div className={styles.imageSection}>
                 <Icon imageName={image} fontSize='1em' height='100%'></Icon>
             </div>

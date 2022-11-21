@@ -55,10 +55,6 @@ const Game = (map: any) => {
         }
     }, [gameTick]);
 
-    useEffect(() => {
-        console.log("ITS THIS");
-    }, [selectedShape, selectedBuilding, selectedMapObject, selectedVillager])
-
 
     useEffect(() => {
         setInventory(setInitialInventory()!);

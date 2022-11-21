@@ -18,18 +18,12 @@ type props = {
 library.add(faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns);
 
 const Icon = ({ name, color, fontSize, imageName, height }: props) => {
-  console.log("Rendered Icon");
   const [imagePath, setImagePath] = useState("");
 
   useEffect(() => {
     if(!imageName) return;
     setImagePath(getImageUrl(imageName));
   }, [imageName]);
-
-  useEffect(() => {
-    console.log("JUUUUP");
-  }, [height])
-
   
   return (
     <div className={(imagePath) ? styles.icon : ""}>

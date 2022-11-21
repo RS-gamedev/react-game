@@ -2,7 +2,7 @@ import styles from './ProfessionPicker.module.css';
 import { professions } from '../../config/Professions';
 import ProfessionPickerItem from './ProfessionPickerItem/ProfessionPickerItem';
 import { VillagerProfession } from '../../models/VillagerProfession';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 type Props = {
   open: boolean;
@@ -12,11 +12,21 @@ type Props = {
 
 const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
 
-  console.log("Rendered ProfessionPicker");
+  const [selectedVillagerProfession, setSelectedVillagerProfession] = useState<VillagerProfession>();
 
   useEffect(() => {
-    console.log("onclick changed");
-  }, [onClick])
+    let selected = villagerProfessions.find(x => x.active);
+    if (!selected) return;
+    setSelectedVillagerProfession(selected)
+  }, [])
+
+
+  const handleChangeProfession = (villagerProfessionId: string) => {
+    let toSelect = villagerProfessions.find(x => x.id === villagerProfessionId);
+    if(!toSelect) return;
+    setSelectedVillagerProfession(toSelect);
+    onClick(toSelect);
+  }
 
   return (open) ?
     (
@@ -24,7 +34,7 @@ const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
         <div className={styles.professionPickerItems}>
           {
             villagerProfessions.map(prof => {
-              return <ProfessionPickerItem active={prof.active} name={prof.profession.name} image={prof.profession.image} level={prof.currentLevel.level} onClick={(() => onClick(prof)!)}></ProfessionPickerItem>
+              return <ProfessionPickerItem id={prof.id} active={(selectedVillagerProfession?.id === prof.id) ? prof.active: false} name={prof.profession.name} image={prof.profession.image} level={prof.currentLevel.level} onClick={handleChangeProfession}></ProfessionPickerItem>
             })
           }
         </div>
@@ -32,4 +42,4 @@ const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
     )
     : <></>
 }
-export default React.memo(ProfessionPicker);
+export default ProfessionPicker;

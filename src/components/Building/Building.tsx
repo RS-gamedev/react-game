@@ -20,7 +20,6 @@ type props = {
 }
 
 const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: props) => {
-  console.log("Rendered Building");
   const position: Position = getHitBoxCenter(hitBox);
 
   return (

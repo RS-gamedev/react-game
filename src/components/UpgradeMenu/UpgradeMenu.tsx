@@ -25,7 +25,6 @@ type Props = {
 }
 
 const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange }: Props) => {
-    console.log("Rendered UpgradeMenu");
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
     const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
     const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
@@ -52,7 +51,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             let entity = buildingOption.toExecute(position);
             onTrain(entity);
         }
-    }, [onTrain])
+    }, [buildingOptions])
 
     const handleChangeProfession = useCallback((villagerProfession: VillagerProfession) => {
         if(!onProfessionChange || !selectedVillager) return;
@@ -66,8 +65,8 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         }
         setJobSelectionOpen(false);
         onProfessionChange(selectedVillagerCopy);
-    }, [selectedVillager])
-
+    }, [])
+    
     if (selectedBuilding) {
         return <div className={styles.upgradeMenu}>
             <div className={styles.titleSection}>
@@ -104,7 +103,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
                     return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff'></ResourceItem>
                 }) : <></>}
             </div>
-            <ProfessionPicker villagerProfessions={selectedVillager.professions} open={jobSelectionOpen} onClick={((villagerProfession) => handleChangeProfession(villagerProfession))}></ProfessionPicker>
+            <ProfessionPicker villagerProfessions={selectedVillager.professions} open={jobSelectionOpen} onClick={handleChangeProfession}></ProfessionPicker>
         </div>
     }
 
