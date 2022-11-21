@@ -1,9 +1,8 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core"
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Hitbox } from "../../models/Hitbox";
 import { Position } from "../../models/Position";
 import { getHitBoxCenter } from "../../utils/HitboxUtils";
-import { getImageUrl } from "../../utils/MapUtils";
 import Icon from "../Icon/Icon";
 import styles from './Building.module.css';
 
@@ -21,6 +20,7 @@ type props = {
 }
 
 const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: props) => {
+  console.log("Rendered Building");
   const position: Position = getHitBoxCenter(hitBox);
 
   return (

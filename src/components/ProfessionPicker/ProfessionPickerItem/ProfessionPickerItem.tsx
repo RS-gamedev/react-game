@@ -10,6 +10,7 @@ type Props = {
 }
 
 export default function ProfessionPickerItem({ image, name, level, active, onClick }: Props) {
+    console.log("Rendered ProfessionPickerItem");
     return (
         <div className={`${styles.professionPickerItem} ${(active) ? styles.active : ""}`} onClick={onClick}>
             <div className={styles.imageSection}>

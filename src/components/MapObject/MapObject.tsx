@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Position } from '../../models/Position';
 import { Hitbox } from '../../models/Hitbox';
 import Icon from '../Icon/Icon';
-import { ObjectProps } from '../../models/ObjectProps';
 
 
 type props = {
@@ -18,6 +17,7 @@ type props = {
 }
 
 const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClick, size }: props) => {
+  console.log("Rendered mapobject");
   const [showTaskAssigned, setShowTaskAssigned] = useState<boolean>(false);
 
   function handleRightClick(event: any) {

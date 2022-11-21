@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BuildingOption } from '../../models/BuildingOption';
 import { BuildingProps } from '../../models/BuildingProps';
 import { Status } from '../../models/enums/Status';
@@ -25,6 +25,7 @@ type Props = {
 }
 
 const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange }: Props) => {
+    console.log("Rendered UpgradeMenu");
     const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
     const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
     const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
@@ -46,14 +47,14 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         }
     }, []);
 
-    const executeBuildingOption = (buildingOption: BuildingOption, type: string) => {
+    const executeBuildingOption = useCallback((buildingOption: BuildingOption, type: string) => {
         if (type == 'train') {
             let entity = buildingOption.toExecute(position);
             onTrain(entity);
         }
-    }
+    }, [onTrain])
 
-    const handleChangeProfession = (villagerProfession: VillagerProfession) => {
+    const handleChangeProfession = useCallback((villagerProfession: VillagerProfession) => {
         if(!onProfessionChange || !selectedVillager) return;
         let selectedVillagerCopy = {
             ...selectedVillager, professions: selectedVillager.professions.map(x => {
@@ -65,7 +66,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         }
         setJobSelectionOpen(false);
         onProfessionChange(selectedVillagerCopy);
-    }
+    }, [selectedVillager])
 
     if (selectedBuilding) {
         return <div className={styles.upgradeMenu}>
@@ -103,7 +104,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
                     return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff'></ResourceItem>
                 }) : <></>}
             </div>
-            <ProfessionPicker villagerProfessions={selectedVillager.professions} open={jobSelectionOpen} onClick={(onProfessionChange) && ((villagerProfession) => handleChangeProfession(villagerProfession))}></ProfessionPicker>
+            <ProfessionPicker villagerProfessions={selectedVillager.professions} open={jobSelectionOpen} onClick={((villagerProfession) => handleChangeProfession(villagerProfession))}></ProfessionPicker>
         </div>
     }
 

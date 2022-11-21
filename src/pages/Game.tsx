@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './Game.module.css';
 import Settings from '../components/Settings/Settings';
 import { Shape } from '../models/Shape';
@@ -16,14 +16,10 @@ import Villager from '../components/Villager/Villager';
 import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
 import { reduceResourcesFromInventory, canAfford } from '../utils/ResourceUtils';
 import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from '../utils/GameUtils';
-import { VillagerType } from '../models/enums/VillagerType';
-import { GameTickResult } from '../models/GameTickResult';
 import { doMoveToLocation } from '../utils/MovementUtils';
 import { doWoodcutting } from '../utils/villagerUtils/LumberjackUtils';
 import { executeTasks } from '../utils/StatusUtils';
 import { InventoryItem } from '../models/InventoryItem';
-import ProfessionPicker from '../components/ProfessionPicker/ProfessionPicker';
-import { VillagerProfession } from '../models/VillagerProfession';
 
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
@@ -58,6 +54,10 @@ const Game = (map: any) => {
             setVillagers(result.villagers);
         }
     }, [gameTick]);
+
+    useEffect(() => {
+        console.log("ITS THIS");
+    }, [selectedShape, selectedBuilding, selectedMapObject, selectedVillager])
 
 
     useEffect(() => {
@@ -160,14 +160,14 @@ const Game = (map: any) => {
         }
     }, [selectedVillager, villagers])
 
-    const onTrain = (entity: any) => {
+    const onTrain = useCallback((entity: any) => {
         let result = reduceResourcesFromInventory(inventory, entity.price);
         if (result[1]) {
             setInventory(result[0]);
             trainVillager(entity);
         }
         return entity;
-    }
+    }, [inventory])
 
     function handleVillagerRightClick() {
 
@@ -185,15 +185,14 @@ const Game = (map: any) => {
     }, [selectedBuilding])
 
 
-    const handleChangeProfessionClick = (updatedVillager: VillagerProps) => {
+    const handleChangeProfessionClick = useCallback((updatedVillager: VillagerProps) => {
         let villagersCopy = [...villagers];
         villagersCopy = villagersCopy.map(vill => {
             if(vill.id === updatedVillager.id) return updatedVillager;
             return vill;
         });
         setVillagers((prev) => villagersCopy);
-    }
-
+    }, [selectedVillager])
 
     return (
         <div className={styles.background}>
