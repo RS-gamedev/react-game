@@ -1,6 +1,5 @@
 import { BuildingProps } from "../models/BuildingProps";
 import { GameTickResult } from "../models/GameTickResult";
-import { Inventory } from "../models/Inventory";
 import { InventoryItem } from "../models/InventoryItem";
 import { ObjectProps } from "../models/ObjectProps";
 import { VillagerProps } from "../models/VillagerProps";
