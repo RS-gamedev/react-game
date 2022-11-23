@@ -9,7 +9,7 @@ import styles from './Building.module.css';
 
 type props = {
   id: string;
-  size: { width: string, height: string },
+  size: { width: number, height: number },
   hitBox: Hitbox,
   icon: IconProp,
   color: string,
@@ -24,7 +24,7 @@ const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected,
 
   return (
     <div className={styles[(selected) ? `active` : `not-active`] + " " + styles['building']} style={{ width: size.width, height: size.height, left: hitBox.leftTop.x - (hitBox.leftTop.x - position.x), top: hitBox.leftTop.y - (hitBox.leftTop.y - position.y), position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(event) => onClick(event, id)} onContextMenu={onRightClick}>
-      <Icon fontSize={size.width} color={color} imageName={image} height={'100%'}></Icon>
+      <Icon fontSize={size.width - 10 + "px"} color={color} imageName={image} height={size.height - 10 + "px"}></Icon>
     </div>
   )
 })

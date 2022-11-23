@@ -16,7 +16,7 @@ export const shapes: Shape[] = [
             { type: resources.find(x => x.name === "Coins"), amount: 50 }
         ],
         type: BuildingType.HOUSE,
-        size: {width:'50px', height:'50px'}
+        size: {width:50, height:50}
     },
     {
         id: uuidv4(),
@@ -29,7 +29,7 @@ export const shapes: Shape[] = [
             { type: resources.find(x => x.name === "Coins"), amount: 50 }
         ],
         type: BuildingType.TOWN_CENTER,
-        size: {width:'75px', height:'75px'}
+        size: {width:75, height:75}
     },
     {
         id: uuidv4(),
@@ -42,7 +42,7 @@ export const shapes: Shape[] = [
             { type: resources.find(x => x.name === "Coins"), amount: 50 }
         ],
         type: BuildingType.TENTS,
-        size: {width:'50px', height:'50px'}
+        size: {width:50, height:50}
     },
 
     {
@@ -56,6 +56,6 @@ export const shapes: Shape[] = [
             { type: resources.find(x => x.name === "Gems"), amount: 150 }
         ],
         type: BuildingType.GUARD_TOWER,
-        size: {width:'50px', height:'50px'}
+        size: {width:50, height:50}
     }
 ]

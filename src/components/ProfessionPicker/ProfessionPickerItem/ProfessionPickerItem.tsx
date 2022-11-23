@@ -14,7 +14,7 @@ export default function ProfessionPickerItem({ image, name, level, active, onCli
     return (
         <div className={`${styles.professionPickerItem} ${(active) ? styles.active : ""}`} onClick={() => onClick(id)}>
             <div className={styles.imageSection}>
-                <Icon imageName={image} fontSize='1em' height='100%'></Icon>
+                <Icon imageName={image} fontSize='1em' height='35px'></Icon>
             </div>
             <div className={styles.nameSection}>
                 <span>{name}</span>

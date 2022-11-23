@@ -21,6 +21,6 @@ export type VillagerProps = {
     currentTask?: (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition?: Position) => GameTickResult;
     buildingOptions: BuildingOption[];
     hitBox: Hitbox;
-    size: {width: string, height: string};
+    size: {width: number, height: number};
     professions: VillagerProfession[];
 }

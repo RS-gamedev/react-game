@@ -12,7 +12,9 @@ export function setInitialInventory() {
 	let wood = resources.find((x) => x.name === 'Wood');
 	let coins = resources.find((x) => x.name === 'Coins');
 	let gems = resources.find((x) => x.name === 'Gems');
-	if (!wood || !coins || !gems) return;
+	let food = resources.find((x) => x.name === 'Food');
+
+	if (!wood || !coins || !gems || !food) return;
 	let inventoryInit: Inventory = {
 		resources: [
 			{
@@ -25,6 +27,10 @@ export function setInitialInventory() {
 			},
 			{
 				resource: gems,
+				amount: 0,
+			},
+			{
+				resource: food,
 				amount: 0,
 			},
 		],

@@ -1,7 +1,7 @@
 // External
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library, IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns } from '@fortawesome/free-solid-svg-icons';
+import { faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import React, { useEffect, useState } from 'react';
 import { getImageUrl } from '../../utils/MapUtils';
 import styles from './Icon.module.css';
@@ -15,7 +15,7 @@ type props = {
   height: string
 }
 
-library.add(faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns);
+library.add(faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns, faUtensils);
 
 const Icon = ({ name, color, fontSize, imageName, height }: props) => {
   const [imagePath, setImagePath] = useState("");

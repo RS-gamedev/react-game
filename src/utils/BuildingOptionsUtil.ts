@@ -35,8 +35,8 @@ export function trainVillager(position: Position) {
             { type: resources.find(x => x.name === "Wood"), amount: 50 }
         ],
         size: {
-            width: '50px',
-            height: '50px'
+            width: 35,
+            height: 35
         },
         hitBox: {
             leftTop: {

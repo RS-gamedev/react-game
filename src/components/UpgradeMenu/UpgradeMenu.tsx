@@ -92,7 +92,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
                 </div>
 
                 <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>
-                    <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"100%"}></Icon>
+                    <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={'50px'}></Icon>
                 </div>
             </div>
             <div className={styles.buildingOptionsSection}>

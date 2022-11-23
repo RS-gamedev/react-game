@@ -10,7 +10,7 @@ type props = {
   id: string;
   name: string;
   hitBox: Hitbox;
-  size: {width: string, height: string};
+  size: {width: number, height: number};
   onClick: (event: any, villagerId: string) => void
   selected: boolean;
   professions: VillagerProfession[];
@@ -30,7 +30,7 @@ export default function Villager({ id, name, size, hitBox, onClick, selected, pr
   return (
     <div className={styles.villager + " " + `${(selected) ? styles.selected : styles.nothing}`} style={{ width: size.width, height: size.height, left: hitBox.leftTop.x, top: hitBox.leftTop.y }} onClick={(event) => onClick(event, id)}>
       {/* <img style={{ height: '100%' }} src={image}></img> */}
-      <Icon height='100%' fontSize='1em' imageName={activeProfession?.profession.characterImageName}></Icon>
+      <Icon height={size.height - 10 + 'px'} fontSize='1em' imageName={activeProfession?.profession.characterImageName}></Icon>
     </div>
   )
 }

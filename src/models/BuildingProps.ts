@@ -11,8 +11,8 @@ export type BuildingProps = {
     name: string,
     color: string,
     size: {
-        width: string,
-        height: string
+        width: number,
+        height: number
     },
     position: {
         x: number,
