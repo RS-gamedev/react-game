@@ -92,30 +92,24 @@ const Game = (map: any) => {
     // Deselect other, and select given
     const deselectAllBut = useCallback((event: any, toSelectId: string) => {
         event.stopPropagation();
-        let mapObjectsCopy = [...mapObjects];
-        mapObjectsCopy.forEach(x => x.selected = false);
-        let toSelectMapObject = mapObjectsCopy.find(x => x.id === toSelectId);
-        if (toSelectMapObject) {
-            toSelectMapObject.selected = true;
-        }
-        setMapObjects((prev) => mapObjectsCopy);
-
-        let villagersCopy = [...villagers];
-        villagersCopy.forEach(x => x.selected = false);
-        let toSelectVillager = villagersCopy.find(x => x.id === toSelectId);
-        if (toSelectVillager) {
-            toSelectVillager.selected = true;
-            selectedVillager = toSelectVillager;
-        }
-        setVillagers(villagersCopy);
-
-        let buildingsCopy = [...buildings];
-        buildingsCopy.forEach(x => x.selected = false);
-        let toSelectBuilding = buildingsCopy.find(x => x.id === toSelectId);
-        if (toSelectBuilding) {
-            toSelectBuilding.selected = true;
-        }
-        setBuildings(buildingsCopy);
+        setMapObjects((previous) => {
+            return previous.map(mapObject => {
+                if (mapObject.id === toSelectId) return { ...mapObject, selected: true }
+                return { ...mapObject, selected: false }
+            })
+        });
+        setVillagers((previous) => {
+            return previous.map(villager => {
+                if (villager.id === toSelectId) return { ...villager, selected: true };
+                return { ...villager, selected: false };
+            })
+        });
+        setBuildings((previous) => {
+            return previous.map(building => {
+                if (building.id === toSelectId) return { ...building, selected: true };
+                return { ...building, selected: false };
+            })
+        });
     }, [buildings, villagers, mapObjects])
 
     // Left click handler
@@ -163,7 +157,7 @@ const Game = (map: any) => {
             trainVillager(entity);
         }
         return entity;
-    }, [inventory])
+    }, [inventory, villagers])
 
     function handleVillagerRightClick() {
 
@@ -172,7 +166,7 @@ const Game = (map: any) => {
     const handleMapObjectRightClick = useCallback((event: any, mapObjectId: string) => {
         event.stopPropagation();
         event.preventDefault();
-        if (selectedVillager) {
+        if (selectedVillager && selectedVillager.professions.find(x => x.active)?.profession.name === 'Lumberjack') {
             selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventoryItems, buildings, mapObjects, mapObjectId);
         }
     }, [mapObjects, selectedVillager])
@@ -184,7 +178,7 @@ const Game = (map: any) => {
     const handleChangeProfessionClick = useCallback((updatedVillager: VillagerProps) => {
         let villagersCopy = [...villagers];
         villagersCopy = villagersCopy.map(vill => {
-            if(vill.id === updatedVillager.id) return updatedVillager;
+            if (vill.id === updatedVillager.id) return updatedVillager;
             return vill;
         });
         setVillagers((prev) => villagersCopy);

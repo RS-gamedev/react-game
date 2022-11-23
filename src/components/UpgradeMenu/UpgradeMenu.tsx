@@ -53,20 +53,16 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         }
     }, [buildingOptions])
 
-    useEffect(() => {
-        console.log(selectedVillager);
-    }, [selectedVillager])
-
     const handleChangeProfession = useCallback((villagerProfession: VillagerProfession) => {
         if(!onProfessionChange || !selectedVillager) return;
         let selectedVillagerCopy = {
-            ...selectedVillager, professions: selectedVillager.professions.map(x => {
+            ...selectedVillager, currentTask: undefined, status: Status.IDLE, professions: selectedVillager.professions.map(x => {
                 if(x.profession.id === villagerProfession.profession.id){
                     return { ...x, active: true }
                 }
                 return { ...x, active: false }
             })
-        }
+        };
         setJobSelectionOpen(false);
         onProfessionChange(selectedVillagerCopy);
     }, [selectedVillager])
