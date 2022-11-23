@@ -77,7 +77,7 @@ const Game = (map: any) => {
             toReturn.push(villager);
             return toReturn;
     })
-    }, [villagers])
+    }, [])
 
     const selectShape = useCallback((shape: Shape) => {
         let shapesCopy = [...allShapes];
@@ -110,7 +110,7 @@ const Game = (map: any) => {
                 return { ...building, selected: false };
             })
         });
-    }, [buildings, villagers, mapObjects])
+    }, [])
 
     // Left click handler
     function handleClick(event: any): any {
@@ -144,7 +144,7 @@ const Game = (map: any) => {
         if (selectedVillager) {
             selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: xPos, y: yPos })
         }
-    }, [selectedVillager, villagers])
+    }, [selectedVillager])
 
     const onTrain = useCallback((entity: any) => {
         let result = reduceResourcesFromInventory(inventory, entity.price);
