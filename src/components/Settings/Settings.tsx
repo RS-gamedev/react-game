@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Shape } from '../../models/Shape';
 import Button from '../Button/Button';
 import styles from './Settings.module.css';

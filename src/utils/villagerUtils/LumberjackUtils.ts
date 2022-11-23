@@ -3,7 +3,6 @@ import { BuildingProps } from "../../models/BuildingProps";
 import { BuildingType } from "../../models/enums/BuildingType";
 import { Status } from "../../models/enums/Status";
 import { GameTickResult } from "../../models/GameTickResult";
-import { Inventory } from "../../models/Inventory";
 import { InventoryItem } from "../../models/InventoryItem";
 import { ObjectProps } from "../../models/ObjectProps";
 import { VillagerProps } from "../../models/VillagerProps";
@@ -89,7 +88,7 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
         case Status.DROPPING_RESOURCES:
             villagerCopy.inventoryItems.forEach(invItem => {
                 if (inventoryItemsCopy) {
-                    let inventoryResource = inventoryItemsCopy.find(x => x.resource.name == invItem.resource.name);
+                    let inventoryResource = inventoryItemsCopy.find(x => x.resource.name === invItem.resource.name);
                     if (inventoryResource) {
                         inventoryItemsChanged = true;
                         inventoryResource.amount = add(inventoryResource.amount, invItem.amount);

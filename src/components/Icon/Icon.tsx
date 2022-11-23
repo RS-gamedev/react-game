@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { getImageUrl } from '../../utils/MapUtils';
 import styles from './Icon.module.css';
 
-
 type props = {
   name?: IconProp,
   color?: string,
@@ -31,7 +30,7 @@ const Icon = ({ name, color, fontSize, imageName, height }: props) => {
         <FontAwesomeIcon icon={name} color={color} fontSize={fontSize} /> : <></>
       }
       {(!name && imagePath) ?
-        <img src={imagePath} style={{height: height}}></img> : <></>
+        <img alt={name} src={imagePath} style={{height: height}}></img> : <></>
       }
     </div>
   );

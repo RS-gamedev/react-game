@@ -195,21 +195,15 @@ const Game = (map: any) => {
                 </div>
 
                 {(buildings) ? buildings?.map((building, index) => {
-                    if (building) {
-                        return <Building key={building.id} {...building} onClick={deselectAllBut} onRightClick={handleBuildingRightClick}></Building>
-                    }
+                    return (building) ? <Building key={building.id} {...building} onClick={deselectAllBut} onRightClick={handleBuildingRightClick}></Building> : <></>
                 }) : <></>
                 }
                 {(mapObjects) ? mapObjects?.map((mapObject, index) => {
-                    if (mapObject) {
-                        return <MapObject key={mapObject.id} {...mapObject} onClick={deselectAllBut} onRightClick={handleMapObjectRightClick}></MapObject>
-                    }
+                    return (mapObject) ?  <MapObject key={mapObject.id} {...mapObject} onClick={deselectAllBut} onRightClick={handleMapObjectRightClick}></MapObject> : <></>
                 }) : <></>
                 }
                 {(villagers) ? villagers?.map((villager, index) => {
-                    if (villager) {
-                        return <Villager key={villager.id} {...villager} onClick={deselectAllBut}></Villager>
-                    }
+                    return (villager) ? <Villager key={villager.id} {...villager} onClick={deselectAllBut}></Villager> : <></>
                 }) : <></>
                 }
             </div>
