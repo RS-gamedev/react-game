@@ -100,7 +100,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             </div>
             <div className={styles.inventorySection}>
                 {(inStock) ? inStock.map(x => {
-                    return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff'></ResourceItem>
+                    return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff' height={15}></ResourceItem>
                 }) : <></>}
             </div>
             <ProfessionPicker villagerProfessions={selectedVillager.professions} open={jobSelectionOpen} onClick={handleChangeProfession}></ProfessionPicker>
@@ -118,7 +118,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             </div>
             <div className={styles.inventorySection}>
                 {(inStock) ? inStock.map(x => {
-                    return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff'></ResourceItem>
+                    return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff' height={15}></ResourceItem>
                 }) : <></>}
             </div>
         </div>
