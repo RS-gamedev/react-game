@@ -1,16 +1,14 @@
 import { BuildingProps } from "../models/BuildingProps";
 import { shapes } from '../config/Shapes';
-import { buildingOptions } from '../config/BuildingOptions';
 import { Shape } from "../models/Shape";
 import { v4 as uuidv4 } from 'uuid';
 import { BuildingType } from "../models/enums/BuildingType";
-import { BuildingOption } from "../models/BuildingOption";
 import { Position } from "../models/Position";
 import { Hitbox } from "../models/Hitbox";
-import { VillagerType } from "../models/enums/VillagerType";
 
-function constructBuilding(position: { x: number, y: number }, shape: Shape, buildingOptions: BuildingOption[]) {
-    let hitbox = createHitbox(position);
+function constructBuilding(position: Position, shape: Shape,) {
+    console.log(shape);
+    let hitbox = createHitbox(position, shape.size);
     let house: BuildingProps = {
         id: uuidv4(),
         selected: false,
@@ -23,62 +21,26 @@ function constructBuilding(position: { x: number, y: number }, shape: Shape, bui
         size: shape.size,
         type: shape.type,
         image: shape.image,
-        buildingOptions: buildingOptions,
+        buildingOptions: shape.buildingOptions,
         hitBox: hitbox
     }
     return house;
 }
 
-export function createBuilding(position: { x: number, y: number }, type: BuildingType) {
-    let shape: Shape | undefined;
-    switch (type) {
-        case BuildingType.HOUSE:
-            shape = shapes.find(x => x.type === BuildingType.HOUSE);
-            if (!shape) return;
-            return constructBuilding({...position, x: position.x - (75 / 2), y: position.y - (75 / 2)}, shape, []);
-        case BuildingType.TENTS:
-            shape = shapes.find(x => x.type === BuildingType.TENTS);
-            if (!shape) return;
-            return constructBuilding({...position, x: position.x - (75 / 2), y: position.y - (75 / 2)}, shape, []);
-        case BuildingType.GUARD_TOWER:
-            shape = shapes.find(x => x.type === BuildingType.GUARD_TOWER);
-            if (!shape) return;
-            return constructBuilding({...position, x: position.x - (75 / 2), y: position.y - (75 / 2)}, shape, []);
-        case BuildingType.TOWN_CENTER:
-            shape = shapes.find(x => x.type === BuildingType.TOWN_CENTER);
-            if (!shape) return;
-            return constructBuilding({...position, x: position.x - (75 / 2), y: position.y - (75 / 2)}, shape, [
-                buildingOptions.find(x => x.name === 'Train Villager')!
-            ]);
-        default:
-            return undefined;
-    }
+export function createBuilding(position: Position, type: BuildingType) {
+    let shape = shapes.find(x => x.type === type);
+    if(!shape) return;
+    return constructBuilding({...position, x: position.x, y: position.y}, shape);
 }
-
-
-export function getStorageBuildings(buildings: BuildingProps[]) {
-    return buildings.filter(x => x.type === BuildingType.STORAGE || x.type === BuildingType.TENTS || x.type === BuildingType.TOWN_CENTER);
-}
-
-function createHitbox(position: Position): Hitbox {
+function createHitbox(position: Position, objectSize: {width: number, height: number}): Hitbox {
     return {
         leftTop: {
-            x: position.x - 25,
-            y: position.y - 25
+            x: position.x - (objectSize.width / 2),
+            y: position.y - (objectSize.height / 2)
         },
         rightBottom: {
-            x: position.x + 25,
-            y: position.y + 25
+            x: position.x + (objectSize.width / 2),
+            y: position.y + (objectSize.height / 2)
         }
     }
-}
-
-export function setSelectedBuilding(buildings: BuildingProps[], toSelectId: string) {
-    let buildingsCopy = [...buildings];
-    let selectedBuilding = buildingsCopy.find(x => x.id === toSelectId);
-    if (selectedBuilding) {
-        selectedBuilding.selected = true;
-    }
-    buildingsCopy.filter(x => x.id !== toSelectId).forEach(x => x.selected = false);
-    return buildingsCopy;
 }

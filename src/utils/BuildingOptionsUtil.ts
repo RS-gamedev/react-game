@@ -2,7 +2,6 @@ import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
 import { v4 as uuidv4 } from 'uuid';
 import { Status } from "../models/enums/Status";
-import { VillagerType } from "../models/enums/VillagerType";
 import { resources } from "../config/Resources";
 import { professions } from '../config/Professions';
 import { VillagerProfession } from "../models/VillagerProfession";

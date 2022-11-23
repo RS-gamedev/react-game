@@ -18,7 +18,6 @@ export default function ProfessionPickerItem({ image, name, level, active, onCli
             </div>
             <div className={styles.nameSection}>
                 <span>{name}</span>
-
             </div>
             <div className={styles.levelSection}>
                 <span>Lvl {level}</span>

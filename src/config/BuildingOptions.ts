@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { resources } from "./Resources";
 import { Position } from "../models/Position";
 import { trainVillager } from "../utils/BuildingOptionsUtil";
-import { VillagerType } from "../models/enums/VillagerType";
 
 
 
