@@ -1,4 +1,3 @@
-import { VillagerType } from "./enums/VillagerType";
 import { Level } from "./Level";
 import { Profession } from "./Profession";
 

@@ -79,15 +79,14 @@ const Game = (map: any) => {
     })
     }, [])
 
-    const selectShape = useCallback((shape: Shape) => {
-        let shapesCopy = [...allShapes];
-        let selectedShape = shapesCopy.find(x => x.name == shape.name);
-        if (selectedShape) {
-            selectedShape.selected = !selectedShape?.selected;
-        }
-        shapesCopy.filter(x => x.id !== shape.id).forEach(x => x.selected = false);
-        setAllShapes((prev) => shapesCopy);
-    }, [allShapes]);
+    const selectShape = useCallback((shapeId: string) => {
+        setAllShapes((prev) => {
+            return prev.map(x => {
+                if(x.id === shapeId) return {...x, selected: (!x.selected) ? true : false};
+                return {...x, selected: false};
+            })
+        })
+    }, []);
 
     // Deselect other, and select given
     const deselectAllBut = useCallback((event: any, toSelectId: string) => {
@@ -153,7 +152,7 @@ const Game = (map: any) => {
             trainVillager(entity);
         }
         return entity;
-    }, [inventory, villagers])
+    }, [inventory, trainVillager])
 
     function handleVillagerRightClick() {
 
@@ -165,20 +164,20 @@ const Game = (map: any) => {
         if (selectedVillager && selectedVillager.professions.find(x => x.active)?.profession.name === 'Lumberjack') {
             selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventoryItems, buildings, mapObjects, mapObjectId);
         }
-    }, [mapObjects, selectedVillager])
+    }, [selectedVillager])
 
     const handleBuildingRightClick = useCallback((event: any) => {
-    }, [selectedBuilding])
 
+    }, [])
 
     const handleChangeProfessionClick = useCallback((updatedVillager: VillagerProps) => {
-        let villagersCopy = [...villagers];
-        villagersCopy = villagersCopy.map(vill => {
-            if (vill.id === updatedVillager.id) return updatedVillager;
-            return vill;
-        });
-        setVillagers((prev) => villagersCopy);
-    }, [selectedVillager])
+        setVillagers((prev) => {
+            return prev.map(vill => {
+                if(vill.id === updatedVillager.id) return updatedVillager;
+                return vill;
+            })
+        })
+    }, [])
 
     return (
         <div className={styles.background}>
