@@ -20,6 +20,11 @@ const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
     setSelectedVillagerProfession(selected)
   }, [])
 
+  useEffect(() => {
+    console.log("villager Professions changed");
+    console.log(villagerProfessions);
+  }, [villagerProfessions])
+
 
   const handleChangeProfession = (villagerProfessionId: string) => {
     let toSelect = villagerProfessions.find(x => x.id === villagerProfessionId);

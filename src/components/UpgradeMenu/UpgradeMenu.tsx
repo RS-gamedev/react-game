@@ -53,6 +53,10 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         }
     }, [buildingOptions])
 
+    useEffect(() => {
+        console.log(selectedVillager);
+    }, [selectedVillager])
+
     const handleChangeProfession = useCallback((villagerProfession: VillagerProfession) => {
         if(!onProfessionChange || !selectedVillager) return;
         let selectedVillagerCopy = {
@@ -65,7 +69,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         }
         setJobSelectionOpen(false);
         onProfessionChange(selectedVillagerCopy);
-    }, [])
+    }, [selectedVillager])
     
     if (selectedBuilding) {
         return <div className={styles.upgradeMenu}>
@@ -95,8 +99,8 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
                     <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"100%"}></Icon>
                 </div>
             </div>
-
             <div className={styles.buildingOptionsSection}>
+                <span>{selectedVillager.id}</span>
             </div>
             <div className={styles.inventorySection}>
                 {(inStock) ? inStock.map(x => {
