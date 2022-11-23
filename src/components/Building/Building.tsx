@@ -27,7 +27,6 @@ const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected,
       <Icon fontSize={size.width} color={color} imageName={image} height={'100%'}></Icon>
     </div>
   )
-
 })
 
 export default Building;

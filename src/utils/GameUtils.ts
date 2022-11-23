@@ -17,7 +17,7 @@ export function setInitialInventory() {
 		resources: [
 			{
 				resource: coins,
-				amount: 0,
+				amount: 50,
 			},
 			{
 				resource: wood,

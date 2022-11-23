@@ -6,8 +6,9 @@ import none from '../assets/none.svg';
 import lumberjack from '../assets/lumberjack.svg';
 import farmer from '../assets/farmer.svg';
 import hoe from '../assets/hoe.svg';
+import house from '../assets/house.svg';
 
-const objects = ['tree', 'villager', 'townCenter', 'axe', 'none', 'hoe', 'lumberjack', 'farmer'];
+const objects = ['tree', 'villager', 'townCenter', 'axe', 'none', 'hoe', 'lumberjack', 'farmer', 'house'];
 
 export const getImageUrl = (name: string) => {
     let object = objects.find(x => x === name);
@@ -28,6 +29,8 @@ export const getImageUrl = (name: string) => {
             return lumberjack;
         case 'farmer':
             return farmer;
+            case 'house':
+                return house;
         default:
             return tree;
     }
