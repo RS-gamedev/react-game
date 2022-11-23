@@ -9,11 +9,10 @@ type Props = {
 }
 
  const Resources = React.memo(({ inventory }: Props) => {
-    console.log("resource render");
     return (
         <div className={styles.resources}>
             {inventory.resources.map((item, index) => {
-                return <ResourceItem key={index} resource={item.resource} amount={item.amount} iconSize='2em' textSize='1em' textColor='#000000' ></ResourceItem>
+                return <ResourceItem key={index} resource={item.resource} amount={item.amount} iconSize='2em' textSize='1em' textColor='#000000' height={25} ></ResourceItem>
             })
             }
         </div>

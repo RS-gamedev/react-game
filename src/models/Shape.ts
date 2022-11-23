@@ -11,5 +11,5 @@ export type Shape = {
     selected: boolean
     price: Price[];
     type: BuildingType,
-    size: {width: string, height: string}
+    size: {width: number, height: number}
 }

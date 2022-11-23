@@ -12,12 +12,14 @@ export function setInitialInventory() {
 	let wood = resources.find((x) => x.name === 'Wood');
 	let coins = resources.find((x) => x.name === 'Coins');
 	let gems = resources.find((x) => x.name === 'Gems');
-	if (!wood || !coins || !gems) return;
+	let food = resources.find((x) => x.name === 'Food');
+
+	if (!wood || !coins || !gems || !food) return;
 	let inventoryInit: Inventory = {
 		resources: [
 			{
 				resource: coins,
-				amount: 0,
+				amount: 50,
 			},
 			{
 				resource: wood,
@@ -25,6 +27,10 @@ export function setInitialInventory() {
 			},
 			{
 				resource: gems,
+				amount: 0,
+			},
+			{
+				resource: food,
 				amount: 0,
 			},
 		],
@@ -66,6 +72,7 @@ export function setInitialMapObjects(map: any): ObjectProps[] {
 			position: mapObject.position,
 			selected: false,
 			hitBox: hitBox,
+			size: mapObject.size,
             inventory: [
                 {
                     amount: 20,

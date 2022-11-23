@@ -1,0 +1,41 @@
+.professionPickerItem {
+    height: 50px;
+    width:100%;
+    display:grid;
+    grid-template-columns: 25% 50% 25%;
+    align-items: center;
+    padding:10px;
+    cursor: pointer;
+    border-radius: 10px;
+    color:white;
+}
+
+.professionPickerItem:hover {
+    background-color: #292d3e9c;
+}
+
+.active{
+    background-color: #292d3e9c;
+}
+
+.imageSection{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+}
+
+.nameSection{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+
+}
+
+.levelSection{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+}

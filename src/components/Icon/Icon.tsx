@@ -1,50 +1,40 @@
 // External
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library, IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect, useState } from 'react';
 import { getImageUrl } from '../../utils/MapUtils';
-import { VillagerType } from '../../models/enums/VillagerType';
+import styles from './Icon.module.css';
+
 
 type props = {
   name?: IconProp,
   color?: string,
   fontSize: string,
-  type?: VillagerType | string
+  imageName?: string,
+  height: string
 }
 
-library.add(faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns);
+library.add(faLightbulb, faFaceGrinBeam, faQuestion, faFaceMeh, faTree, faHouse, faTents, faTowerObservation, faCoins, faGem, faBuildingColumns, faUtensils);
 
-const Icon = ({ name, color, fontSize, type }: props) => {
-
+const Icon = ({ name, color, fontSize, imageName, height }: props) => {
   const [imagePath, setImagePath] = useState("");
 
   useEffect(() => {
-    if(type){
-      switch (type) {
-        case VillagerType.VILLAGER:
-          setImagePath(getImageUrl('villager')!);
-          break;
-        case VillagerType.LUMBERJACK:
-          setImagePath(getImageUrl('lumberjack')!);
-        break;
-        default:
-          setImagePath(getImageUrl('tree')!);
-          break;
-      }
-    }
-  }, []);
+    if(!imageName) return;
+    setImagePath(getImageUrl(imageName));
+  }, [imageName]);
   
   return (
-    <div className="icon">
+    <div className={(imagePath) ? styles.icon : ""}>
       {(name) ?
-        <FontAwesomeIcon className="icon" icon={name} color={color} fontSize={fontSize} /> : <></>
+        <FontAwesomeIcon icon={name} color={color} fontSize={fontSize} /> : <></>
       }
-      {(imagePath) ?
-        <img src={imagePath}></img> : <></>
+      {(!name && imagePath) ?
+        <img src={imagePath} style={{height: height}}></img> : <></>
       }
     </div>
   );
 };
 
-export default Icon;
+export default React.memo(Icon);

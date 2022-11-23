@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './Game.module.css';
 import Settings from '../components/Settings/Settings';
 import { Shape } from '../models/Shape';
@@ -16,13 +16,10 @@ import Villager from '../components/Villager/Villager';
 import UpgradeMenu from '../components/UpgradeMenu/UpgradeMenu';
 import { reduceResourcesFromInventory, canAfford } from '../utils/ResourceUtils';
 import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from '../utils/GameUtils';
-import { VillagerType } from '../models/enums/VillagerType';
-import { GameTickResult } from '../models/GameTickResult';
 import { doMoveToLocation } from '../utils/MovementUtils';
 import { doWoodcutting } from '../utils/villagerUtils/LumberjackUtils';
 import { executeTasks } from '../utils/StatusUtils';
 import { InventoryItem } from '../models/InventoryItem';
-
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
     const [buildings, setBuildings] = useState<BuildingProps[]>([]);
@@ -66,19 +63,20 @@ const Game = (map: any) => {
 
     function addBuilding(building?: BuildingProps) {
         if (!building) return;
-        let buildingsCopy = [...buildings];
-        let shapesCopy = [...shapes];
-        buildingsCopy.push(building);
-        buildingsCopy.forEach(x => x.selected = false);
-        shapesCopy.forEach(x => x.selected = false);
-        setAllShapes(shapesCopy);
-        setBuildings(buildingsCopy);
+        setBuildings((previous) => {
+            let toReturn = previous.map(building => {return {...building, selected: false}});
+            toReturn.push(building);
+            return toReturn;
+        })
+        setAllShapes((prev) => {return prev.map(x => {return {...x, selected: false}})});
     }
 
     const trainVillager = useCallback((villager: VillagerProps) => {
-        let villagersCopy = [...villagers];
-        villagersCopy.push(villager);
-        setVillagers((prev) => villagersCopy);
+        setVillagers((prev) => {
+            let toReturn = [...prev];
+            toReturn.push(villager);
+            return toReturn;
+    })
     }, [villagers])
 
     const selectShape = useCallback((shape: Shape) => {
@@ -94,50 +92,40 @@ const Game = (map: any) => {
     // Deselect other, and select given
     const deselectAllBut = useCallback((event: any, toSelectId: string) => {
         event.stopPropagation();
-        let mapObjectsCopy = [...mapObjects];
-        mapObjectsCopy.forEach(x => x.selected = false);
-        let toSelectMapObject = mapObjectsCopy.find(x => x.id === toSelectId);
-        if (toSelectMapObject) {
-            toSelectMapObject.selected = true;
-        }
-        setMapObjects((prev) => mapObjectsCopy);
-
-        let villagersCopy = [...villagers];
-        villagersCopy.forEach(x => x.selected = false);
-        let toSelectVillager = villagersCopy.find(x => x.id === toSelectId);
-        if (toSelectVillager) {
-            toSelectVillager.selected = true;
-            selectedVillager = toSelectVillager;
-        }
-        setVillagers(villagersCopy);
-
-        let buildingsCopy = [...buildings];
-        buildingsCopy.forEach(x => x.selected = false);
-        let toSelectBuilding = buildingsCopy.find(x => x.id === toSelectId);
-        if (toSelectBuilding) {
-            toSelectBuilding.selected = true;
-        }
-        setBuildings(buildingsCopy);
+        setMapObjects((previous) => {
+            return previous.map(mapObject => {
+                if (mapObject.id === toSelectId) return { ...mapObject, selected: true }
+                return { ...mapObject, selected: false }
+            })
+        });
+        setVillagers((previous) => {
+            return previous.map(villager => {
+                if (villager.id === toSelectId) return { ...villager, selected: true };
+                return { ...villager, selected: false };
+            })
+        });
+        setBuildings((previous) => {
+            return previous.map(building => {
+                if (building.id === toSelectId) return { ...building, selected: true };
+                return { ...building, selected: false };
+            })
+        });
     }, [buildings, villagers, mapObjects])
 
     // Left click handler
     function handleClick(event: any): any {
-        if (!selectedShape || !canAfford(inventory?.resources, selectedShape?.price)) {
-            let buildingsCopy = [...buildings];
-            buildingsCopy.forEach(x => x.selected = false);
-            setBuildings((prev) => buildingsCopy);
-
-            let villagersCopy = [...villagers];
-            villagersCopy.forEach(x => x.selected = false);
-            setVillagers((prev) => villagersCopy);
-
-            let mapObjectsCopy = [...mapObjects];
-            mapObjectsCopy.forEach(x => x.selected = false);
-            setMapObjects((prev) => mapObjectsCopy);
+        if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
+            setBuildings((prev) => {return prev.map(x => {return {...x, selected: false}})});
+            setVillagers((prev) => {return prev.map(villager => {return {...villager, selected: false}})})
+            setMapObjects((prev) => {return prev.map(mapObject => {return {...mapObject, selected: false}})})
             return;
         };
 
-        let building: BuildingProps | undefined = createBuilding({ x: event.clientX, y: event.clientY }, selectedShape?.type);
+        let clientRect = event.currentTarget.getBoundingClientRect();
+        let xPos = event.pageX - clientRect.left;
+        let yPos = event.pageY - clientRect.top;
+
+        let building: BuildingProps | undefined = createBuilding({ x: xPos, y: yPos }, selectedShape.type);
         if (building) {
             let result = reduceResourcesFromInventory(inventory!, building.price);
             if (result[1]) {
@@ -158,16 +146,14 @@ const Game = (map: any) => {
         }
     }, [selectedVillager, villagers])
 
-    const onTrain = (entity: any, type: VillagerType) => {
-        if (type === VillagerType.VILLAGER) {
-            let result = reduceResourcesFromInventory(inventory, entity.price);
-            if (result[1]) {
-                setInventory(result[0]);
-                trainVillager(entity);
-            }
+    const onTrain = useCallback((entity: any) => {
+        let result = reduceResourcesFromInventory(inventory, entity.price);
+        if (result[1]) {
+            setInventory(result[0]);
+            trainVillager(entity);
         }
         return entity;
-    }
+    }, [inventory, villagers])
 
     function handleVillagerRightClick() {
 
@@ -176,7 +162,7 @@ const Game = (map: any) => {
     const handleMapObjectRightClick = useCallback((event: any, mapObjectId: string) => {
         event.stopPropagation();
         event.preventDefault();
-        if (selectedVillager) {
+        if (selectedVillager && selectedVillager.professions.find(x => x.active)?.profession.name === 'Lumberjack') {
             selectedVillager.currentTask = (villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[]) => doWoodcutting(villagers, villagerId, inventoryItems, buildings, mapObjects, mapObjectId);
         }
     }, [mapObjects, selectedVillager])
@@ -185,18 +171,26 @@ const Game = (map: any) => {
     }, [selectedBuilding])
 
 
+    const handleChangeProfessionClick = useCallback((updatedVillager: VillagerProps) => {
+        let villagersCopy = [...villagers];
+        villagersCopy = villagersCopy.map(vill => {
+            if (vill.id === updatedVillager.id) return updatedVillager;
+            return vill;
+        });
+        setVillagers((prev) => villagersCopy);
+    }, [selectedVillager])
+
     return (
         <div className={styles.background}>
             <div className={styles.actionsArea}>
                 <div className={styles.actions} onClick={event => event.stopPropagation()}>
                     <Settings onClick={selectShape} shapes={allShapes}></Settings>
                     {(selectedBuilding) ? <UpgradeMenu inStock={undefined} onTrain={onTrain} selectedBuilding={selectedBuilding} selectedVillager={undefined} selectedMapObject={undefined}></UpgradeMenu> : <></>}
-                    {(selectedVillager) ? <UpgradeMenu inStock={selectedVillager.inventoryItems} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={selectedVillager} selectedMapObject={undefined}></UpgradeMenu> : <></>}
+                    {(selectedVillager) ? <UpgradeMenu onProfessionChange={handleChangeProfessionClick} inStock={selectedVillager.inventoryItems} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={selectedVillager} selectedMapObject={undefined}></UpgradeMenu> : <></>}
                     {(selectedMapObject) ? <UpgradeMenu inStock={selectedMapObject.inventory} onTrain={onTrain} selectedBuilding={undefined} selectedVillager={undefined} selectedMapObject={selectedMapObject}></UpgradeMenu> : <></>}
-
                 </div>
             </div>
-            <div className={styles.gameArea}  onClick={handleClick} onContextMenu={handleRightClick}>
+            <div className={styles.gameArea} onClick={handleClick} onContextMenu={handleRightClick}>
                 <div className={styles.resourceArea}>
                     {(inventory) ? <Resources inventory={inventory}></Resources> : <></>}
                 </div>
