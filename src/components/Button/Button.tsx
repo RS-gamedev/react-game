@@ -35,7 +35,7 @@ const Button = React.memo(({ onClick, text, disabled, active, width, height, ico
           <></>
         }
         {(imageName) ?
-          <Icon fontSize={'1em'} imageName={imageName} height={'50px'}></Icon> :
+          <Icon fontSize={'1em'} imageName={imageName} height={imageHeight}></Icon> :
           <></>
         }
       </div>
@@ -47,7 +47,7 @@ const Button = React.memo(({ onClick, text, disabled, active, width, height, ico
         <div style={{ width: '100%', height: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px' }}>
           {price.map((_price, index) => {
             return <div key={text + index} >
-              <Icon color={_price.type?.color} fontSize='1em' name={_price.type?.icon} height={imageHeight}></Icon>
+              <Icon color={_price.type?.color} fontSize='1em' name={_price.type?.icon} imageName={_price.type?.image} height={'10px'}></Icon>
               <span>{_price.amount}</span>
             </div>
           })}

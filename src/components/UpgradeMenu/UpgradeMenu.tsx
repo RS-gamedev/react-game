@@ -77,7 +77,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             </div>
             <div className={styles.buildingOptionsSection} style={{ height: 'calc(100% - 80px)' }}>
                 {buildingOptions.map(x => {
-                    return <Button imageHeight={"50%"} imageName={x.imageName!} key={x.id} icon={x.icon} active={false} disabled={false} price={x.price} iconColor={'#ffffff'} height='100px' width='100px' onClick={() => executeBuildingOption(x, 'train')} text={x.name}></Button>
+                    return <Button imageHeight={'35px'} imageName={x.imageName!} key={x.id} icon={x.icon} active={false} disabled={false} price={x.price} iconColor={'#ffffff'} height='100px' width='100px' onClick={() => executeBuildingOption(x, 'train')} text={x.name}></Button>
                 })}
             </div>
         </div>
