@@ -63,15 +63,24 @@ const Game = (map: any) => {
     }, [map]);
 
     function addBuilding(building?: BuildingProps) {
+        console.log(building);
         if (!building) return;
-        let buildingsCopy = [...buildings];
         let shapesCopy = [...shapes];
-        buildingsCopy.push(building);
-        buildingsCopy.forEach(x => x.selected = false);
+        setBuildings((previous) => {
+            let toReturn = previous.map(building => {
+                return {...building, selected: false}
+            })
+            toReturn.push(building);
+            console.log(toReturn);
+            return toReturn;
+        })
         shapesCopy.forEach(x => x.selected = false);
         setAllShapes(shapesCopy);
-        setBuildings(buildingsCopy);
     }
+
+    useEffect(() => {
+        console.log(buildings);
+    }, [buildings])
 
     const trainVillager = useCallback((villager: VillagerProps) => {
         let villagersCopy = [...villagers];
@@ -114,7 +123,7 @@ const Game = (map: any) => {
 
     // Left click handler
     function handleClick(event: any): any {
-        if (!selectedShape || !canAfford(inventory?.resources, selectedShape?.price)) {
+        if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
             let buildingsCopy = [...buildings];
             buildingsCopy.forEach(x => x.selected = false);
             setBuildings((prev) => buildingsCopy);
@@ -129,7 +138,11 @@ const Game = (map: any) => {
             return;
         };
 
-        let building: BuildingProps | undefined = createBuilding({ x: event.clientX, y: event.clientY }, selectedShape?.type);
+        let clientRect = event.currentTarget.getBoundingClientRect();
+        let xPos = event.pageX - clientRect.left;
+        let yPos = event.pageY - clientRect.top;
+
+        let building: BuildingProps | undefined = createBuilding({ x: xPos, y: yPos }, selectedShape.type);
         if (building) {
             let result = reduceResourcesFromInventory(inventory!, building.price);
             if (result[1]) {
