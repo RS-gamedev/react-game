@@ -1,17 +1,25 @@
 {
   "files": {
-    "main.css": "/react-game/static/css/main.0c93e363.css",
-    "main.js": "/react-game/static/js/main.30569e20.js",
+    "main.css": "/react-game/static/css/main.6202430e.css",
+    "main.js": "/react-game/static/js/main.e5aac3e4.js",
     "static/media/background.jpg": "/react-game/static/media/background.c63ca0c047cc8ea7af09.jpg",
-    "static/media/villager.png": "/react-game/static/media/villager.5bf3665c2e4544f4875e.png",
+    "static/media/lumberjack.svg": "/react-game/static/media/lumberjack.dde7beee779510affb28b4151838bc30.svg",
+    "static/media/villager.svg": "/react-game/static/media/villager.da645850a6113eb6d6ad592fd4703109.svg",
+    "static/media/farmer.svg": "/react-game/static/media/farmer.d33ac87fe6b588a949ba588886019ab3.svg",
+    "static/media/food.svg": "/react-game/static/media/food.e03b40818ba8d3a3363cd3ae9ab88fcd.svg",
     "static/media/tree.svg": "/react-game/static/media/tree.06a9c1f0adfb382c5514ebea78889adf.svg",
+    "static/media/house.svg": "/react-game/static/media/house.7484f5b1b41dd9bc924b452c51b23cf5.svg",
+    "static/media/logs.svg": "/react-game/static/media/logs.fcb13c4f9471b6c8508179f5dfe5f478.svg",
+    "static/media/none.svg": "/react-game/static/media/none.3fe56e1dfab59a921b21abb9af547d27.svg",
+    "static/media/axe.svg": "/react-game/static/media/axe.acab508584ef2f6f78bff3507e17d5ab.svg",
     "static/media/townCenter.svg": "/react-game/static/media/townCenter.b1bf9e0061c39c927ce286eb1ba42562.svg",
+    "static/media/hoe.svg": "/react-game/static/media/hoe.06b3bae670b32c950eb74a7bb4e66449.svg",
     "index.html": "/react-game/index.html",
-    "main.0c93e363.css.map": "/react-game/static/css/main.0c93e363.css.map",
-    "main.30569e20.js.map": "/react-game/static/js/main.30569e20.js.map"
+    "main.6202430e.css.map": "/react-game/static/css/main.6202430e.css.map",
+    "main.e5aac3e4.js.map": "/react-game/static/js/main.e5aac3e4.js.map"
   },
   "entrypoints": [
-    "static/css/main.0c93e363.css",
-    "static/js/main.30569e20.js"
+    "static/css/main.6202430e.css",
+    "static/js/main.e5aac3e4.js"
   ]
 }
