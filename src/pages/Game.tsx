@@ -20,7 +20,6 @@ import { doMoveToLocation } from '../utils/MovementUtils';
 import { doWoodcutting } from '../utils/villagerUtils/LumberjackUtils';
 import { executeTasks } from '../utils/StatusUtils';
 import { InventoryItem } from '../models/InventoryItem';
-
 const Game = (map: any) => {
     const [villagers, setVillagers] = useState<VillagerProps[]>([]);
     const [buildings, setBuildings] = useState<BuildingProps[]>([]);
@@ -63,29 +62,21 @@ const Game = (map: any) => {
     }, [map]);
 
     function addBuilding(building?: BuildingProps) {
-        console.log(building);
         if (!building) return;
-        let shapesCopy = [...shapes];
         setBuildings((previous) => {
-            let toReturn = previous.map(building => {
-                return {...building, selected: false}
-            })
+            let toReturn = previous.map(building => {return {...building, selected: false}});
             toReturn.push(building);
-            console.log(toReturn);
             return toReturn;
         })
-        shapesCopy.forEach(x => x.selected = false);
-        setAllShapes(shapesCopy);
+        setAllShapes((prev) => {return prev.map(x => {return {...x, selected: false}})});
     }
 
-    useEffect(() => {
-        console.log(buildings);
-    }, [buildings])
-
     const trainVillager = useCallback((villager: VillagerProps) => {
-        let villagersCopy = [...villagers];
-        villagersCopy.push(villager);
-        setVillagers((prev) => villagersCopy);
+        setVillagers((prev) => {
+            let toReturn = [...prev];
+            toReturn.push(villager);
+            return toReturn;
+    })
     }, [villagers])
 
     const selectShape = useCallback((shape: Shape) => {
@@ -124,17 +115,9 @@ const Game = (map: any) => {
     // Left click handler
     function handleClick(event: any): any {
         if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
-            let buildingsCopy = [...buildings];
-            buildingsCopy.forEach(x => x.selected = false);
-            setBuildings((prev) => buildingsCopy);
-
-            let villagersCopy = [...villagers];
-            villagersCopy.forEach(x => x.selected = false);
-            setVillagers((prev) => villagersCopy);
-
-            let mapObjectsCopy = [...mapObjects];
-            mapObjectsCopy.forEach(x => x.selected = false);
-            setMapObjects((prev) => mapObjectsCopy);
+            setBuildings((prev) => {return prev.map(x => {return {...x, selected: false}})});
+            setVillagers((prev) => {return prev.map(villager => {return {...villager, selected: false}})})
+            setMapObjects((prev) => {return prev.map(mapObject => {return {...mapObject, selected: false}})})
             return;
         };
 
