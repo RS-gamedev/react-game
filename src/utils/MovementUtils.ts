@@ -15,14 +15,6 @@ export function getDistance(startPosition: Position, goalPosition: Position) {
     return Math.sqrt(x * x + y * y);
 }
 
-export function getDistanceToHitBox(startPosition: Position, goalHitbox: Hitbox){
-    let goalPosition = getHitBoxCenter(goalHitbox);
-    let y = goalPosition.x - startPosition.x;
-    let x = goalPosition.y - startPosition.y;
-    return Math.sqrt(x * x + y * y);
-}
-
-
 export function getNewPosition(startPosition: Hitbox, goalPosition: Position): Hitbox{
     let newPosition: Hitbox = {...startPosition};
     let center = getHitBoxCenter(newPosition);
@@ -44,18 +36,6 @@ export function getNewPosition(startPosition: Hitbox, goalPosition: Position): H
         newPosition.rightBottom.y -= 8;
     }
     return newPosition;
-}
-
-// export function moveVillagerToPosition(villager: VillagerProps, goalPosition: Position) {
-//     let villagerCopy = {...villager};
-//     villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, goalPosition);
-//     return villagerCopy;
-// }
-
-export function moveVillagerToNearestRock(villager: VillagerProps) {
-    let goalPosition = { x: 800, y: 800 };
-    // goalposition = nearest rock
-    return { ...villager, position: getNewPosition(villager.hitBox, goalPosition) };
 }
 
 export function doMoveToLocation(villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition: Position): GameTickResult {

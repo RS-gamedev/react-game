@@ -7,7 +7,6 @@ import { Position } from "../models/Position";
 import { Hitbox } from "../models/Hitbox";
 
 function constructBuilding(position: Position, shape: Shape,) {
-    console.log(shape);
     let hitbox = createHitbox(position, shape.size);
     let house: BuildingProps = {
         id: uuidv4(),

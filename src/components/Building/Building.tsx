@@ -17,9 +17,6 @@ type props = {
 }
 
 const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: props) => {
-
-
-  console.log(size, hitBox);
   return (
     <div className={styles[(selected) ? `active` : `not-active`] + " " + styles['building']} style={{ width: size.width, height: size.height, left: hitBox.leftTop.x, top: hitBox.leftTop.y, position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(event) => onClick(event, id)} onContextMenu={onRightClick}>
       <Icon fontSize={size.width - 10 + "px"} color={color} imageName={image} height={size.height - 10 + "px"}></Icon>

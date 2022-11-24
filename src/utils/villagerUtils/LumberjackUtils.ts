@@ -1,3 +1,4 @@
+import { levels } from "../../config/Levels";
 import { resources } from "../../config/Resources";
 import { BuildingProps } from "../../models/BuildingProps";
 import { BuildingType } from "../../models/enums/BuildingType";
@@ -30,7 +31,8 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
     let closestStorage = findNearestStorage(getHitBoxCenter(villagerCopy?.hitBox), buildings.filter(x => x.type === BuildingType.TOWN_CENTER))
 
     villagerCopy = handleIdle(villagerCopy, buildings, mapObjectsCopy, closestStorage, targetObjectCopy);
-
+    let currentProfession = villagerCopy.professions.find(x => x.active);
+    if(!currentProfession) return gameTickResult;
     switch (villagerCopy.status) {
         case Status.WALKING_TO_TREE:
             if (targetObjectCopy) {
@@ -63,6 +65,12 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
                     let toAddResource = villagerCopy.inventoryItems.find(x => x.resource.name === 'Wood');
                     if (toAddResource) {
                         toAddResource.amount = add(toAddResource.amount, 0.05);
+                        currentProfession.currentExperience = add(currentProfession.currentExperience, 1);
+                        if(achievedNextLevel(currentProfession.currentExperience, currentProfession?.currentLevel.experienceNeededForNextLevel)) {
+                            let nextLevel = levels.find(x => x.id === currentProfession?.currentLevel.nextLevel);
+                            currentProfession.currentLevel = (nextLevel) ? nextLevel : currentProfession.currentLevel;
+                            currentProfession.currentExperience = 0;
+                        }
                     }
                     else {
                         villagerCopy.inventoryItems.push({ resource: resources.find(x => x.name === 'Wood')!, amount: 0 });
@@ -116,6 +124,10 @@ export function doWoodcutting(villagers: VillagerProps[], villagerId: string, in
     }
     gameTickResult.villagers = villagersCopy;
     return gameTickResult;
+}
+
+function achievedNextLevel(experience: number, experienceNeeded: number){
+    return experience >= experienceNeeded;
 }
 
 function treeHasWood(tree: ObjectProps) {
