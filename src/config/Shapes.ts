@@ -19,7 +19,7 @@ export const shapes: Shape[] = [
     ],
     type: BuildingType.HOUSE,
     buildingOptions: [],
-    size: { width: 50, height: 50 },
+    size: { width: 45, height: 45 },
     availability: Availability.GAME_LEVEL1,
   },
   {
@@ -40,12 +40,12 @@ export const shapes: Shape[] = [
     name: "Storage",
     icon: ["fas", "tents"],
     iconColor: "#373c50",
-    image: "",
+    image: "storage",
     selected: false,
     price: [{ type: resources.find((x) => x.name === "Coins"), amount: 50 }],
     type: BuildingType.TENTS,
     buildingOptions: [],
-    size: { width: 50, height: 50 },
+    size: { width: 45, height: 45 },
     availability: Availability.GAME_LEVEL1,
   },
   {
