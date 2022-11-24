@@ -1,7 +1,7 @@
 import styles from "./ProfessionPicker.module.css";
 import ProfessionPickerItem from "./ProfessionPickerItem/ProfessionPickerItem";
 import { VillagerProfession } from "../../models/VillagerProfession";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
   open: boolean;
@@ -38,6 +38,7 @@ const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
               image={prof.profession.image}
               level={prof.currentLevel.level}
               onClick={handleChangeProfession}
+              showLevel={prof.profession.name !== "None"}
             ></ProfessionPickerItem>
           );
         })}
