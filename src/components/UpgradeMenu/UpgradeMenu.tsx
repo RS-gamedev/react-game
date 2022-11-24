@@ -54,8 +54,6 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         onTrain(entity);
       }
       if (buildingOption.type === BuildingOptionType.BUILD) {
-        console.log(selectedBuilding?.hitBox);
-        console.log(getHitBoxCenter(selectedBuilding!.hitBox));
         if (onPlaceBuilding && selectedBuilding) onPlaceBuilding(buildingOption, getHitBoxCenter(selectedBuilding.hitBox));
       }
       if (buildingOption.type === BuildingOptionType.UPGRADE) {

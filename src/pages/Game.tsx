@@ -17,7 +17,6 @@ import UpgradeMenu from "../components/UpgradeMenu/UpgradeMenu";
 import { reduceResourcesFromInventory, canAfford } from "../utils/ResourceUtils";
 import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from "../utils/GameUtils";
 import { doMoveToLocation } from "../utils/MovementUtils";
-import { doWoodcutting } from "../utils/villagerUtils/LumberjackUtils";
 import { executeTasks } from "../utils/StatusUtils";
 import { InventoryItem } from "../models/InventoryItem";
 import PlacementOverlay from "../components/PlacementOverlay/PlacementOverlay";
@@ -26,6 +25,7 @@ import { PlacementOverlayConfig } from "../models/PlacementOverlayConfig";
 import { Size } from "../models/Size";
 import { Position } from "../models/Position";
 import { Availability } from "../models/enums/Availability";
+import { doGatheringTask } from "../utils/villagerUtils/VillagerTaskUtils";
 const Game = (map: any) => {
   const [villagers, setVillagers] = useState<VillagerProps[]>([]);
   const [buildings, setBuildings] = useState<BuildingProps[]>([]);
@@ -219,7 +219,16 @@ const Game = (map: any) => {
           inventoryItems: InventoryItem[],
           buildings: BuildingProps[],
           mapObjects: ObjectProps[]
-        ) => doWoodcutting(villagers, villagerId, inventoryItems, buildings, mapObjects, mapObjectId);
+        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, "tree", mapObjectId);
+      }
+      if (selectedVillager && selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner") {
+        selectedVillager.currentTask = (
+          villagers: VillagerProps[],
+          villagerId: string,
+          inventoryItems: InventoryItem[],
+          buildings: BuildingProps[],
+          mapObjects: ObjectProps[]
+        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, "stone", mapObjectId);
       }
     },
     [selectedVillager]
@@ -251,7 +260,6 @@ const Game = (map: any) => {
   };
 
   function getIncreasedSizeByRange(size: Size, range?: number): Size {
-    console.log(range);
     let toReturn = { ...size };
     toReturn.width += (range ? range : 0) * 2;
     toReturn.height += (range ? range : 0) * 2;

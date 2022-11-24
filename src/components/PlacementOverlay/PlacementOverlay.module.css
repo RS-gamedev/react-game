@@ -1,8 +1,7 @@
 .placementOverlay {
   background-color: rgba(0, 128, 0, 0.212);
-  background-image: radial-gradient(rgba(0, 0, 0, 0.363) 0.5px, transparent 0);
-  background-size: 5px 5px;
   position: absolute;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
 }
 .circle {
   border-radius: 100%;

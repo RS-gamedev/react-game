@@ -26,4 +26,10 @@ export const resources: Resource[] = [
     image: "food",
     color: "#b7779f",
   },
+  {
+    id: uuidv4(),
+    name: "Stone",
+    image: "stone",
+    color: "#b7779f",
+  },
 ];

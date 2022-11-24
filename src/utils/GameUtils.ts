@@ -13,8 +13,9 @@ export function setInitialInventory() {
   let coins = resources.find((x) => x.name === "Coins");
   let gems = resources.find((x) => x.name === "Gems");
   let food = resources.find((x) => x.name === "Food");
+  let stone = resources.find((x) => x.name === "Stone");
 
-  if (!wood || !coins || !gems || !food) return;
+  if (!wood || !coins || !gems || !food || !stone) return;
   let inventoryInit: Inventory = {
     resources: [
       {
@@ -31,6 +32,10 @@ export function setInitialInventory() {
       },
       {
         resource: food,
+        amount: 0,
+      },
+      {
+        resource: stone,
         amount: 0,
       },
     ],
@@ -53,6 +58,7 @@ export function setInitialMapObjects(map: any): ObjectProps[] {
   let wood = resources.find((x) => x.name === "Wood");
   let coins = resources.find((x) => x.name === "Coins");
   let gems = resources.find((x) => x.name === "Gems");
+  let stone = resources.find((x) => x.name === "Stone");
   let initialMapObjects: ObjectProps[] = map.map.map((mapObject: any) => {
     let hitBox: Hitbox = {
       leftTop: {
@@ -64,6 +70,12 @@ export function setInitialMapObjects(map: any): ObjectProps[] {
         y: mapObject.position.y + mapObject.size / 2,
       },
     };
+    let mapObjectInventory = [
+      {
+        resource: mapObject.name === "tree" ? wood : mapObject.name === "rock" && stone,
+        amount: 100,
+      },
+    ];
     return {
       id: uuidv4(),
       name: mapObject.name,
@@ -71,12 +83,7 @@ export function setInitialMapObjects(map: any): ObjectProps[] {
       selected: false,
       hitBox: hitBox,
       size: mapObject.size,
-      inventory: [
-        {
-          amount: 20,
-          resource: wood,
-        },
-      ],
+      inventory: mapObjectInventory,
     };
   });
   return initialMapObjects;
