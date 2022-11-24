@@ -30,15 +30,9 @@ function constructBuilding(position: Position, shape: Shape) {
 export function createBuilding(position: Position, type: BuildingType) {
   let shape = shapes.find((x) => x.type === type);
   if (!shape) return;
-  return constructBuilding(
-    { ...position, x: position.x, y: position.y },
-    shape
-  );
+  return constructBuilding({ ...position, x: position.x, y: position.y }, shape);
 }
-function createHitbox(
-  position: Position,
-  objectSize: { width: number; height: number }
-): Hitbox {
+function createHitbox(position: Position, objectSize: { width: number; height: number }): Hitbox {
   return {
     leftTop: {
       x: position.x - objectSize.width / 2,

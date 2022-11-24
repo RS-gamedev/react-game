@@ -29,9 +29,7 @@ export const shapes: Shape[] = [
     selected: false,
     price: [{ type: resources.find((x) => x.name === "Coins"), amount: 50 }],
     type: BuildingType.TOWN_CENTER,
-    buildingOptions: [
-      buildingOptions.find((x) => x.name === "Train Villager")!,
-    ],
+    buildingOptions: [buildingOptions.find((x) => x.name === "Train Villager")!],
     size: { width: 75, height: 75 },
   },
   {

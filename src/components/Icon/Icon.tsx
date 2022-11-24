@@ -52,16 +52,8 @@ const Icon = ({ name, color, fontSize, imageName, height }: props) => {
 
   return (
     <div className={imagePath ? styles.icon : ""}>
-      {name ? (
-        <FontAwesomeIcon icon={name} color={color} fontSize={fontSize} />
-      ) : (
-        <></>
-      )}
-      {!name && imagePath ? (
-        <img alt={name} src={imagePath} style={{ height: height }}></img>
-      ) : (
-        <></>
-      )}
+      {name ? <FontAwesomeIcon icon={name} color={color} fontSize={fontSize} /> : <></>}
+      {!name && imagePath ? <img alt={name} src={imagePath} style={{ height: height }}></img> : <></>}
     </div>
   );
 };

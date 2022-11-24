@@ -26,27 +26,13 @@ export function executeTasks(
   let buildingsCopy = [...buildings];
 
   villagers.forEach((villager) => {
-    let toUseVillagers = gameTickResult.villagers
-      ? gameTickResult.villagers
-      : villagersCopy;
-    let toUseInventoryItems = gameTickResult.inventoryItems
-      ? gameTickResult.inventoryItems
-      : inventoryItemsCopy;
-    let toUseMapObjects = gameTickResult.mapObjects
-      ? gameTickResult.mapObjects
-      : mapObjectsCopy;
-    let toUseBuildings = gameTickResult.buildings
-      ? gameTickResult.buildings
-      : buildingsCopy;
+    let toUseVillagers = gameTickResult.villagers ? gameTickResult.villagers : villagersCopy;
+    let toUseInventoryItems = gameTickResult.inventoryItems ? gameTickResult.inventoryItems : inventoryItemsCopy;
+    let toUseMapObjects = gameTickResult.mapObjects ? gameTickResult.mapObjects : mapObjectsCopy;
+    let toUseBuildings = gameTickResult.buildings ? gameTickResult.buildings : buildingsCopy;
 
     if (villager.currentTask) {
-      let resultFromVillager = villager.currentTask(
-        toUseVillagers,
-        villager.id,
-        toUseInventoryItems,
-        toUseBuildings,
-        toUseMapObjects
-      );
+      let resultFromVillager = villager.currentTask(toUseVillagers, villager.id, toUseInventoryItems, toUseBuildings, toUseMapObjects);
       if (resultFromVillager.villagers) {
         gameTickResult.villagers = resultFromVillager.villagers;
       }

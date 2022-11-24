@@ -14,17 +14,8 @@ type props = {
   professions: VillagerProfession[];
 };
 
-export default function Villager({
-  id,
-  name,
-  size,
-  hitBox,
-  onClick,
-  selected,
-  professions,
-}: props) {
-  const [activeProfession, setActiveProfession] =
-    useState<VillagerProfession>();
+export default function Villager({ id, name, size, hitBox, onClick, selected, professions }: props) {
+  const [activeProfession, setActiveProfession] = useState<VillagerProfession>();
 
   useEffect(() => {
     setActiveProfession((prev) => {
@@ -34,9 +25,7 @@ export default function Villager({
 
   return (
     <div
-      className={
-        styles.villager + ` ${selected ? styles.selected : styles.nothing}`
-      }
+      className={styles.villager + ` ${selected ? styles.selected : styles.nothing}`}
       style={{
         width: size.width,
         height: size.height,
@@ -45,11 +34,7 @@ export default function Villager({
       }}
       onClick={(event) => onClick(event, id)}
     >
-      <Icon
-        height={size.height - 10 + "px"}
-        fontSize="1em"
-        imageName={activeProfession?.profession.characterImageName}
-      ></Icon>
+      <Icon height={size.height - 10 + "px"} fontSize="1em" imageName={activeProfession?.profession.characterImageName}></Icon>
     </div>
   );
 }

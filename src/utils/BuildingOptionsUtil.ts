@@ -8,18 +8,16 @@ import { VillagerProfession } from "../models/VillagerProfession";
 import { levels } from "../config/Levels";
 
 export function trainVillager(position: Position) {
-  let villagerProfessions: VillagerProfession[] = professions.map(
-    (x, index) => {
-      return {
-        id: uuidv4(),
-        profession: x,
-        currentExperience: 0,
-        currentLevel: levels[0],
-        active: index > 0 ? false : true,
-        characterImageName: x.characterImageName,
-      };
-    }
-  );
+  let villagerProfessions: VillagerProfession[] = professions.map((x, index) => {
+    return {
+      id: uuidv4(),
+      profession: x,
+      currentExperience: 0,
+      currentLevel: levels[0],
+      active: index > 0 ? false : true,
+      characterImageName: x.characterImageName,
+    };
+  });
 
   let newVillager: VillagerProps = {
     selected: false,

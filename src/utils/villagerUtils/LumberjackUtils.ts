@@ -28,9 +28,7 @@ export function doWoodcutting(
   let targetObjectCopy = mapObjectsCopy.find((x) => x.id === initialTargetId);
   if (!targetObjectCopy) {
     // if initial target is not found, set target to villagerCopy.goalObjectId;
-    targetObjectCopy = mapObjectsCopy.find(
-      (x) => x.id === villagerCopy?.goalObjectId
-    );
+    targetObjectCopy = mapObjectsCopy.find((x) => x.id === villagerCopy?.goalObjectId);
   }
   let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
   let mapObjectsChanged: boolean = false;
@@ -41,25 +39,13 @@ export function doWoodcutting(
     buildings.filter((x) => x.type === BuildingType.TOWN_CENTER)
   );
 
-  villagerCopy = handleIdle(
-    villagerCopy,
-    buildings,
-    mapObjectsCopy,
-    closestStorage,
-    targetObjectCopy
-  );
+  villagerCopy = handleIdle(villagerCopy, buildings, mapObjectsCopy, closestStorage, targetObjectCopy);
 
   switch (villagerCopy.status) {
     case Status.WALKING_TO_TREE:
       if (targetObjectCopy) {
-        villagerCopy.hitBox = getNewPosition(
-          villagerCopy.hitBox,
-          getHitBoxCenter(targetObjectCopy?.hitBox!)
-        );
-        if (
-          targetObjectCopy &&
-          onGoal(villagerCopy.hitBox, getHitBoxCenter(targetObjectCopy?.hitBox))
-        ) {
+        villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, getHitBoxCenter(targetObjectCopy?.hitBox!));
+        if (targetObjectCopy && onGoal(villagerCopy.hitBox, getHitBoxCenter(targetObjectCopy?.hitBox))) {
           villagerCopy.status = Status.IDLE;
         }
       } else {
@@ -75,11 +61,8 @@ export function doWoodcutting(
       if (targetObjectCopy) {
         if (treeHasWood(targetObjectCopy)) {
           // Tree has wood
-          targetObjectCopy.inventory.find(
-            (x) => x.resource.name === "Wood"
-          )!.amount = retract(
-            targetObjectCopy.inventory.find((x) => x.resource.name === "Wood")!
-              .amount,
+          targetObjectCopy.inventory.find((x) => x.resource.name === "Wood")!.amount = retract(
+            targetObjectCopy.inventory.find((x) => x.resource.name === "Wood")!.amount,
             0.05
           );
           mapObjectsCopy = mapObjectsCopy.map((tree) => {
@@ -89,9 +72,7 @@ export function doWoodcutting(
             return tree;
           });
           mapObjectsChanged = true;
-          let toAddResource = villagerCopy.inventoryItems.find(
-            (x) => x.resource.name === "Wood"
-          );
+          let toAddResource = villagerCopy.inventoryItems.find((x) => x.resource.name === "Wood");
           if (toAddResource) {
             toAddResource.amount = add(toAddResource.amount, 0.05);
           } else {
@@ -102,9 +83,7 @@ export function doWoodcutting(
           }
         }
         if (!treeHasWood(targetObjectCopy)) {
-          mapObjectsCopy = mapObjectsCopy.filter(
-            (x) => x.id !== villagerCopy?.goalObjectId
-          );
+          mapObjectsCopy = mapObjectsCopy.filter((x) => x.id !== villagerCopy?.goalObjectId);
           mapObjectsChanged = true;
           villagerCopy.status = Status.IDLE;
         }
@@ -114,10 +93,7 @@ export function doWoodcutting(
 
       break;
     case Status.RETURNING_RESOURCES:
-      villagerCopy.hitBox = getNewPosition(
-        villagerCopy.hitBox,
-        closestStorage.position
-      );
+      villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, closestStorage.position);
       if (onGoal(villagerCopy.hitBox, closestStorage.position)) {
         villagerCopy.status = Status.IDLE;
       }
@@ -125,15 +101,10 @@ export function doWoodcutting(
     case Status.DROPPING_RESOURCES:
       villagerCopy.inventoryItems.forEach((invItem) => {
         if (inventoryItemsCopy) {
-          let inventoryResource = inventoryItemsCopy.find(
-            (x) => x.resource.name === invItem.resource.name
-          );
+          let inventoryResource = inventoryItemsCopy.find((x) => x.resource.name === invItem.resource.name);
           if (inventoryResource) {
             inventoryItemsChanged = true;
-            inventoryResource.amount = add(
-              inventoryResource.amount,
-              invItem.amount
-            );
+            inventoryResource.amount = add(inventoryResource.amount, invItem.amount);
             invItem.amount = 0;
           }
         }

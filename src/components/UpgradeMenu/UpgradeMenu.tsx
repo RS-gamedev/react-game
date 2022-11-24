@@ -23,14 +23,7 @@ type Props = {
   onProfessionChange?: (selectedVillager: VillagerProps) => void;
 };
 
-const UpgradeMenu = ({
-  selectedBuilding,
-  selectedVillager,
-  selectedMapObject,
-  onTrain,
-  inStock,
-  onProfessionChange,
-}: Props) => {
+const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange }: Props) => {
   const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
   const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
   const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
@@ -91,10 +84,7 @@ const UpgradeMenu = ({
             <span>{selectedBuilding.level}</span>
           </div>
         </div>
-        <div
-          className={styles.buildingOptionsSection}
-          style={{ height: "calc(100% - 80px)" }}
-        >
+        <div className={styles.buildingOptionsSection} style={{ height: "calc(100% - 80px)" }}>
           {buildingOptions.map((x) => {
             return (
               <Button
@@ -121,27 +111,14 @@ const UpgradeMenu = ({
   if (selectedVillager) {
     return (
       <div className={styles.upgradeMenu}>
-        <div
-          className={`${styles.titleSection} ${
-            jobSelectionOpen && styles.noTopRightBorderRadius
-          }`}
-        >
+        <div className={`${styles.titleSection} ${jobSelectionOpen && styles.noTopRightBorderRadius}`}>
           <div className={styles.titlePart}>
             <span className={styles.name}>{selectedVillager.name}</span>
-            <span style={{ fontSize: "1em" }}>
-              {Status[selectedVillager.status]}
-            </span>
+            <span style={{ fontSize: "1em" }}>{Status[selectedVillager.status]}</span>
           </div>
 
-          <div
-            className={`${styles.levelSection}`}
-            onClick={() => setJobSelectionOpen((prev) => !prev)}
-          >
-            <Icon
-              fontSize={"1em"}
-              imageName={activeProfession?.profession.image}
-              height={"50px"}
-            ></Icon>
+          <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>
+            <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"50px"}></Icon>
             <span>{`Level ${activeProfession?.currentLevel.level}`}</span>
           </div>
         </div>

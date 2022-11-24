@@ -15,20 +15,14 @@ export function getDistance(startPosition: Position, goalPosition: Position) {
   return Math.sqrt(x * x + y * y);
 }
 
-export function getDistanceToHitBox(
-  startPosition: Position,
-  goalHitbox: Hitbox
-) {
+export function getDistanceToHitBox(startPosition: Position, goalHitbox: Hitbox) {
   let goalPosition = getHitBoxCenter(goalHitbox);
   let y = goalPosition.x - startPosition.x;
   let x = goalPosition.y - startPosition.y;
   return Math.sqrt(x * x + y * y);
 }
 
-export function getNewPosition(
-  startPosition: Hitbox,
-  goalPosition: Position
-): Hitbox {
+export function getNewPosition(startPosition: Hitbox, goalPosition: Position): Hitbox {
   let newPosition: Hitbox = { ...startPosition };
   let center = getHitBoxCenter(newPosition);
   if (goalPosition.x - center.x >= 10) {
@@ -81,10 +75,7 @@ export function doMoveToLocation(
       updatedVillager.status = Status.IDLE;
       updatedVillager.currentTask = undefined;
     } else {
-      updatedVillager.hitBox = getNewPosition(
-        updatedVillager.hitBox,
-        goalPosition
-      );
+      updatedVillager.hitBox = getNewPosition(updatedVillager.hitBox, goalPosition);
     }
     villagersCopy = villagersCopy.map((vill) => {
       if (updatedVillager && vill.id === updatedVillager.id) {

@@ -13,17 +13,12 @@ function reduceResource(inventoryItem: InventoryItem, amount: number) {
   return inventoryItem;
 }
 
-export function reduceResourcesFromInventory(
-  inventory: Inventory,
-  prices: Price[]
-): [Inventory, boolean] {
+export function reduceResourcesFromInventory(inventory: Inventory, prices: Price[]): [Inventory, boolean] {
   let inventoryCopy = { ...inventory };
   let resourcesCopy = [...inventoryCopy.resources];
   if (!canAfford(resourcesCopy, prices)) return [inventory, false];
   prices.forEach((price) => {
-    let toReduceResource = inventoryCopy.resources.find(
-      (x) => x.resource.id === price.type?.id
-    );
+    let toReduceResource = inventoryCopy.resources.find((x) => x.resource.id === price.type?.id);
     if (toReduceResource && toReduceResource.resource) {
       let reducedInventoryItem = reduceResource(toReduceResource, price.amount);
       if (!reducedInventoryItem) return [inventory, false];
@@ -36,10 +31,7 @@ export function reduceResourcesFromInventory(
   return [inventoryCopy, true];
 }
 
-export function canAfford(
-  inventoryItems?: InventoryItem[],
-  price?: Price[]
-): boolean {
+export function canAfford(inventoryItems?: InventoryItem[], price?: Price[]): boolean {
   if (!inventoryItems || !price) return false;
   let toReturn = true;
   inventoryItems.forEach((inventItem) => {

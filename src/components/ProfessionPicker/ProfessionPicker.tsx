@@ -10,8 +10,7 @@ type Props = {
 };
 
 const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
-  const [selectedVillagerProfession, setSelectedVillagerProfession] =
-    useState<VillagerProfession>();
+  const [selectedVillagerProfession, setSelectedVillagerProfession] = useState<VillagerProfession>();
 
   useEffect(() => {
     let selected = villagerProfessions.find((x) => x.active);
@@ -20,9 +19,7 @@ const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
   }, [villagerProfessions]);
 
   const handleChangeProfession = (villagerProfessionId: string) => {
-    let toSelect = villagerProfessions.find(
-      (x) => x.id === villagerProfessionId
-    );
+    let toSelect = villagerProfessions.find((x) => x.id === villagerProfessionId);
     if (!toSelect) return;
     setSelectedVillagerProfession(toSelect);
     onClick(toSelect);
@@ -36,9 +33,7 @@ const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
             <ProfessionPickerItem
               key={prof.id}
               id={prof.id}
-              active={
-                selectedVillagerProfession?.id === prof.id ? prof.active : false
-              }
+              active={selectedVillagerProfession?.id === prof.id ? prof.active : false}
               name={prof.profession.name}
               image={prof.profession.image}
               level={prof.currentLevel.level}

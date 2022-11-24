@@ -41,9 +41,7 @@ export function setInitialInventory() {
 export function setInitialBuildings() {
   let townCenter = shapes.find((x) => x.type === BuildingType.TOWN_CENTER);
   if (townCenter) {
-    let initialBuildings: BuildingProps[] = [
-      createBuilding({ x: 500, y: 300 }, BuildingType.TOWN_CENTER)!,
-    ];
+    let initialBuildings: BuildingProps[] = [createBuilding({ x: 500, y: 300 }, BuildingType.TOWN_CENTER)!];
     if (initialBuildings) {
       return initialBuildings;
     }

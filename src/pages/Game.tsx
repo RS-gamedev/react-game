@@ -14,15 +14,8 @@ import MapObject from "../components/MapObject/MapObject";
 import { VillagerProps } from "../models/VillagerProps";
 import Villager from "../components/Villager/Villager";
 import UpgradeMenu from "../components/UpgradeMenu/UpgradeMenu";
-import {
-  reduceResourcesFromInventory,
-  canAfford,
-} from "../utils/ResourceUtils";
-import {
-  setInitialBuildings,
-  setInitialInventory,
-  setInitialMapObjects,
-} from "../utils/GameUtils";
+import { reduceResourcesFromInventory, canAfford } from "../utils/ResourceUtils";
+import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from "../utils/GameUtils";
 import { doMoveToLocation } from "../utils/MovementUtils";
 import { doWoodcutting } from "../utils/villagerUtils/LumberjackUtils";
 import { executeTasks } from "../utils/StatusUtils";
@@ -46,12 +39,7 @@ const Game = (map: any) => {
   var selectedMapObject = mapObjects.find((x) => x.selected);
 
   useEffect(() => {
-    let result = executeTasks(
-      villagers,
-      inventory.resources,
-      mapObjects,
-      buildings
-    );
+    let result = executeTasks(villagers, inventory.resources, mapObjects, buildings);
     if (result.buildings) {
       setBuildings(result.buildings);
     }
@@ -101,8 +89,7 @@ const Game = (map: any) => {
   const selectShape = useCallback((shapeId: string) => {
     setAllShapes((prev) => {
       return prev.map((x) => {
-        if (x.id === shapeId)
-          return { ...x, selected: !x.selected ? true : false };
+        if (x.id === shapeId) return { ...x, selected: !x.selected ? true : false };
         return { ...x, selected: false };
       });
     });
@@ -113,8 +100,7 @@ const Game = (map: any) => {
     event.stopPropagation();
     setMapObjects((previous) => {
       return previous.map((mapObject) => {
-        if (mapObject.id === toSelectId)
-          return { ...mapObject, selected: true };
+        if (mapObject.id === toSelectId) return { ...mapObject, selected: true };
         return { ...mapObject, selected: false };
       });
     });
@@ -134,10 +120,7 @@ const Game = (map: any) => {
 
   // Left click handler
   function handleClick(event: any): any {
-    if (
-      !selectedShape ||
-      !canAfford(inventory?.resources, selectedShape.price)
-    ) {
+    if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
       setBuildings((prev) => {
         return prev.map((x) => {
           return { ...x, selected: false };
@@ -160,10 +143,7 @@ const Game = (map: any) => {
     let xPos = event.pageX - clientRect.left;
     let yPos = event.pageY - clientRect.top;
 
-    let building: BuildingProps | undefined = createBuilding(
-      { x: xPos, y: yPos },
-      selectedShape.type
-    );
+    let building: BuildingProps | undefined = createBuilding({ x: xPos, y: yPos }, selectedShape.type);
     if (building) {
       let result = reduceResourcesFromInventory(inventory!, building.price);
       if (result[1]) {
@@ -187,15 +167,7 @@ const Game = (map: any) => {
           inventoryItems: InventoryItem[],
           buildings: BuildingProps[],
           mapObjects: ObjectProps[]
-        ) =>
-          doMoveToLocation(
-            villagers,
-            villagerId,
-            inventoryItems,
-            buildings,
-            mapObjects,
-            { x: xPos, y: yPos }
-          );
+        ) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: xPos, y: yPos });
       }
     },
     [selectedVillager]
@@ -219,26 +191,14 @@ const Game = (map: any) => {
     (event: any, mapObjectId: string) => {
       event.stopPropagation();
       event.preventDefault();
-      if (
-        selectedVillager &&
-        selectedVillager.professions.find((x) => x.active)?.profession.name ===
-          "Lumberjack"
-      ) {
+      if (selectedVillager && selectedVillager.professions.find((x) => x.active)?.profession.name === "Lumberjack") {
         selectedVillager.currentTask = (
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
           buildings: BuildingProps[],
           mapObjects: ObjectProps[]
-        ) =>
-          doWoodcutting(
-            villagers,
-            villagerId,
-            inventoryItems,
-            buildings,
-            mapObjects,
-            mapObjectId
-          );
+        ) => doWoodcutting(villagers, villagerId, inventoryItems, buildings, mapObjects, mapObjectId);
       }
     },
     [selectedVillager]
@@ -246,25 +206,19 @@ const Game = (map: any) => {
 
   const handleBuildingRightClick = useCallback((event: any) => {}, []);
 
-  const handleChangeProfessionClick = useCallback(
-    (updatedVillager: VillagerProps) => {
-      setVillagers((prev) => {
-        return prev.map((vill) => {
-          if (vill.id === updatedVillager.id) return updatedVillager;
-          return vill;
-        });
+  const handleChangeProfessionClick = useCallback((updatedVillager: VillagerProps) => {
+    setVillagers((prev) => {
+      return prev.map((vill) => {
+        if (vill.id === updatedVillager.id) return updatedVillager;
+        return vill;
       });
-    },
-    []
-  );
+    });
+  }, []);
 
   return (
     <div className={styles.background}>
       <div className={styles.actionsArea}>
-        <div
-          className={styles.actions}
-          onClick={(event) => event.stopPropagation()}
-        >
+        <div className={styles.actions} onClick={(event) => event.stopPropagation()}>
           <Settings onClick={selectShape} shapes={allShapes}></Settings>
           {selectedBuilding ? (
             <UpgradeMenu
@@ -302,24 +256,13 @@ const Game = (map: any) => {
           )}
         </div>
       </div>
-      <div
-        className={styles.gameArea}
-        onClick={handleClick}
-        onContextMenu={handleRightClick}
-      >
-        <div className={styles.resourceArea}>
-          {inventory ? <Resources inventory={inventory}></Resources> : <></>}
-        </div>
+      <div className={styles.gameArea} onClick={handleClick} onContextMenu={handleRightClick}>
+        <div className={styles.resourceArea}>{inventory ? <Resources inventory={inventory}></Resources> : <></>}</div>
 
         {buildings ? (
           buildings?.map((building, index) => {
             return building ? (
-              <Building
-                key={building.id}
-                {...building}
-                onClick={deselectAllBut}
-                onRightClick={handleBuildingRightClick}
-              ></Building>
+              <Building key={building.id} {...building} onClick={deselectAllBut} onRightClick={handleBuildingRightClick}></Building>
             ) : (
               <></>
             );
@@ -330,12 +273,7 @@ const Game = (map: any) => {
         {mapObjects ? (
           mapObjects?.map((mapObject, index) => {
             return mapObject ? (
-              <MapObject
-                key={mapObject.id}
-                {...mapObject}
-                onClick={deselectAllBut}
-                onRightClick={handleMapObjectRightClick}
-              ></MapObject>
+              <MapObject key={mapObject.id} {...mapObject} onClick={deselectAllBut} onRightClick={handleMapObjectRightClick}></MapObject>
             ) : (
               <></>
             );
@@ -345,15 +283,7 @@ const Game = (map: any) => {
         )}
         {villagers ? (
           villagers?.map((villager, index) => {
-            return villager ? (
-              <Villager
-                key={villager.id}
-                {...villager}
-                onClick={deselectAllBut}
-              ></Villager>
-            ) : (
-              <></>
-            );
+            return villager ? <Villager key={villager.id} {...villager} onClick={deselectAllBut}></Villager> : <></>;
           })
         ) : (
           <></>
