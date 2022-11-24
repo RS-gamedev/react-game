@@ -1,13 +1,15 @@
 {
   "files": {
-    "main.css": "/react-game/static/css/main.a2878bcf.css",
-    "main.js": "/react-game/static/js/main.ec8dac8e.js",
+    "main.css": "/react-game/static/css/main.9276ee2d.css",
+    "main.js": "/react-game/static/js/main.f492bda7.js",
     "static/media/background.jpg": "/react-game/static/media/background.c63ca0c047cc8ea7af09.jpg",
     "static/media/lumberjack.svg": "/react-game/static/media/lumberjack.dde7beee779510affb28b4151838bc30.svg",
+    "static/media/mill.svg": "/react-game/static/media/mill.ccd69e54f5067da00bfa8b7d7acb96c7.svg",
     "static/media/villager.svg": "/react-game/static/media/villager.da645850a6113eb6d6ad592fd4703109.svg",
     "static/media/farmer.svg": "/react-game/static/media/farmer.d33ac87fe6b588a949ba588886019ab3.svg",
     "static/media/house4.svg": "/react-game/static/media/house4.376f31c1d11bce5d3bf91553a8a68de8.svg",
     "static/media/food.svg": "/react-game/static/media/food.e03b40818ba8d3a3363cd3ae9ab88fcd.svg",
+    "static/media/field2.svg": "/react-game/static/media/field2.e3d5dc14cd0890c6c8f0dbd9d588c07c.svg",
     "static/media/tree.svg": "/react-game/static/media/tree.06a9c1f0adfb382c5514ebea78889adf.svg",
     "static/media/logs.svg": "/react-game/static/media/logs.fcb13c4f9471b6c8508179f5dfe5f478.svg",
     "static/media/townCenter4.svg": "/react-game/static/media/townCenter4.c9c4ea5a8e6175d46208e18b4dea2dc8.svg",
@@ -15,11 +17,11 @@
     "static/media/axe.svg": "/react-game/static/media/axe.acab508584ef2f6f78bff3507e17d5ab.svg",
     "static/media/hoe.svg": "/react-game/static/media/hoe.06b3bae670b32c950eb74a7bb4e66449.svg",
     "index.html": "/react-game/index.html",
-    "main.a2878bcf.css.map": "/react-game/static/css/main.a2878bcf.css.map",
-    "main.ec8dac8e.js.map": "/react-game/static/js/main.ec8dac8e.js.map"
+    "main.9276ee2d.css.map": "/react-game/static/css/main.9276ee2d.css.map",
+    "main.f492bda7.js.map": "/react-game/static/js/main.f492bda7.js.map"
   },
   "entrypoints": [
-    "static/css/main.a2878bcf.css",
-    "static/js/main.ec8dac8e.js"
+    "static/css/main.9276ee2d.css",
+    "static/js/main.f492bda7.js"
   ]
 }
