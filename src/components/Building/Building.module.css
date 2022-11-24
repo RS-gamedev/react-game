@@ -1,22 +1,22 @@
-.building{
-    border:1px solid transparent;
-    border-radius: 10px;
-    transition: border-color 300ms;
-    padding:5px;
-    color:red;
+.building {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: border-color 300ms;
+  padding: 5px;
+  color: red;
 }
 
-.building:hover{
-    border-color:#80bd9e36;
+.building:hover {
+  border-color: #80bd9e36;
 }
 
-.active{
-    border-color: #80bd9f!important;
+.active {
+  border-color: #80bd9f !important;
 }
 
-.building svg{
-    height:0.5em!important;
+.building svg {
+  height: 0.5em !important;
 }
-.not-active{
-    border-color: transparent;
+.not-active {
+  border-color: transparent;
 }

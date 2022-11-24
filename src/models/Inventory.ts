@@ -1,6 +1,6 @@
-import { InventoryItem } from "./InventoryItem"
-import { Resource } from "./Resource"
+import { InventoryItem } from "./InventoryItem";
+import { Resource } from "./Resource";
 
 export type Inventory = {
-    resources: InventoryItem[]
-}
+  resources: InventoryItem[];
+};

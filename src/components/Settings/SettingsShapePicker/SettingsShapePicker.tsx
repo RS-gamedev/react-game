@@ -1,27 +1,19 @@
-import { useEffect } from 'react';
-import Button from '../../Button/Button';
-import styles from './SettingsShapePicker.module.css';
+import { useEffect } from "react";
+import Button from "../../Button/Button";
+import styles from "./SettingsShapePicker.module.css";
 
 type Shape = {
-    name: string,
-    image: string,
-    selected: boolean
-}
+  name: string;
+  image: string;
+  selected: boolean;
+};
 
 type Props = {
-    shapes: Shape[]
-}
+  shapes: Shape[];
+};
 
-export default function SettingsShapePicker({shapes}: Props) {
+export default function SettingsShapePicker({ shapes }: Props) {
+  useEffect(() => {}, []);
 
-
-    useEffect(() => {
-        
-    }, [])
-
-    return (
-        <div className={styles.shapePicker}>
-           
-        </div>
-    )
+  return <div className={styles.shapePicker}></div>;
 }

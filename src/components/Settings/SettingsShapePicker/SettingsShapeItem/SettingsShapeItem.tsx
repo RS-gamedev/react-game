@@ -1,25 +1,22 @@
-import Button from '../../../Button/Button';
-import styles from './SettingsShapeItem.module.css';
+import Button from "../../../Button/Button";
+import styles from "./SettingsShapeItem.module.css";
 type Props = {
-    shape: Shape
-}
+  shape: Shape;
+};
 
 type Shape = {
-    name: string,
-    image: string,
-    selected: boolean
-}
+  name: string;
+  image: string;
+  selected: boolean;
+};
 
-export default function SettingsShapeItem({shape}: Props) {
-
-    function onClick(){
-
-    }
+export default function SettingsShapeItem({ shape }: Props) {
+  function onClick() {}
 
   return (
     <div className={styles.shapeToggle}>
-        <span>{shape.name}</span>
-        {/* <Button active={shape.selected} onClick={onClick} text=''></Button> */}
+      <span>{shape.name}</span>
+      {/* <Button active={shape.selected} onClick={onClick} text=''></Button> */}
     </div>
-  )
+  );
 }

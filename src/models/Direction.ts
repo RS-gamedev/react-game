@@ -1,10 +1,10 @@
-export enum Direction{
-    up,
-    right,
-    down,
-    left,
-    upright,
-    downright,
-    downleft,
-    upleft
+export enum Direction {
+  up,
+  right,
+  down,
+  left,
+  upright,
+  downright,
+  downleft,
+  upleft,
 }

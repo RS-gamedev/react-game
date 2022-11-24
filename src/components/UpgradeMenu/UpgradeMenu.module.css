@@ -1,69 +1,71 @@
-.upgradeMenu{
-    width:240px;
-    /* background-color:white; */
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    border-radius: 10px;
-    flex: 1;
-    /* overflow:hidden; */
-    position: relative;
+.upgradeMenu {
+  width: 240px;
+  /* background-color:white; */
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  border-radius: 10px;
+  flex: 1;
+  /* overflow:hidden; */
+  position: relative;
 }
 
-.titleSection{
-    height: 80px;
-    width:100%;
-    overflow:hidden;
-    display:flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 10px 10px 0px 0px;
-    padding-left:20px;
-    background:white;
-    overflow:hidden;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+.titleSection {
+  height: 80px;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px 10px 0px 0px;
+  padding-left: 20px;
+  background: white;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
+    rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
-.titlePart{
-    display:flex;
-    flex-direction: column;
+.titlePart {
+  display: flex;
+  flex-direction: column;
 }
 
-.titleSection span{
-    font-size: 1.5em;
+.titleSection span {
+  font-size: 1.5em;
 }
 
-.levelSection{
-    height: 80px;
-    width:80px;
-    background-color:#586599b2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    padding:10px;
+.levelSection {
+  height: 80px;
+  width: 80px;
+  background-color: #586599b2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
 }
-.noTopRightBorderRadius{
-    border-top-right-radius: 0px;
+.noTopRightBorderRadius {
+  border-top-right-radius: 0px;
 }
 
 .levelSection span {
-    font-size: 0.9em;
-    color:white;
+  font-size: 0.9em;
+  color: white;
 }
 
-.name{
-    font-weight: 800;
+.name {
+  font-weight: 800;
 }
 
-.buildingOptionsSection{
-    height: calc(100% - 140px);
-    padding:15px;
-    background-color: #787b8693;
-    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(15px);
+.buildingOptionsSection {
+  height: calc(100% - 140px);
+  padding: 15px;
+  background-color: #787b8693;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
 }
 
-.inventorySection{
-    height: 60px;
-    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
+.inventorySection {
+  height: 60px;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.5);
 }
