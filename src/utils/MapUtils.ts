@@ -11,6 +11,7 @@ import logs from "../assets/logs.svg";
 import food from "../assets/food.svg";
 import mill from "../assets/mill.svg";
 import field from "../assets/field2.svg";
+import storage from "../assets/storage.svg";
 
 export const getImageUrl = (name: string) => {
   switch (name) {
@@ -40,6 +41,8 @@ export const getImageUrl = (name: string) => {
       return food;
     case "mill":
       return mill;
+    case "storage":
+      return storage;
     default:
       return tree;
   }

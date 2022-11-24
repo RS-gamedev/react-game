@@ -34,11 +34,12 @@ const Game = (map: any) => {
   const [inventory, setInventory] = useState<Inventory>({ resources: [] });
   const [gameTick, setGameTick] = useState(0);
   const [placementOverlayConfig, setPlacementOverlayConfig] = useState<PlacementOverlayConfig | undefined>();
+  const [gameSpeed, setGameSpeed] = useState(1);
 
   useInterval(() => {
     // GAME LOOP
     setGameTick((prev) => prev + 1);
-  }, 50);
+  }, 50 / gameSpeed);
 
   var selectedShape = allShapes.find((x) => x.selected);
   var selectedBuilding = buildings.find((x) => x.selected);
@@ -138,6 +139,11 @@ const Game = (map: any) => {
         return { ...building, selected: false };
       });
     });
+    setAllShapes((prev) => {
+      return prev.map((x) => {
+        return { ...x, selected: false };
+      });
+    });
   }, []);
 
   // Left click handler
@@ -158,6 +164,12 @@ const Game = (map: any) => {
           return { ...mapObject, selected: false };
         });
       });
+      setAllShapes((prev) => {
+        return prev.map((x) => {
+          return { ...x, selected: false };
+        });
+      });
+      setPlacementOverlayConfig(undefined);
       return;
     }
   }
