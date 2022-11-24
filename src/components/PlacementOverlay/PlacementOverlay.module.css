@@ -1,6 +1,7 @@
 .placementOverlay {
-  background-color: green;
-  opacity: 0.5;
+  background-color: rgba(0, 128, 0, 0.212);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.363) 0.5px, transparent 0);
+  background-size: 5px 5px;
   position: absolute;
 }
 .circle {
