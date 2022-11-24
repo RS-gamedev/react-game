@@ -15,48 +15,45 @@ export function getDistance(startPosition: Position, goalPosition: Position) {
   return Math.sqrt(x * x + y * y);
 }
 
-export function getNewPosition(startPosition: Hitbox, goalPosition: Position): Hitbox{
-    let newPosition: Hitbox = {...startPosition};
-    let center = getHitBoxCenter(newPosition);
-    if (goalPosition.x - center.x >= 10) {
-        newPosition.leftTop.x += 8;
-        newPosition.rightBottom.x += 8;
-    }
-    else if (goalPosition.x - center.x <= 10) {
-        newPosition.leftTop.x -= 8;
-        newPosition.rightBottom.x -= 8;
-    }
+export function getNewPosition(startPosition: Hitbox, goalPosition: Position): Hitbox {
+  let newPosition: Hitbox = { ...startPosition };
+  let center = getHitBoxCenter(newPosition);
+  if (goalPosition.x - center.x >= 10) {
+    newPosition.leftTop.x += 8;
+    newPosition.rightBottom.x += 8;
+  } else if (goalPosition.x - center.x <= 10) {
+    newPosition.leftTop.x -= 8;
+    newPosition.rightBottom.x -= 8;
+  }
 
-    if (goalPosition.y - center.y >= 10) {
-        newPosition.leftTop.y += 8;
-        newPosition.rightBottom.y += 8;
-    }
-    else if (goalPosition.y - center.y <= 10) {
-        newPosition.leftTop.y -= 8;
-        newPosition.rightBottom.y -= 8;
-    }
-    return newPosition;
+  if (goalPosition.y - center.y >= 10) {
+    newPosition.leftTop.y += 8;
+    newPosition.rightBottom.y += 8;
+  } else if (goalPosition.y - center.y <= 10) {
+    newPosition.leftTop.y -= 8;
+    newPosition.rightBottom.y -= 8;
+  }
+  return newPosition;
 }
 
-export function doMoveToLocation(villagers: VillagerProps[], villagerId: string, inventoryItems: InventoryItem[], buildings: BuildingProps[], mapObjects: ObjectProps[], goalPosition: Position): GameTickResult {
-    let villagersCopy = [...villagers];
-    let updatedVillager = villagersCopy.find( x=> x.id === villagerId);
-    let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
-    if(updatedVillager){
-        updatedVillager.status = Status.WALKING;
-        if (onGoal(updatedVillager.hitBox, goalPosition)) {
-            updatedVillager.status = Status.IDLE;
-            updatedVillager.currentTask = undefined;
-        }
-        else{
-            updatedVillager.hitBox = getNewPosition(updatedVillager.hitBox, goalPosition)
-        }
-        villagersCopy = villagersCopy.map(vill => {
-            if(updatedVillager && vill.id === updatedVillager.id){
-                return updatedVillager;
-            }
-            return vill;
-        });
+export function doMoveToLocation(
+  villagers: VillagerProps[],
+  villagerId: string,
+  inventoryItems: InventoryItem[],
+  buildings: BuildingProps[],
+  mapObjects: ObjectProps[],
+  goalPosition: Position
+): GameTickResult {
+  let villagersCopy = [...villagers];
+  let updatedVillager = villagersCopy.find((x) => x.id === villagerId);
+  let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
+  if (updatedVillager) {
+    updatedVillager.status = Status.WALKING;
+    if (onGoal(updatedVillager.hitBox, goalPosition)) {
+      updatedVillager.status = Status.IDLE;
+      updatedVillager.currentTask = undefined;
+    } else {
+      updatedVillager.hitBox = getNewPosition(updatedVillager.hitBox, goalPosition);
     }
     villagersCopy = villagersCopy.map((vill) => {
       if (updatedVillager && vill.id === updatedVillager.id) {
@@ -64,6 +61,13 @@ export function doMoveToLocation(villagers: VillagerProps[], villagerId: string,
       }
       return vill;
     });
+  }
+  villagersCopy = villagersCopy.map((vill) => {
+    if (updatedVillager && vill.id === updatedVillager.id) {
+      return updatedVillager;
+    }
+    return vill;
+  });
   gameTickResult.villagers = villagersCopy;
   return gameTickResult;
 }

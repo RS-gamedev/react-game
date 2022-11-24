@@ -6,24 +6,24 @@ import { BuildingType } from "../models/enums/BuildingType";
 import { Position } from "../models/Position";
 import { Hitbox } from "../models/Hitbox";
 
-function constructBuilding(position: Position, shape: Shape,) {
-    let hitbox = createHitbox(position, shape.size);
-    let house: BuildingProps = {
-        id: uuidv4(),
-        selected: false,
-        level: 1,
-        name: shape.name,
-        color: '#ffffff',
-        icon: shape.icon,
-        position: position,
-        price: shape.price,
-        size: shape.size,
-        type: shape.type,
-        image: shape.image,
-        buildingOptions: shape.buildingOptions,
-        hitBox: hitbox
-    }
-    return house;
+function constructBuilding(position: Position, shape: Shape) {
+  let hitbox = createHitbox(position, shape.size);
+  let house: BuildingProps = {
+    id: uuidv4(),
+    selected: false,
+    level: 1,
+    name: shape.name,
+    color: "#ffffff",
+    icon: shape.icon,
+    position: position,
+    price: shape.price,
+    size: shape.size,
+    type: shape.type,
+    image: shape.image,
+    buildingOptions: shape.buildingOptions,
+    hitBox: hitbox,
+  };
+  return house;
 }
 
 export function createBuilding(position: Position, type: BuildingType) {
