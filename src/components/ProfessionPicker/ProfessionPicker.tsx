@@ -1,5 +1,4 @@
 import styles from './ProfessionPicker.module.css';
-import { professions } from '../../config/Professions';
 import ProfessionPickerItem from './ProfessionPickerItem/ProfessionPickerItem';
 import { VillagerProfession } from '../../models/VillagerProfession';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +17,7 @@ const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
     let selected = villagerProfessions.find(x => x.active);
     if (!selected) return;
     setSelectedVillagerProfession(selected)
-  }, [])
+  }, [villagerProfessions])
   
   const handleChangeProfession = (villagerProfessionId: string) => {
     let toSelect = villagerProfessions.find(x => x.id === villagerProfessionId);
@@ -33,7 +32,7 @@ const ProfessionPicker = ({ open, villagerProfessions, onClick }: Props) => {
         <div className={styles.professionPickerItems}>
           {
             villagerProfessions.map(prof => {
-              return <ProfessionPickerItem id={prof.id} active={(selectedVillagerProfession?.id === prof.id) ? prof.active: false} name={prof.profession.name} image={prof.profession.image} level={prof.currentLevel.level} onClick={handleChangeProfession}></ProfessionPickerItem>
+              return <ProfessionPickerItem key={prof.id} id={prof.id} active={(selectedVillagerProfession?.id === prof.id) ? prof.active: false} name={prof.profession.name} image={prof.profession.image} level={prof.currentLevel.level} onClick={handleChangeProfession}></ProfessionPickerItem>
             })
           }
         </div>

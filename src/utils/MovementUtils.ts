@@ -1,5 +1,4 @@
 import { BuildingProps } from "../models/BuildingProps";
-import { Direction } from "../models/Direction";
 import { Status } from "../models/enums/Status";
 import { GameTickResult } from "../models/GameTickResult";
 import { Hitbox } from "../models/Hitbox";
@@ -9,12 +8,6 @@ import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
 import { getHitBoxCenter, onGoal } from "./HitboxUtils";
 import { getEmptyGameTickResultObject } from "./StatusUtils";
-
-function getBestDirection(startPosition: { x: number, y: number }, goalPosition: { x: number, y: number }): Direction {
-    let actualDistance = getDistance(startPosition, goalPosition);
-    return Direction.up;
-}
-
 
 export function getDistance(startPosition: Position, goalPosition: Position) {
     let y = goalPosition.x - startPosition.x;

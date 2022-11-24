@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { BuildingOption } from '../../models/BuildingOption';
 import { BuildingProps } from '../../models/BuildingProps';
 import { Status } from '../../models/enums/Status';
-import { VillagerType } from '../../models/enums/VillagerType';
 import { InventoryItem } from '../../models/InventoryItem';
 import { ObjectProps } from '../../models/ObjectProps';
 import { Position } from '../../models/Position';
@@ -44,14 +43,14 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             setBuildingOptions(selectedMapObject.buildingOptions);
             setPosition(getHitBoxCenter(selectedMapObject.hitBox));
         }
-    }, []);
+    }, [selectedBuilding, selectedMapObject, selectedVillager]);
 
     const executeBuildingOption = useCallback((buildingOption: BuildingOption, type: string) => {
-        if (type == 'train') {
+        if (type === 'train') {
             let entity = buildingOption.toExecute(position);
             onTrain(entity);
         }
-    }, [buildingOptions])
+    }, [onTrain, position])
 
     const handleChangeProfession = useCallback((villagerProfession: VillagerProfession) => {
         if(!onProfessionChange || !selectedVillager) return;
@@ -65,7 +64,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         };
         setJobSelectionOpen(false);
         onProfessionChange(selectedVillagerCopy);
-    }, [selectedVillager])
+    }, [onProfessionChange, selectedVillager])
     
     if (selectedBuilding) {
         return <div className={styles.upgradeMenu}>
@@ -93,14 +92,15 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
 
                 <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>
                     <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={'50px'}></Icon>
+                    <span>{`Level ${activeProfession?.currentLevel.level}`}</span>
                 </div>
             </div>
             <div className={styles.buildingOptionsSection}>
                 <span>{selectedVillager.id}</span>
             </div>
             <div className={styles.inventorySection}>
-                {(inStock) ? inStock.map(x => {
-                    return <ResourceItem resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff' height={15}></ResourceItem>
+                {(inStock) ? inStock.map((x, index)=> {
+                    return <ResourceItem key={index} resource={x.resource} amount={Math.round(x.amount)} iconSize='1em' textSize='1em' textColor='#ffffff' height={15}></ResourceItem>
                 }) : <></>}
             </div>
             <ProfessionPicker villagerProfessions={selectedVillager.professions} open={jobSelectionOpen} onClick={handleChangeProfession}></ProfessionPicker>

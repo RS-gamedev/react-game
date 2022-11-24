@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Hitbox } from '../../models/Hitbox';
-import { Position } from '../../models/Position';
 import { VillagerProfession } from '../../models/VillagerProfession';
-import { getImageUrl } from '../../utils/MapUtils';
 import Icon from '../Icon/Icon';
 import styles from './Villager.module.css';
 
@@ -28,8 +26,7 @@ export default function Villager({ id, name, size, hitBox, onClick, selected, pr
 
 
   return (
-    <div className={styles.villager + " " + `${(selected) ? styles.selected : styles.nothing}`} style={{ width: size.width, height: size.height, left: hitBox.leftTop.x, top: hitBox.leftTop.y }} onClick={(event) => onClick(event, id)}>
-      {/* <img style={{ height: '100%' }} src={image}></img> */}
+    <div className={styles.villager + ` ${(selected) ? styles.selected : styles.nothing}`} style={{ width: size.width, height: size.height, left: hitBox.leftTop.x, top: hitBox.leftTop.y }} onClick={(event) => onClick(event, id)}>
       <Icon height={size.height - 10 + 'px'} fontSize='1em' imageName={activeProfession?.profession.characterImageName}></Icon>
     </div>
   )

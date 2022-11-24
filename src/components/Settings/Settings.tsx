@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Shape } from '../../models/Shape';
 import Button from '../Button/Button';
 import styles from './Settings.module.css';
 
 type Props = {
     shapes: Shape[],
-    onClick: (shape: Shape) => void
+    onClick: (shapeId: string) => void
 }
 
 const Settings = React.memo(({shapes, onClick}: Props) => {
@@ -15,7 +15,7 @@ const Settings = React.memo(({shapes, onClick}: Props) => {
             <div className={styles.shapePicker}>
                 {
                     shapes.map(option => {
-                        return <Button imageHeight={'25px'} key={option.id} price={option.price} active={option.selected} disabled={false} text={option.name} onClick={() => onClick(option)} width="100px" height='100px' icon={option.icon} iconColor={option.iconColor}></Button>
+                        return <Button imageHeight={'25px'} key={option.id} price={option.price} active={option.selected} disabled={false} text={option.name} onClick={() => onClick(option.id)} width="100px" height='100px' icon={option.icon} iconColor={option.iconColor}></Button>
                     })
                 }
             </div>

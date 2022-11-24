@@ -26,6 +26,7 @@ export function executeTasks(villagers: VillagerProps[], inventoryItems: Invento
         let toUseInventoryItems = (gameTickResult.inventoryItems) ? gameTickResult.inventoryItems : inventoryItemsCopy;
         let toUseMapObjects = (gameTickResult.mapObjects) ? gameTickResult.mapObjects : mapObjectsCopy;
         let toUseBuildings = (gameTickResult.buildings) ? gameTickResult.buildings : buildingsCopy;
+        
         if (villager.currentTask) {
             let resultFromVillager = villager.currentTask(toUseVillagers, villager.id, toUseInventoryItems, toUseBuildings, toUseMapObjects);
             if(resultFromVillager.villagers){
