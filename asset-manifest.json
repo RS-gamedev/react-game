@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/react-game/static/css/main.a2878bcf.css",
-    "main.js": "/react-game/static/js/main.4831489f.js",
+    "main.js": "/react-game/static/js/main.ec8dac8e.js",
     "static/media/background.jpg": "/react-game/static/media/background.c63ca0c047cc8ea7af09.jpg",
     "static/media/lumberjack.svg": "/react-game/static/media/lumberjack.dde7beee779510affb28b4151838bc30.svg",
     "static/media/villager.svg": "/react-game/static/media/villager.da645850a6113eb6d6ad592fd4703109.svg",
@@ -16,10 +16,10 @@
     "static/media/hoe.svg": "/react-game/static/media/hoe.06b3bae670b32c950eb74a7bb4e66449.svg",
     "index.html": "/react-game/index.html",
     "main.a2878bcf.css.map": "/react-game/static/css/main.a2878bcf.css.map",
-    "main.4831489f.js.map": "/react-game/static/js/main.4831489f.js.map"
+    "main.ec8dac8e.js.map": "/react-game/static/js/main.ec8dac8e.js.map"
   },
   "entrypoints": [
     "static/css/main.a2878bcf.css",
-    "static/js/main.4831489f.js"
+    "static/js/main.ec8dac8e.js"
   ]
 }
