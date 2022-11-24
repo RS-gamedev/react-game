@@ -1,8 +1,9 @@
 {
   "files": {
-    "main.css": "/react-game/static/css/main.9276ee2d.css",
-    "main.js": "/react-game/static/js/main.72138c24.js",
+    "main.css": "/react-game/static/css/main.0358c92f.css",
+    "main.js": "/react-game/static/js/main.ce711a77.js",
     "static/media/background.jpg": "/react-game/static/media/background.c63ca0c047cc8ea7af09.jpg",
+    "static/media/miner2.svg": "/react-game/static/media/miner2.f3f18a5bec57bab03e07579bf3c2d2dc.svg",
     "static/media/lumberjack.svg": "/react-game/static/media/lumberjack.dde7beee779510affb28b4151838bc30.svg",
     "static/media/mill.svg": "/react-game/static/media/mill.ccd69e54f5067da00bfa8b7d7acb96c7.svg",
     "static/media/villager.svg": "/react-game/static/media/villager.da645850a6113eb6d6ad592fd4703109.svg",
@@ -11,18 +12,21 @@
     "static/media/food.svg": "/react-game/static/media/food.e03b40818ba8d3a3363cd3ae9ab88fcd.svg",
     "static/media/field2.svg": "/react-game/static/media/field2.e3d5dc14cd0890c6c8f0dbd9d588c07c.svg",
     "static/media/tree.svg": "/react-game/static/media/tree.06a9c1f0adfb382c5514ebea78889adf.svg",
+    "static/media/stone.svg": "/react-game/static/media/stone.77f35897cd0e2633a4d63bf66ff6bce5.svg",
     "static/media/logs.svg": "/react-game/static/media/logs.fcb13c4f9471b6c8508179f5dfe5f478.svg",
     "static/media/storage.svg": "/react-game/static/media/storage.82cbd3c6811ab498d72109fe606328c2.svg",
-    "static/media/townCenter4.svg": "/react-game/static/media/townCenter4.c9c4ea5a8e6175d46208e18b4dea2dc8.svg",
+    "static/media/townCenter4.svg": "/react-game/static/media/townCenter4.4193db483ed21bb3d70a7dc2a936581a.svg",
+    "static/media/rock.svg": "/react-game/static/media/rock.859efc050ffef3345e9fda3bc094877f.svg",
+    "static/media/pickaxe.svg": "/react-game/static/media/pickaxe.96581d0636c1bac06a24faa20e346536.svg",
     "static/media/none.svg": "/react-game/static/media/none.3fe56e1dfab59a921b21abb9af547d27.svg",
     "static/media/axe.svg": "/react-game/static/media/axe.acab508584ef2f6f78bff3507e17d5ab.svg",
     "static/media/hoe.svg": "/react-game/static/media/hoe.06b3bae670b32c950eb74a7bb4e66449.svg",
     "index.html": "/react-game/index.html",
-    "main.9276ee2d.css.map": "/react-game/static/css/main.9276ee2d.css.map",
-    "main.72138c24.js.map": "/react-game/static/js/main.72138c24.js.map"
+    "main.0358c92f.css.map": "/react-game/static/css/main.0358c92f.css.map",
+    "main.ce711a77.js.map": "/react-game/static/js/main.ce711a77.js.map"
   },
   "entrypoints": [
-    "static/css/main.9276ee2d.css",
-    "static/js/main.72138c24.js"
+    "static/css/main.0358c92f.css",
+    "static/js/main.ce711a77.js"
   ]
 }
