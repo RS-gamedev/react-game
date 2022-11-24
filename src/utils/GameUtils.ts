@@ -73,7 +73,7 @@ export function setInitialMapObjects(map: any): ObjectProps[] {
     let mapObjectInventory = [
       {
         resource: mapObject.name === "tree" ? wood : mapObject.name === "rock" && stone,
-        amount: 100,
+        amount: 50,
       },
     ];
     return {
