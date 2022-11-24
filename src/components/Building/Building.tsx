@@ -17,7 +17,6 @@ type props = {
 };
 
 const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: props) => {
-  console.log(size, hitBox);
   return (
     <div
       className={styles[selected ? `active` : `not-active`] + " " + styles["building"]}

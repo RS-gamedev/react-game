@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { buildStyles, CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { BuildingOption } from "../../models/BuildingOption";
 import { BuildingProps } from "../../models/BuildingProps";
 import { Status } from "../../models/enums/Status";
@@ -113,13 +114,19 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
       <div className={styles.upgradeMenu}>
         <div className={`${styles.titleSection} ${jobSelectionOpen && styles.noTopRightBorderRadius}`}>
           <div className={styles.titlePart}>
-            <span className={styles.name}>{selectedVillager.name}</span>
             <span style={{ fontSize: "1em" }}>{Status[selectedVillager.status]}</span>
           </div>
 
           <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>
-            <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"50px"}></Icon>
-            <span>{`Level ${activeProfession?.currentLevel.level}`}</span>
+            <CircularProgressbarWithChildren
+              className={`${styles.spinner} ${activeProfession?.currentLevel.nextLevel === "" && styles.maxLevel}`}
+              value={activeProfession?.currentExperience!}
+              maxValue={activeProfession?.currentLevel.experienceNeededForNextLevel}
+              styles={buildStyles({ pathColor: "#515b80", trailColor: "#e0e0e0" })}
+            >
+              <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"25px"}></Icon>
+              <span>{`Level ${activeProfession?.currentLevel.level}`}</span>
+            </CircularProgressbarWithChildren>
           </div>
         </div>
         <div className={styles.buildingOptionsSection}>
