@@ -77,8 +77,11 @@ export function doWoodcutting(
           let toAddResource = villagerCopy.inventoryItems.find((x) => x.resource.name === "Wood");
           if (toAddResource) {
             toAddResource.amount = add(toAddResource.amount, 0.05);
-            currentProfession.currentExperience = add(currentProfession.currentExperience, 1);
-            if (achievedNextLevel(currentProfession.currentExperience, currentProfession?.currentLevel.experienceNeededForNextLevel)) {
+            currentProfession.currentExperience = add(currentProfession.currentExperience, 0.5);
+            if (
+              achievedNextLevel(currentProfession.currentExperience, currentProfession?.currentLevel.experienceNeededForNextLevel) &&
+              currentProfession.currentLevel.nextLevel !== ""
+            ) {
               let nextLevel = levels.find((x) => x.id === currentProfession?.currentLevel.nextLevel);
               currentProfession.currentLevel = nextLevel ? nextLevel : currentProfession.currentLevel;
               currentProfession.currentExperience = 0;

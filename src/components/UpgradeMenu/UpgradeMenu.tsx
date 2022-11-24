@@ -119,7 +119,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
 
           <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>
             <CircularProgressbarWithChildren
-              className={styles.spinner}
+              className={`${styles.spinner} ${activeProfession?.currentLevel.nextLevel === "" && styles.maxLevel}`}
               value={activeProfession?.currentExperience!}
               maxValue={activeProfession?.currentLevel.experienceNeededForNextLevel}
               styles={buildStyles({ pathColor: "#515b80", trailColor: "#e0e0e0" })}
