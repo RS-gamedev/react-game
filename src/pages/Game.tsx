@@ -20,13 +20,20 @@ import { doMoveToLocation } from "../utils/MovementUtils";
 import { doWoodcutting } from "../utils/villagerUtils/LumberjackUtils";
 import { executeTasks } from "../utils/StatusUtils";
 import { InventoryItem } from "../models/InventoryItem";
+import PlacementOverlay from "../components/PlacementOverlay/PlacementOverlay";
+import { BuildingOption } from "../models/BuildingOption";
+import { PlacementOverlayConfig } from "../models/PlacementOverlayConfig";
+import { Size } from "../models/Size";
+import { Position } from "../models/Position";
+import { Availability } from "../models/enums/Availability";
 const Game = (map: any) => {
   const [villagers, setVillagers] = useState<VillagerProps[]>([]);
   const [buildings, setBuildings] = useState<BuildingProps[]>([]);
   const [mapObjects, setMapObjects] = useState<ObjectProps[]>([]);
-  const [allShapes, setAllShapes] = useState<Shape[]>(shapes);
+  const [allShapes, setAllShapes] = useState<Shape[]>(shapes.filter((x) => x.availability === Availability.GAME_LEVEL1));
   const [inventory, setInventory] = useState<Inventory>({ resources: [] });
   const [gameTick, setGameTick] = useState(0);
+  const [placementOverlayConfig, setPlacementOverlayConfig] = useState<PlacementOverlayConfig | undefined>();
 
   useInterval(() => {
     // GAME LOOP
@@ -89,11 +96,26 @@ const Game = (map: any) => {
   const selectShape = useCallback((shapeId: string) => {
     setAllShapes((prev) => {
       return prev.map((x) => {
-        if (x.id === shapeId) return { ...x, selected: !x.selected ? true : false };
+        if (x.id === shapeId) {
+          return { ...x, selected: !x.selected ? true : false };
+        }
         return { ...x, selected: false };
       });
     });
   }, []);
+
+  useEffect(() => {
+    let _selectedShape = allShapes.find((x) => x.selected);
+    if (!_selectedShape) {
+      setPlacementOverlayConfig((prev) => {
+        return { ...prev, show: false };
+      });
+    } else {
+      setPlacementOverlayConfig((prev) => {
+        return { ...prev, show: true, fullscreen: true, selectedShape: _selectedShape };
+      });
+    }
+  }, [allShapes]);
 
   // Deselect other, and select given
   const deselectAllBut = useCallback((event: any, toSelectId: string) => {
@@ -137,19 +159,6 @@ const Game = (map: any) => {
         });
       });
       return;
-    }
-
-    let clientRect = event.currentTarget.getBoundingClientRect();
-    let xPos = event.pageX - clientRect.left;
-    let yPos = event.pageY - clientRect.top;
-
-    let building: BuildingProps | undefined = createBuilding({ x: xPos, y: yPos }, selectedShape.type);
-    if (building) {
-      let result = reduceResourcesFromInventory(inventory!, building.price);
-      if (result[1]) {
-        setInventory((prev) => result[0]);
-        addBuilding(building);
-      }
     }
   }
 
@@ -215,6 +224,43 @@ const Game = (map: any) => {
     });
   }, []);
 
+  const handleOpenOverlay = (buildingOption: BuildingOption, centerPosition: Position) => {
+    let toPlaceShape = shapes.find((x) => x.id === buildingOption.shapeId);
+    if (!toPlaceShape) return;
+    let overlayConfig: PlacementOverlayConfig = {
+      circle: true,
+      fullscreen: false,
+      show: true,
+      size: getIncreasedSizeByRange(toPlaceShape.size, buildingOption.placementRange),
+      centerPosition: centerPosition,
+      selectedShape: toPlaceShape,
+    };
+    setPlacementOverlayConfig(overlayConfig);
+  };
+
+  function getIncreasedSizeByRange(size: Size, range?: number): Size {
+    console.log(range);
+    let toReturn = { ...size };
+    toReturn.width += (range ? range : 0) * 2;
+    toReturn.height += (range ? range : 0) * 2;
+    return toReturn;
+  }
+
+  const handlePlaceBuilding = (event: any) => {
+    let clientRect = event.target.parentElement.getBoundingClientRect();
+    let xPos = event.pageX - clientRect.left;
+    let yPos = event.pageY - clientRect.top;
+    if (!placementOverlayConfig || !placementOverlayConfig.selectedShape) return;
+    let building: BuildingProps | undefined = createBuilding({ x: xPos, y: yPos }, placementOverlayConfig?.selectedShape.type);
+    if (building) {
+      let result = reduceResourcesFromInventory(inventory!, building.price);
+      if (result[1]) {
+        setInventory((prev) => result[0]);
+        addBuilding(building);
+      }
+    }
+  };
+
   return (
     <div className={styles.background}>
       <div className={styles.actionsArea}>
@@ -224,6 +270,7 @@ const Game = (map: any) => {
             <UpgradeMenu
               inStock={undefined}
               onTrain={onTrain}
+              onPlaceBuilding={handleOpenOverlay}
               selectedBuilding={selectedBuilding}
               selectedVillager={undefined}
               selectedMapObject={undefined}
@@ -257,6 +304,15 @@ const Game = (map: any) => {
         </div>
       </div>
       <div className={styles.gameArea} onClick={handleClick} onContextMenu={handleRightClick}>
+        {placementOverlayConfig?.show && (
+          <PlacementOverlay
+            onClick={handlePlaceBuilding}
+            fullscreen={placementOverlayConfig?.fullscreen}
+            circle={placementOverlayConfig.circle}
+            size={placementOverlayConfig.size}
+            centerPosition={placementOverlayConfig.centerPosition}
+          />
+        )}
         <div className={styles.resourceArea}>{inventory ? <Resources inventory={inventory}></Resources> : <></>}</div>
 
         {buildings ? (

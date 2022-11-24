@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { buildStyles, CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { BuildingOption } from "../../models/BuildingOption";
 import { BuildingProps } from "../../models/BuildingProps";
+import { BuildingOptionType } from "../../models/enums/BuildingOptionType";
 import { Status } from "../../models/enums/Status";
 import { InventoryItem } from "../../models/InventoryItem";
 import { ObjectProps } from "../../models/ObjectProps";
@@ -20,14 +21,16 @@ type Props = {
   selectedVillager: VillagerProps | undefined;
   selectedMapObject: ObjectProps | undefined;
   onTrain: (villager: VillagerProps) => VillagerProps;
+  onPlaceBuilding?: (buildingOption: BuildingOption, centerPosition: Position) => void;
   inStock?: InventoryItem[];
   onProfessionChange?: (selectedVillager: VillagerProps) => void;
 };
 
-const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange }: Props) => {
+const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange, onPlaceBuilding }: Props) => {
   const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
   const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
   const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
+  const [toPlaceBuildingPosition, setToPlaceBuildingPosition] = useState();
 
   const activeProfession = selectedVillager?.professions.find((x) => x.active);
 
@@ -47,10 +50,17 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
   }, [selectedBuilding, selectedMapObject, selectedVillager]);
 
   const executeBuildingOption = useCallback(
-    (buildingOption: BuildingOption, type: string) => {
-      if (type === "train") {
+    (buildingOption: BuildingOption) => {
+      if (buildingOption.type === BuildingOptionType.TRAIN) {
         let entity = buildingOption.toExecute(position);
         onTrain(entity);
+      }
+      if (buildingOption.type === BuildingOptionType.BUILD) {
+        console.log(selectedBuilding?.hitBox);
+        console.log(getHitBoxCenter(selectedBuilding!.hitBox));
+        if (onPlaceBuilding && selectedBuilding) onPlaceBuilding(buildingOption, getHitBoxCenter(selectedBuilding.hitBox));
+      }
+      if (buildingOption.type === BuildingOptionType.UPGRADE) {
       }
     },
     [onTrain, position]
@@ -99,7 +109,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
                 iconColor={"#ffffff"}
                 height="100px"
                 width="100px"
-                onClick={() => executeBuildingOption(x, "train")}
+                onClick={() => executeBuildingOption(x)}
                 text={x.name}
               ></Button>
             );
