@@ -3,52 +3,50 @@ import { InventoryItem } from "../models/InventoryItem";
 import { Price } from "../models/Price";
 
 function reduceResource(inventoryItem: InventoryItem, amount: number) {
-    if (inventoryItem) {
-        let newAmount = inventoryItem.amount -= amount;
-        if (newAmount >= 0) {
-            inventoryItem.amount = newAmount
-        }
-        return null;
+  if (inventoryItem) {
+    let newAmount = (inventoryItem.amount -= amount);
+    if (newAmount >= 0) {
+      inventoryItem.amount = newAmount;
     }
-    return inventoryItem;
+    return null;
+  }
+  return inventoryItem;
 }
 
-export function reduceResourcesFromInventory(inventory: Inventory, prices: Price[]): [Inventory, boolean]{
-    let inventoryCopy = { ...inventory };
-    let resourcesCopy = [...inventoryCopy.resources];
-    if (!canAfford(resourcesCopy, prices)) return [inventory, false];
-    prices.forEach(price => {
-        let toReduceResource = inventoryCopy.resources.find(x => x.resource.id === price.type?.id);
-        if (toReduceResource && toReduceResource.resource) {
-            let reducedInventoryItem = reduceResource(toReduceResource, price.amount);
-            if (!reducedInventoryItem) return [inventory, false];
-            toReduceResource = reducedInventoryItem;
-        }
-        else{
-            return [inventory, false];
-        }
-    });
+export function reduceResourcesFromInventory(inventory: Inventory, prices: Price[]): [Inventory, boolean] {
+  let inventoryCopy = { ...inventory };
+  let resourcesCopy = [...inventoryCopy.resources];
+  if (!canAfford(resourcesCopy, prices)) return [inventory, false];
+  prices.forEach((price) => {
+    let toReduceResource = inventoryCopy.resources.find((x) => x.resource.id === price.type?.id);
+    if (toReduceResource && toReduceResource.resource) {
+      let reducedInventoryItem = reduceResource(toReduceResource, price.amount);
+      if (!reducedInventoryItem) return [inventory, false];
+      toReduceResource = reducedInventoryItem;
+    } else {
+      return [inventory, false];
+    }
+  });
 
-    return [inventoryCopy, true];
+  return [inventoryCopy, true];
 }
 
-
-export function canAfford(inventoryItems?: InventoryItem[], price?: Price[]) : boolean{
-    if(!inventoryItems || !price) return false;
-    let toReturn = true;
-    inventoryItems.forEach(inventItem => {
-        let toCheckPrice = price.find(x => x.type?.id == inventItem.resource.id);
-        if(toCheckPrice && inventItem.amount < toCheckPrice.amount){
-            toReturn = false;
-        }
-    });
-    return toReturn;
+export function canAfford(inventoryItems?: InventoryItem[], price?: Price[]): boolean {
+  if (!inventoryItems || !price) return false;
+  let toReturn = true;
+  inventoryItems.forEach((inventItem) => {
+    let toCheckPrice = price.find((x) => x.type?.id == inventItem.resource.id);
+    if (toCheckPrice && inventItem.amount < toCheckPrice.amount) {
+      toReturn = false;
+    }
+  });
+  return toReturn;
 }
 
 export function add(start: number, by: number): number {
-    return ((start * 10) + (by * 10)) / 10;
+  return (start * 10 + by * 10) / 10;
 }
 
 export function retract(start: number, by: number) {
-    return ((start * 10) - (by * 10)) / 10;
+  return (start * 10 - by * 10) / 10;
 }

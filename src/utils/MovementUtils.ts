@@ -10,9 +10,9 @@ import { getHitBoxCenter, onGoal } from "./HitboxUtils";
 import { getEmptyGameTickResultObject } from "./StatusUtils";
 
 export function getDistance(startPosition: Position, goalPosition: Position) {
-    let y = goalPosition.x - startPosition.x;
-    let x = goalPosition.y - startPosition.y;
-    return Math.sqrt(x * x + y * y);
+  let y = goalPosition.x - startPosition.x;
+  let x = goalPosition.y - startPosition.y;
+  return Math.sqrt(x * x + y * y);
 }
 
 export function getNewPosition(startPosition: Hitbox, goalPosition: Position): Hitbox{
@@ -58,6 +58,12 @@ export function doMoveToLocation(villagers: VillagerProps[], villagerId: string,
             return vill;
         });
     }
-    gameTickResult.villagers = villagersCopy;
-    return gameTickResult;
+    villagersCopy = villagersCopy.map((vill) => {
+      if (updatedVillager && vill.id === updatedVillager.id) {
+        return updatedVillager;
+      }
+      return vill;
+    });
+  gameTickResult.villagers = villagersCopy;
+  return gameTickResult;
 }

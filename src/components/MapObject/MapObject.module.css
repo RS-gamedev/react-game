@@ -1,30 +1,29 @@
-.mapObject{
-    height: 50px;
-    width:50px;
-    position: absolute;
-    border:1px solid transparent;
-    border-radius: 10px;
-    padding:5px;
-    transition: border-color 300ms;
+.mapObject {
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 5px;
+  transition: border-color 300ms;
 }
 
-.mapObject:hover{
-    border-color:#80bd9e36;
+.mapObject:hover {
+  border-color: #80bd9e36;
 }
 
-.taskAssignedAfter{
-    border-color: transparent;
+.taskAssignedAfter {
+  border-color: transparent;
 }
 
-.selected{
-    border-color:#80bd9f!important;
-    border-radius: 10px;
+.selected {
+  border-color: #80bd9f !important;
+  border-radius: 10px;
 }
 
-.nothing{
+.nothing {
 }
 
-.taskAssigned{
-    border-color: #80bd9f!important;
+.taskAssigned {
+  border-color: #80bd9f !important;
 }
-

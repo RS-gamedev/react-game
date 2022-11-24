@@ -1,6 +1,6 @@
-import { Position } from "./Position"
+import { Position } from "./Position";
 
 export type Hitbox = {
-    leftTop: Position;
-    rightBottom: Position;
-}
+  leftTop: Position;
+  rightBottom: Position;
+};

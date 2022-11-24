@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { buildStyles, CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { BuildingOption } from "../../models/BuildingOption";
 import { BuildingProps } from "../../models/BuildingProps";
 import { Status } from "../../models/enums/Status";
@@ -13,11 +14,6 @@ import Icon from "../Icon/Icon";
 import ProfessionPicker from "../ProfessionPicker/ProfessionPicker";
 import ResourceItem from "../Resources/ResourceItem/ResourceItem";
 import styles from "./UpgradeMenu.module.css";
-import {
-  CircularProgressbarWithChildren,
-  buildStyles,
-} from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
 
 type Props = {
   selectedBuilding: BuildingProps | undefined;
@@ -28,14 +24,7 @@ type Props = {
   onProfessionChange?: (selectedVillager: VillagerProps) => void;
 };
 
-const UpgradeMenu = ({
-  selectedBuilding,
-  selectedVillager,
-  selectedMapObject,
-  onTrain,
-  inStock,
-  onProfessionChange,
-}: Props) => {
+const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange }: Props) => {
   const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
   const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
   const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
@@ -96,10 +85,7 @@ const UpgradeMenu = ({
             <span>{selectedBuilding.level}</span>
           </div>
         </div>
-        <div
-          className={styles.buildingOptionsSection}
-          style={{ height: "calc(100% - 80px)" }}
-        >
+        <div className={styles.buildingOptionsSection} style={{ height: "calc(100% - 80px)" }}>
           {buildingOptions.map((x) => {
             return (
               <Button
@@ -183,7 +169,7 @@ const UpgradeMenu = ({
           villagerProfessions={selectedVillager.professions}
           open={jobSelectionOpen}
           onClick={handleChangeProfession}
-        />
+        ></ProfessionPicker>
       </div>
     );
   }
@@ -207,7 +193,7 @@ const UpgradeMenu = ({
                   textSize="1em"
                   textColor="#ffffff"
                   height={15}
-                />
+                ></ResourceItem>
               );
             })
           ) : (

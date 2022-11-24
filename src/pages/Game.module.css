@@ -1,5 +1,5 @@
 .background {
-  background-color: #292D3E;
+  background-color: #292d3e;
   display: flex;
   height: 100vh;
   width: 100vw;
@@ -22,22 +22,22 @@
 
 .resourceArea {
   position: absolute;
-  margin:20px;
+  margin: 20px;
 }
 
 .actionsArea {
   margin: 15px;
 }
 
-.gameArea{
+.gameArea {
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  margin:15px;
-  background: url('../assets/background.jpg');
+  margin: 15px;
+  background: url("../assets/background.jpg");
   position: relative;
   background-size: contain;
   min-height: 800px;
-  min-width:1071px;
-    max-height: 800px;
-  max-width:1071px;
+  min-width: 1071px;
+  max-height: 800px;
+  max-width: 1071px;
 }
