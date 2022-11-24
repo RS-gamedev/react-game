@@ -21,7 +21,7 @@ const Settings = React.memo(({ shapes, onClick }: Props) => {
               imageHeight={"25px"}
               key={option.id}
               price={option.price}
-              active={option.selected}
+              active={option.selected ? option.selected : false}
               disabled={false}
               text={option.name}
               onClick={() => onClick(option.id)}

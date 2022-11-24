@@ -1,0 +1,8 @@
+.placementOverlay {
+  background-color: green;
+  opacity: 0.5;
+  position: absolute;
+}
+.circle {
+  border-radius: 100%;
+}

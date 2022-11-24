@@ -4,4 +4,6 @@ export enum BuildingType {
   GUARD_TOWER,
   TOWN_CENTER,
   TENTS,
+  MILL,
+  FARMING_FIELD,
 }

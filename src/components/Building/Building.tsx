@@ -8,7 +8,7 @@ type props = {
   id: string;
   size: { width: number; height: number };
   hitBox: Hitbox;
-  icon: IconProp;
+  icon?: IconProp;
   color: string;
   selected: boolean;
   onClick: (event: any, buildingId: string) => void;

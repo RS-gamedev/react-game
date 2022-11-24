@@ -9,11 +9,15 @@ import hoe from "../assets/hoe.svg";
 import house from "../assets/house4.svg";
 import logs from "../assets/logs.svg";
 import food from "../assets/food.svg";
+import mill from "../assets/mill.svg";
+import field from "../assets/field2.svg";
 
 export const getImageUrl = (name: string) => {
   switch (name) {
     case "tree":
       return tree;
+    case "field":
+      return field;
     case "villager":
       return villager;
     case "townCenter":
@@ -34,6 +38,8 @@ export const getImageUrl = (name: string) => {
       return logs;
     case "food":
       return food;
+    case "mill":
+      return mill;
     default:
       return tree;
   }
