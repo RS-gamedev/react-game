@@ -40,6 +40,7 @@ export const buildingOptions: BuildingOption[] = [
     toExecute: (position: Position) => {},
     imageName: "field",
     type: BuildingOptionType.BUILD,
+    price: [{ type: resources.find((x) => x.name === "Wood"), amount: 25 }],
     shapeId: "farm-field",
     placementRange: 50,
   },

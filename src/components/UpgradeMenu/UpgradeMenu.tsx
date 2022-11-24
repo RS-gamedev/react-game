@@ -30,8 +30,6 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
   const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
   const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
   const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
-  const [toPlaceBuildingPosition, setToPlaceBuildingPosition] = useState();
-
   const activeProfession = selectedVillager?.professions.find((x) => x.active);
 
   useEffect(() => {
