@@ -135,5 +135,45 @@
       "y": 550
     },
     "size": 50
+  },
+  {
+    "name": "rock",
+    "position": {
+      "x": 800,
+      "y": 300
+    },
+    "size": 50
+  },
+  {
+    "name": "rock",
+    "position": {
+      "x": 830,
+      "y": 320
+    },
+    "size": 50
+  },
+  {
+    "name": "rock",
+    "position": {
+      "x": 860,
+      "y": 310
+    },
+    "size": 50
+  },
+  {
+    "name": "rock",
+    "position": {
+      "x": 800,
+      "y": 350
+    },
+    "size": 50
+  },
+  {
+    "name": "rock",
+    "position": {
+      "x": 850,
+      "y": 340
+    },
+    "size": 50
   }
 ]

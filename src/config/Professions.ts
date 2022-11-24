@@ -24,4 +24,11 @@ export const professions: Profession[] = [
     maxLevel: levels.find((level) => level.level === 5)!,
     characterImageName: "farmer",
   },
+  {
+    id: uuidv4(),
+    name: "Miner",
+    image: "pickaxe",
+    maxLevel: levels.find((level) => level.level === 5)!,
+    characterImageName: "miner",
+  },
 ];
