@@ -11,8 +11,40 @@
 
 body {
   margin: 0;
-  font-family: "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.rc-slider-handle {
+  transition-duration: 300ms;
+  transition-property: box-shadow, width;
+  width: 10px !important;
+  box-shadow: none !important;
+  border: 0.5px solid rgba(0, 0, 0, 0.2) !important;
+  border-radius: 3px !important;
+  opacity: 1;
+}
+.rc-slider-rail {
+  height: 50px !important;
+  transform: translateY(-4px) !important;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset !important;
+}
+.rc-slider-step {
+  height: 50px !important;
+  transform: translateY(-4px) !important;
+}
+.rc-slider-track {
+  height: 50px !important;
+  transform: translateY(-4px) !important;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset !important;
+}
+
+.rc-slider-handle:hover {
+  width: 20px !important;
+  transition: width, box-shadow width 200ms;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset !important;
+}
+.rc-slider {
+  height: 50px !important;
+  border-radius: 10px !important;
 }

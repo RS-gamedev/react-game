@@ -5,6 +5,7 @@ import { generateMap } from "../../utils/MapUtils";
 import styles from "./MapPicker.module.css";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import Icon from "../../components/Icon/Icon";
 
 type CustomizeOption = {
   mapObject: MapPickerObject;
@@ -25,11 +26,11 @@ export default function MapPicker({ onStart, mapSize }: Props) {
         name: "Tree",
         previewSize: { width: 200, height: 50 },
       },
-      value: 50,
+      value: 400,
     },
     {
       mapObject: { color: "grey", name: "Rock", previewSize: { width: 200, height: 50 } },
-      value: 50,
+      value: 250,
     },
   ]);
   const [triggerGenerate, setTriggerGenerate] = useState(false);
@@ -74,14 +75,24 @@ export default function MapPicker({ onStart, mapSize }: Props) {
           <div className={styles.legend}>
             {customizeOptions.map((x) => {
               return (
-                // <div className={styles.legendItem} style={{ width: x.previewSize.width, height: x.previewSize.height }}>
-                //   <div style={{ background: x.color }}></div>
-                //   <span>{x.name}</span>
-                // </div>
-                <>
-                  {/* <div style={{ background: x.mapObject.color }}></div> */}
-                  <Slider min={0} max={500} value={x.value} onAfterChange={afterChange} onChange={(event) => changeValue(event, x)}></Slider>
-                </>
+                <div className={styles.sliderItem}>
+                  <Icon fontSize="2em" height="35px" imageName={x.mapObject.name.toLowerCase()}></Icon>
+                  <Slider
+                    min={0}
+                    max={500}
+                    value={x.value}
+                    onAfterChange={afterChange}
+                    handleStyle={{
+                      background: x.mapObject.color,
+                      opacity: "1",
+                      border: "none",
+                      boxShadow: "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
+                      height: "51px",
+                    }}
+                    trackStyle={{ backgroundColor: x.mapObject.color }}
+                    onChange={(event) => changeValue(event, x)}
+                  ></Slider>
+                </div>
               );
             })}
           </div>

@@ -46,35 +46,16 @@
 .legend {
   display: flex;
   flex-direction: column;
-  padding: 50px;
+  padding: 50px 25px 50px 25px;
   justify-content: center;
   align-items: center;
   gap: 10px;
 }
-.legendItem {
+.sliderItem {
+  box-shadow: none;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
-  color: white;
-  background-color: rgba(0, 5, 68, 0.445);
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.legend div {
-  margin-right: 20px;
-  width: 50px;
-  height: 50px;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-}
-
-.rangeInput {
-  outline: 0;
-  border: 0;
-  border-radius: 500px;
-  width: 400px;
-  max-width: 100%;
-  margin: 24px 0 16px;
-  transition: box-shadow 0.2s ease-in-out;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
 }
