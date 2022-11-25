@@ -16,7 +16,6 @@ function App() {
 
   const onStart = (objects: MapPickerObject[]) => {
     setMap(setInitialMapObjects(objects)!);
-    console.log(objects);
   };
 
   useEffect(() => {

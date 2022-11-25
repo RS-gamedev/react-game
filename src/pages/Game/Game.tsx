@@ -73,7 +73,6 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
 
   useEffect(() => {
     setInventory(setInitialInventory()!);
-    console.log(mapSize);
     setBuildings(setInitialBuildings({ x: mapSize.height / 2, y: mapSize.height / 2 })!);
   }, [initialMapObjects]);
 

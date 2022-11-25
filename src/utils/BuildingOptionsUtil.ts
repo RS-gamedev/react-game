@@ -28,7 +28,7 @@ export function trainVillager(position: Position) {
     name: "Villager",
     status: Status.IDLE,
     buildingOptions: [],
-    price: [{ type: resources.find((x) => x.name === "Wood"), amount: 50 }],
+    price: [{ type: resources.find((x) => x.name === "Wood"), amount: 100 }],
     size: {
       width: 35,
       height: 35,

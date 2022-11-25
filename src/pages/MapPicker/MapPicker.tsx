@@ -26,11 +26,11 @@ export default function MapPicker({ onStart, mapSize }: Props) {
         name: "Tree",
         previewSize: { width: 200, height: 50 },
       },
-      value: 400,
+      value: 300,
     },
     {
       mapObject: { color: "grey", name: "Rock", previewSize: { width: 200, height: 50 } },
-      value: 250,
+      value: 150,
     },
   ]);
   const [triggerGenerate, setTriggerGenerate] = useState(false);
@@ -42,7 +42,6 @@ export default function MapPicker({ onStart, mapSize }: Props) {
   }, [triggerGenerate]);
 
   const onClick = () => {
-    console.log(mapObjects);
     if (mapObjects) onStart(mapObjects);
   };
 
