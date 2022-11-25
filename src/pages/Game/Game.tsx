@@ -1,40 +1,47 @@
 import { useCallback, useEffect, useState } from "react";
 import styles from "./Game.module.css";
-import Settings from "../components/Settings/Settings";
-import { Shape } from "../models/Shape";
-import { BuildingProps } from "../models/BuildingProps";
-import Building from "../components/Building/Building";
-import { shapes } from "../config/Shapes";
-import { createBuilding } from "../utils/BuildingUtils";
-import Resources from "../components/Resources/Resources";
-import { Inventory } from "../models/Inventory";
-import useInterval from "../hooks/useInterval";
-import { ObjectProps } from "../models/ObjectProps";
-import MapObject from "../components/MapObject/MapObject";
-import { VillagerProps } from "../models/VillagerProps";
-import Villager from "../components/Villager/Villager";
-import UpgradeMenu from "../components/UpgradeMenu/UpgradeMenu";
-import { reduceResourcesFromInventory, canAfford } from "../utils/ResourceUtils";
-import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from "../utils/GameUtils";
-import { doMoveToLocation } from "../utils/MovementUtils";
-import { executeTasks } from "../utils/StatusUtils";
-import { InventoryItem } from "../models/InventoryItem";
-import PlacementOverlay from "../components/PlacementOverlay/PlacementOverlay";
-import { BuildingOption } from "../models/BuildingOption";
-import { PlacementOverlayConfig } from "../models/PlacementOverlayConfig";
-import { Size } from "../models/Size";
-import { Position } from "../models/Position";
-import { Availability } from "../models/enums/Availability";
-import { doGatheringTask } from "../utils/villagerUtils/VillagerTaskUtils";
-const Game = (map: any) => {
+import Settings from "../../components/Settings/Settings";
+import { Shape } from "../../models/Shape";
+import { BuildingProps } from "../../models/BuildingProps";
+import Building from "../../components/Building/Building";
+import { shapes } from "../../config/Shapes";
+import { createBuilding } from "../../utils/BuildingUtils";
+import Resources from "../../components/Resources/Resources";
+import { Inventory } from "../../models/Inventory";
+import useInterval from "../../hooks/useInterval";
+import { ObjectProps } from "../../models/ObjectProps";
+import MapObject from "../../components/MapObject/MapObject";
+import { VillagerProps } from "../../models/VillagerProps";
+import Villager from "../../components/Villager/Villager";
+import UpgradeMenu from "../../components/UpgradeMenu/UpgradeMenu";
+import { reduceResourcesFromInventory, canAfford } from "../../utils/ResourceUtils";
+import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from "../../utils/GameUtils";
+import { doMoveToLocation } from "../../utils/MovementUtils";
+import { executeTasks } from "../../utils/StatusUtils";
+import { InventoryItem } from "../../models/InventoryItem";
+import PlacementOverlay from "../../components/PlacementOverlay/PlacementOverlay";
+import { BuildingOption } from "../../models/BuildingOption";
+import { PlacementOverlayConfig } from "../../models/PlacementOverlayConfig";
+import { Size } from "../../models/Size";
+import { Position } from "../../models/Position";
+import { Availability } from "../../models/enums/Availability";
+import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
+type props = {
+  initialMapObjects: ObjectProps[];
+  mapSize: Size;
+};
+
+const Game = ({ initialMapObjects, mapSize }: props) => {
   const [villagers, setVillagers] = useState<VillagerProps[]>([]);
   const [buildings, setBuildings] = useState<BuildingProps[]>([]);
-  const [mapObjects, setMapObjects] = useState<ObjectProps[]>([]);
+  const [mapObjects, setMapObjects] = useState<ObjectProps[]>(initialMapObjects);
   const [allShapes, setAllShapes] = useState<Shape[]>(shapes.filter((x) => x.availability === Availability.GAME_LEVEL1));
   const [inventory, setInventory] = useState<Inventory>({ resources: [] });
   const [gameTick, setGameTick] = useState(0);
   const [placementOverlayConfig, setPlacementOverlayConfig] = useState<PlacementOverlayConfig | undefined>();
   const [gameSpeed, setGameSpeed] = useState(1);
+
+  const controlsAreaWidth = 240;
 
   useInterval(() => {
     // GAME LOOP
@@ -66,9 +73,9 @@ const Game = (map: any) => {
 
   useEffect(() => {
     setInventory(setInitialInventory()!);
-    setBuildings(setInitialBuildings()!);
-    setMapObjects((prev) => setInitialMapObjects(map));
-  }, [map]);
+    console.log(mapSize);
+    setBuildings(setInitialBuildings({ x: mapSize.height / 2, y: mapSize.height / 2 })!);
+  }, [initialMapObjects]);
 
   function addBuilding(building?: BuildingProps) {
     if (!building) return;
@@ -212,7 +219,8 @@ const Game = (map: any) => {
     (event: any, mapObjectId: string) => {
       event.stopPropagation();
       event.preventDefault();
-      if (selectedVillager && selectedVillager.professions.find((x) => x.active)?.profession.name === "Lumberjack") {
+      let targetObject = mapObjects.find((x) => x.id === mapObjectId);
+      if (selectedVillager && targetObject?.name === "tree" && selectedVillager.professions.find((x) => x.active)?.profession.name === "Lumberjack") {
         selectedVillager.currentTask = (
           villagers: VillagerProps[],
           villagerId: string,
@@ -221,7 +229,7 @@ const Game = (map: any) => {
           mapObjects: ObjectProps[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, "tree", mapObjectId);
       }
-      if (selectedVillager && selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner") {
+      if (selectedVillager && targetObject?.name === "rock" && selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner") {
         selectedVillager.currentTask = (
           villagers: VillagerProps[],
           villagerId: string,
@@ -323,7 +331,12 @@ const Game = (map: any) => {
           )}
         </div>
       </div>
-      <div className={styles.gameArea} onClick={handleClick} onContextMenu={handleRightClick}>
+      <div
+        className={styles.gameArea}
+        onClick={handleClick}
+        onContextMenu={handleRightClick}
+        style={{ width: mapSize.height - 50, height: mapSize.height - 50 }}
+      >
         {placementOverlayConfig?.show && (
           <PlacementOverlay
             onClick={handlePlaceBuilding}

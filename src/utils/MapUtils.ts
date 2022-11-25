@@ -16,6 +16,9 @@ import stone from "../assets/stone.svg";
 import rock from "../assets/rock.svg";
 import miner from "../assets/miner2.svg";
 import pickaxe from "../assets/pickaxe.svg";
+import { MapPickerObject } from "../models/MapPickerObject";
+import { ObjectProps } from "../models/ObjectProps";
+import { v4 as uuidv4 } from "uuid";
 
 export const getImageUrl = (name: string) => {
   switch (name) {
@@ -58,4 +61,71 @@ export const getImageUrl = (name: string) => {
     default:
       return tree;
   }
+};
+
+export const generateMap = (width: number, treeAmount: number, stoneAmount: number): MapPickerObject[] => {
+  // const f = (x: number) => (Math.sin(x) * 10000) & 255;
+  const generateCoordinate = (x: number) => {
+    return Math.random() * width;
+  };
+  let newPositions: MapPickerObject[] = [];
+  for (let i = 0; i < treeAmount; i++) {
+    let object = {
+      name: "tree",
+      size: 30,
+      position: { x: generateCoordinate(Math.random()), y: generateCoordinate(Math.random()) },
+      previewSize: {
+        width: 10,
+        height: 10,
+      },
+      color: "green",
+    };
+    if (
+      (object.position.x > 350 || object.position.y > 100) &&
+      object.position.x > 10 &&
+      object.position.y > 10 &&
+      object.position.x < width - 10 &&
+      object.position.y < width - 10
+    ) {
+      if (
+        object.position.x > width / 2 + 100 ||
+        object.position.x < width / 2 - 100 ||
+        object.position.y > width / 2 + 100 ||
+        object.position.y < width / 2 - 100
+      ) {
+        newPositions.push(object);
+      }
+    }
+  }
+  let stones: MapPickerObject[] = [];
+  for (let i = 0; i < stoneAmount; i++) {
+    let stone = {
+      name: "rock",
+      size: 30,
+      position: { x: generateCoordinate(i), y: generateCoordinate(Math.random()) },
+      previewSize: {
+        width: 10,
+        height: 10,
+      },
+      color: "grey",
+    };
+    if (
+      (stone.position.x > 350 || stone.position.y > 100) &&
+      stone.position.x > 10 &&
+      stone.position.y > 10 &&
+      stone.position.x < width - 10 &&
+      stone.position.y < width - 10
+    ) {
+      if (
+        stone.position.x > width / 2 + 100 ||
+        stone.position.x < width / 2 - 100 ||
+        stone.position.y > width / 2 + 100 ||
+        stone.position.y < width / 2 - 100
+      ) {
+        newPositions.push(stone);
+      }
+    }
+  }
+
+  return newPositions;
 };

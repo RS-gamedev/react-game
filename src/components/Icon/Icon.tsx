@@ -15,6 +15,8 @@ import {
   faBuildingColumns,
   faUtensils,
   faWheatAwn,
+  faArrowsRotate,
+  faPlay,
 } from "@fortawesome/free-solid-svg-icons";
 import React, { useEffect, useState } from "react";
 import { getImageUrl } from "../../utils/MapUtils";
@@ -41,7 +43,9 @@ library.add(
   faGem,
   faBuildingColumns,
   faUtensils,
-  faWheatAwn
+  faWheatAwn,
+  faArrowsRotate,
+  faPlay
 );
 
 const Icon = ({ name, color, fontSize, imageName, height }: props) => {

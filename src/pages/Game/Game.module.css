@@ -17,6 +17,7 @@
 
 .buttons {
   display: flex;
+
   gap: 10px;
 }
 
@@ -33,11 +34,7 @@
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   margin: 15px;
-  background: url("../assets/background.jpg");
+  background: url("../../assets/background8.svg");
   position: relative;
-  background-size: contain;
-  min-height: 800px;
-  min-width: 1071px;
-  max-height: 800px;
-  max-width: 1071px;
+  background-size: cover;
 }

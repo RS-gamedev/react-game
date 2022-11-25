@@ -10,11 +10,11 @@
 }
 
 .villager:hover {
-  border-color: #80bd9e36;
+  border-color: #32353f59;
 }
 
 .selected {
-  border-color: #80bd9f !important;
+  border-color: #32353f !important;
 }
 .nothing {
   border-color: transparent;
