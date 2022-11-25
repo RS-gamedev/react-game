@@ -1,0 +1,61 @@
+.background {
+  background-color: #292d3e;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+.settingsArea {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: calc(100% - 50px);
+  align-items: stretch;
+  margin: 25px;
+}
+.map {
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  margin: 15px;
+  background: url("../../assets/background8.svg");
+  position: relative;
+  background-size: cover;
+  display: block;
+}
+.settingsCard {
+  background-color: #787b8693;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  height: 50%;
+  width: 100%;
+  border-radius: 10px;
+  position: relative;
+}
+.mapObject {
+  position: absolute;
+}
+
+.settingsFooter {
+  display: flex;
+  padding: 25px;
+  gap: 10px;
+  width: 100%;
+  justify-content: flex-end;
+  position: absolute;
+  bottom: 0;
+}
+.legend {
+  display: flex;
+  flex-direction: column;
+  padding: 50px 25px 50px 25px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.sliderItem {
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}

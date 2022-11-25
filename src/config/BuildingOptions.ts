@@ -12,7 +12,7 @@ export const buildingOptions: BuildingOption[] = [
     id: uuidv4(),
     name: "Train Villager",
     toExecute: trainVillager,
-    price: [{ type: resources.find((x) => x.name === "Wood"), amount: 50 }],
+    price: [{ type: resources.find((x) => x.name === "Wood"), amount: 100 }],
     imageName: "villager",
     type: BuildingOptionType.TRAIN,
   },

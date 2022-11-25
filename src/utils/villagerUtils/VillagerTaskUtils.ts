@@ -74,8 +74,8 @@ export function doGatheringTask(
           mapObjectsChanged = true;
           let toAddResource = villagerCopy.inventoryItems.find((x) => x.resource.id === targetObjectCopy?.inventory[0].resource.id);
           if (toAddResource) {
-            toAddResource.amount = add(toAddResource.amount, 0.05);
-            currentProfession.currentExperience = add(currentProfession.currentExperience, 0.5);
+            toAddResource.amount = add(toAddResource.amount, 0.02);
+            currentProfession.currentExperience = add(currentProfession.currentExperience, 0.2);
             if (
               achievedNextLevel(currentProfession.currentExperience, currentProfession?.currentLevel.experienceNeededForNextLevel) &&
               currentProfession.currentLevel.nextLevel !== ""

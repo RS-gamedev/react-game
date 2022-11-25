@@ -7,11 +7,11 @@
 }
 
 .building:hover {
-  border-color: #80bd9e36;
+  border-color: #32353f59;
 }
 
 .active {
-  border-color: #80bd9f !important;
+  border-color: #32353f !important;
 }
 
 .building svg {

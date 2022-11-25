@@ -7,6 +7,9 @@ import { ObjectProps } from "../models/ObjectProps";
 import { v4 as uuidv4 } from "uuid";
 import { createBuilding } from "./BuildingUtils";
 import { Hitbox } from "../models/Hitbox";
+import { MapPickerObject } from "../models/MapPickerObject";
+import { VillagerType } from "../models/enums/VillagerType";
+import { Position } from "../models/Position";
 
 export function setInitialInventory() {
   let wood = resources.find((x) => x.name === "Wood");
@@ -20,7 +23,7 @@ export function setInitialInventory() {
     resources: [
       {
         resource: coins,
-        amount: 50,
+        amount: 0,
       },
       {
         resource: wood,
@@ -43,10 +46,10 @@ export function setInitialInventory() {
   return inventoryInit;
 }
 
-export function setInitialBuildings() {
+export function setInitialBuildings(position: Position) {
   let townCenter = shapes.find((x) => x.type === BuildingType.TOWN_CENTER);
   if (townCenter) {
-    let initialBuildings: BuildingProps[] = [createBuilding({ x: 500, y: 300 }, BuildingType.TOWN_CENTER)!];
+    let initialBuildings: BuildingProps[] = [createBuilding({ x: position.x, y: position.y }, BuildingType.TOWN_CENTER)!];
     if (initialBuildings) {
       return initialBuildings;
     }
@@ -54,35 +57,39 @@ export function setInitialBuildings() {
   return [];
 }
 
-export function setInitialMapObjects(map: any): ObjectProps[] {
+export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | undefined {
   let wood = resources.find((x) => x.name === "Wood");
   let coins = resources.find((x) => x.name === "Coins");
   let gems = resources.find((x) => x.name === "Gems");
   let stone = resources.find((x) => x.name === "Stone");
-  let initialMapObjects: ObjectProps[] = map.map.map((mapObject: any) => {
+  if (!wood || !stone) return undefined;
+  let initialMapObjects: ObjectProps[] = map.map((mapObject: MapPickerObject) => {
     let hitBox: Hitbox = {
       leftTop: {
-        x: mapObject.position.x - mapObject.size / 2,
-        y: mapObject.position.y - mapObject.size / 2,
+        x: mapObject.position!.x - mapObject.size! / 2,
+        y: mapObject.position!.y - mapObject.size! / 2,
       },
       rightBottom: {
-        x: mapObject.position.x + mapObject.size / 2,
-        y: mapObject.position.y + mapObject.size / 2,
+        x: mapObject.position!.x + mapObject.size! / 2,
+        y: mapObject.position!.y + mapObject.size! / 2,
       },
     };
+    let resource = mapObject.name === "tree" ? wood : mapObject.name === "rock" ? stone : wood;
     let mapObjectInventory = [
       {
-        resource: mapObject.name === "tree" ? wood : mapObject.name === "rock" && stone,
+        resource: resource!,
         amount: 50,
       },
     ];
     return {
       id: uuidv4(),
       name: mapObject.name,
-      position: mapObject.position,
+      position: mapObject.position!,
       selected: false,
       hitBox: hitBox,
-      size: mapObject.size,
+      size: { width: mapObject.size + "px", height: mapObject.size + "px" },
+      buildingOptions: [],
+      type: VillagerType.VILLAGER,
       inventory: mapObjectInventory,
     };
   });
