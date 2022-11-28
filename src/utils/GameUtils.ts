@@ -27,7 +27,7 @@ export function setInitialInventory() {
       },
       {
         resource: wood,
-        amount: 100,
+        amount: 250,
       },
       {
         resource: gems,
