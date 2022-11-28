@@ -15,6 +15,7 @@ export type ObjectProps = {
   hitBox: Hitbox;
   type: VillagerType;
   inventory: InventoryItem[];
+  inventoryMax: number;
   size: {
     height: string;
     width: string;

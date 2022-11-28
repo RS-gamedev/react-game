@@ -25,3 +25,13 @@
 .taskAssigned {
   border-color: #32353f !important;
 }
+
+.inventoryProgressBar[value]::-webkit-progress-value{
+  background-color:#373c50;
+}
+
+.inventoryProgressBar[value]{
+  -webkit-appearance: none;
+  border-radius: 5px;
+  height: 5px;
+}

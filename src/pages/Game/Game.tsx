@@ -57,7 +57,6 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     let result = executeTasks(villagers, inventory.resources, mapObjects, buildings);
     if (result.buildings) {
       setBuildings(result.buildings);
-      console.log(result.buildings);
     }
     if (result.inventoryItems) {
       setInventory((prev) => {
@@ -267,8 +266,6 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
   }, []);
 
   const handleOpenOverlay = (buildingOption: BuildingOption, centerPosition: Position) => {
-    console.log(buildingOption.shapeId);
-    console.log(shapes.map(x => x.id));
     let toPlaceShape = shapes.find((x) => x.id === buildingOption.shapeId);
     if (!toPlaceShape) return;
     let overlayConfig: PlacementOverlayConfig = {
