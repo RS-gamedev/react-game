@@ -59,7 +59,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
       if (buildingOption.type === BuildingOptionType.UPGRADE) {
       }
     },
-    [onTrain, position]
+    [onPlaceBuilding, onTrain, position, selectedBuilding]
   );
 
   const handleChangeProfession = useCallback(
@@ -91,7 +91,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             <span>{selectedBuilding.level}</span>
           </div>
         </div>
-        <div className={styles.buildingOptionsSection} style={{ height: "calc(100% - 80px)" }}>
+        <div className={styles.buildingOptionsSection}>
           {buildingOptions.map((x) => {
             return (
               <Button
@@ -111,6 +111,24 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             );
           })}
         </div>
+        <div className={styles.inventorySection}>
+          {inStock ? (
+            inStock.map((x) => {
+              return (
+                <ResourceItem
+                  resource={x.resource}
+                  amount={Math.round(x.amount)}
+                  iconSize="1em"
+                  textSize="1em"
+                  textColor="#ffffff"
+                  height={15}
+                ></ResourceItem>
+              );
+            })
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
     );
   }
@@ -121,7 +139,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
         <div className={`${styles.titleSection} ${jobSelectionOpen && styles.noTopRightBorderRadius}`}>
           <div className={styles.titlePart}>
             <span>{selectedVillager.name}</span>
-            <span style={{ fontSize: "1em" }}>{Status[selectedVillager.status]}</span>
+            <span style={{ fontSize: "0.8em" }}>{Status[selectedVillager.status]}</span>
           </div>
 
           <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>

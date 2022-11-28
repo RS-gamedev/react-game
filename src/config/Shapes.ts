@@ -7,7 +7,7 @@ import { Availability } from "../models/enums/Availability";
 
 export const shapes: Shape[] = [
   {
-    id: uuidv4(),
+    id: "house",
     name: "House",
     icon: ["fas", "house"],
     iconColor: "#373c50",
@@ -21,9 +21,10 @@ export const shapes: Shape[] = [
     buildingOptions: [],
     size: { width: 45, height: 45 },
     availability: Availability.GAME_LEVEL1,
+    inventory: [],
   },
   {
-    id: uuidv4(),
+    id: "town-center",
     name: "Town Center",
     icon: ["fas", "building-columns"],
     iconColor: "#373c50",
@@ -38,9 +39,10 @@ export const shapes: Shape[] = [
     buildingOptions: [buildingOptions.find((x) => x.name === "Train Villager")!],
     size: { width: 75, height: 75 },
     availability: Availability.GAME_LEVEL1,
+    inventory: [],
   },
   {
-    id: uuidv4(),
+    id: "storage",
     name: "Storage",
     icon: ["fas", "tents"],
     iconColor: "#373c50",
@@ -51,25 +53,24 @@ export const shapes: Shape[] = [
     buildingOptions: [],
     size: { width: 45, height: 45 },
     availability: Availability.GAME_LEVEL1,
+    inventory: [],
   },
   {
-    id: uuidv4(),
+    id: "mill",
     name: "Mill",
     icon: ["fas", "wheat-awn"],
     iconColor: "#373c50",
     image: "mill",
     selected: false,
-    price: [
-      { type: resources.find((x) => x.name === "Wood"), amount: 50 },
-      { type: resources.find((x) => x.name === "Stone"), amount: 50 },
-    ],
+    price: [{ type: resources.find((x) => x.name === "Wood"), amount: 50 }],
     type: BuildingType.MILL,
     buildingOptions: [buildingOptions.find((x) => x.name === "Place field")!],
     size: { width: 50, height: 50 },
     availability: Availability.GAME_LEVEL1,
+    inventory: [],
   },
   {
-    id: uuidv4(),
+    id: "guard-tower",
     name: "Guard tower",
     icon: ["fas", "tower-observation"],
     iconColor: "#373c50",
@@ -80,6 +81,7 @@ export const shapes: Shape[] = [
     buildingOptions: [],
     size: { width: 50, height: 50 },
     availability: Availability.GAME_LEVEL2,
+    inventory: [],
   },
   {
     id: "farm-field",
@@ -91,5 +93,6 @@ export const shapes: Shape[] = [
     buildingOptions: [],
     size: { width: 35, height: 35 },
     availability: Availability.GAME_LEVEL2,
+    inventory: [{ resource: resources.find((x) => x.name === "Food")!, amount:0 }],
   },
 ];

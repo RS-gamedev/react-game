@@ -226,7 +226,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
           inventoryItems: InventoryItem[],
           buildings: BuildingProps[],
           mapObjects: ObjectProps[]
-        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, "tree", mapObjectId);
+        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "tree", mapObjectId);
       }
       if (selectedVillager && targetObject?.name === "rock" && selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner") {
         selectedVillager.currentTask = (
@@ -235,13 +235,26 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
           inventoryItems: InventoryItem[],
           buildings: BuildingProps[],
           mapObjects: ObjectProps[]
-        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, "stone", mapObjectId);
+        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
       }
     },
-    [selectedVillager]
+    [mapObjects, selectedVillager]
   );
 
-  const handleBuildingRightClick = useCallback((event: any) => {}, []);
+  const handleBuildingRightClick = useCallback((event: any, buildingId: string) => {
+    event.stopPropagation();
+    event.preventDefault();
+    let clickedBuilding = buildings.find((x) => x.id === buildingId);
+    if (selectedVillager && clickedBuilding?.name === "Farm field" && selectedVillager.professions.find(x => x.active)?.profession.name === "Farmer") {
+      selectedVillager.currentTask = (
+        villagers: VillagerProps[],
+        villagerId: string,
+        inventoryItems: InventoryItem[],
+        buildings: BuildingProps[],
+        mapObjects: ObjectProps[]
+      ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, true, "Farm field", buildingId);
+    }
+  }, [buildings, selectedVillager]);
 
   const handleChangeProfessionClick = useCallback((updatedVillager: VillagerProps) => {
     setVillagers((prev) => {
@@ -295,7 +308,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
           <Settings onClick={selectShape} shapes={allShapes}></Settings>
           {selectedBuilding ? (
             <UpgradeMenu
-              inStock={undefined}
+              inStock={selectedBuilding.inventory}
               onTrain={onTrain}
               onPlaceBuilding={handleOpenOverlay}
               selectedBuilding={selectedBuilding}

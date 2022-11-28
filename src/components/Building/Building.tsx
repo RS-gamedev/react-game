@@ -12,7 +12,7 @@ type props = {
   color: string;
   selected: boolean;
   onClick: (event: any, buildingId: string) => void;
-  onRightClick: (event: any) => void;
+  onRightClick: (event: any, buildingId: string) => void;
   image?: string;
 };
 
@@ -31,7 +31,7 @@ const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected,
         justifyContent: "center",
       }}
       onClick={(event) => onClick(event, id)}
-      onContextMenu={onRightClick}
+      onContextMenu={(event) => onRightClick(event, id)}
     >
       <Icon fontSize={size.width - 10 + "px"} color={color} imageName={image} height={size.height - 10 + "px"}></Icon>
     </div>

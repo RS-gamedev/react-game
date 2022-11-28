@@ -44,9 +44,9 @@ export function canAfford(inventoryItems?: InventoryItem[], price?: Price[]): bo
 }
 
 export function add(start: number, by: number): number {
-  return (start * 10 + by * 10) / 10;
+  return Math.round(start * 1000 + by * 1000) / 1000;
 }
 
 export function retract(start: number, by: number) {
-  return (start * 10 - by * 10) / 10;
+  return Math.round(start * 1000 - by * 1000) / 1000;
 }

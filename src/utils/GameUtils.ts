@@ -27,7 +27,7 @@ export function setInitialInventory() {
       },
       {
         resource: wood,
-        amount: 100,
+        amount: 250,
       },
       {
         resource: gems,
@@ -75,10 +75,11 @@ export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | un
       },
     };
     let resource = mapObject.name === "tree" ? wood : mapObject.name === "rock" ? stone : wood;
+    let amount = 50;
     let mapObjectInventory = [
       {
         resource: resource!,
-        amount: 50,
+        amount: amount,
       },
     ];
     return {
@@ -91,6 +92,7 @@ export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | un
       buildingOptions: [],
       type: VillagerType.VILLAGER,
       inventory: mapObjectInventory,
+      inventoryMax: amount
     };
   });
   return initialMapObjects;

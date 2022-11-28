@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Position } from "../../models/Position";
 import { Hitbox } from "../../models/Hitbox";
 import Icon from "../Icon/Icon";
+import { InventoryItem } from "../../models/InventoryItem";
 
 type props = {
   id: string;
@@ -13,9 +14,11 @@ type props = {
   onRightClick: (event: any, mapObjectId: string) => void;
   hitBox: Hitbox;
   size: { height: string; width: string };
+  inventoryMax: number;
+  inventory: InventoryItem[];
 };
 
-const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClick, size }: props) => {
+const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClick, size, inventoryMax, inventory }: props) => {
   const [showTaskAssigned, setShowTaskAssigned] = useState<boolean>(false);
 
   function handleRightClick(event: any) {
@@ -41,6 +44,7 @@ const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClic
           onContextMenu={handleRightClick}
         >
           <Icon fontSize="1em" imageName={name} height={size.height}></Icon>
+          {(inventory[0].amount < inventoryMax) && <progress className={styles.inventoryProgressBar} style={{width:'100%'}} value={inventory[0].amount} max={inventoryMax}></progress>}
         </div>
       ) : (
         <></>

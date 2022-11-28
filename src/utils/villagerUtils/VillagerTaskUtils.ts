@@ -19,6 +19,7 @@ export function doGatheringTask(
   inventoryItems: InventoryItem[],
   buildings: BuildingProps[],
   mapObjects: ObjectProps[],
+  targetIsBuilding: boolean,
   taskTargetResource: string, // tree, stone, field
   initialTargetId: string
 ): GameTickResult {
@@ -26,21 +27,27 @@ export function doGatheringTask(
   let villagerCopy = villagersCopy.find((x) => x.id === villagerId);
   let inventoryItemsCopy = [...inventoryItems];
   let mapObjectsCopy = [...mapObjects];
-  let targetObjectCopy = mapObjectsCopy.find((x) => x.id === initialTargetId);
+  let buildingsCopy = [...buildings];
+  let targetObjectCopy = targetIsBuilding ? buildings.find((x) => x.id === initialTargetId) : mapObjectsCopy.find((x) => x.id === initialTargetId);
   if (!targetObjectCopy) {
     // if initial target is not found, set target to villagerCopy.goalObjectId;
-    targetObjectCopy = mapObjectsCopy.find((x) => x.id === villagerCopy?.goalObjectId);
+    targetObjectCopy = targetIsBuilding
+      ? buildings.find((x) => x.id === villagerCopy?.goalObjectId)
+      : mapObjectsCopy.find((x) => x.id === villagerCopy?.goalObjectId);
   }
   let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
   let mapObjectsChanged: boolean = false;
   let inventoryItemsChanged: boolean = false;
+  let buildingsChanged: boolean = false;
   if (!villagerCopy) return gameTickResult;
   let closestStorage = findNearestStorage(
     getHitBoxCenter(villagerCopy?.hitBox),
-    buildings.filter((x) => x.type === BuildingType.TOWN_CENTER)
+    taskTargetResource === "Farm field"
+      ? buildings.filter((x) => x.type === BuildingType.FARMING_FIELD)
+      : buildings.filter((x) => x.type === BuildingType.TOWN_CENTER)
   );
 
-  villagerCopy = handleIdle(villagerCopy, buildings, mapObjectsCopy, closestStorage, taskTargetResource, targetObjectCopy);
+  villagerCopy = handleIdle(villagerCopy, buildings, mapObjectsCopy, closestStorage, taskTargetResource, targetIsBuilding, targetObjectCopy);
   let currentProfession = villagerCopy.professions.find((x) => x.active);
   if (!currentProfession) return gameTickResult;
   switch (villagerCopy.status) {
@@ -49,6 +56,7 @@ export function doGatheringTask(
         villagerCopy.hitBox = getNewPosition(villagerCopy.hitBox, getHitBoxCenter(targetObjectCopy?.hitBox!));
         if (targetObjectCopy && onGoal(villagerCopy.hitBox, getHitBoxCenter(targetObjectCopy?.hitBox))) {
           villagerCopy.status = Status.IDLE;
+          targetObjectCopy = undefined;
         }
       } else {
         villagerCopy.status = Status.IDLE;
@@ -61,14 +69,23 @@ export function doGatheringTask(
       }
 
       if (targetObjectCopy) {
-        if (mapObjectHasResources(targetObjectCopy)) {
+        if (sourceHasResourcesLeft(targetObjectCopy)) {
           // Tree has wood
           targetObjectCopy.inventory[0].amount = retract(targetObjectCopy.inventory[0].amount, 0.04);
+          console.log(targetObjectCopy.inventory[0].amount);
           mapObjectsCopy = mapObjectsCopy.map((tree) => {
             if (tree.id === targetObjectCopy?.id) {
-              return targetObjectCopy;
+              mapObjectsChanged = true;
+              return targetObjectCopy as ObjectProps;
             }
             return tree;
+          });
+          buildingsCopy = buildingsCopy.map((building) => {
+            if (building.id === targetObjectCopy?.id) {
+              buildingsChanged = true;
+              return targetObjectCopy as BuildingProps;
+            }
+            return building;
           });
           mapObjectsChanged = true;
           let toAddResource = villagerCopy.inventoryItems.find((x) => x.resource.id === targetObjectCopy?.inventory[0].resource.id);
@@ -87,9 +104,18 @@ export function doGatheringTask(
             villagerCopy.inventoryItems.push({ resource: targetObjectCopy.inventory[0].resource, amount: 0 });
           }
         }
-        if (!mapObjectHasResources(targetObjectCopy)) {
-          mapObjectsCopy = mapObjectsCopy.filter((x) => x.id !== villagerCopy?.goalObjectId);
-          mapObjectsChanged = true;
+        if (!sourceHasResourcesLeft(targetObjectCopy)) {
+          console.log("removing tree");
+          targetObjectCopy = undefined;
+          if (targetIsBuilding) {
+            buildingsCopy = buildingsCopy.filter((x) => x.id !== villagerCopy?.goalObjectId);
+            buildingsChanged = true;
+          } else {
+            mapObjectsCopy = mapObjectsCopy.filter((x) => x.id !== villagerCopy?.goalObjectId);
+            mapObjectsChanged = true;
+          }
+          console.log(targetObjectCopy);
+          villagerCopy.goalObjectId = undefined;
           villagerCopy.status = Status.IDLE;
         }
       } else {
@@ -132,6 +158,9 @@ export function doGatheringTask(
   if (inventoryItemsChanged) {
     gameTickResult.inventoryItems = inventoryItemsCopy;
   }
+  if (buildingsChanged) {
+    gameTickResult.buildings = buildingsCopy;
+  }
   gameTickResult.villagers = villagersCopy;
   return gameTickResult;
 }
@@ -142,14 +171,19 @@ function handleIdle(
   mapObjects: ObjectProps[],
   closestStorage: BuildingProps,
   taskTargetResource: string,
-  targetObject?: ObjectProps
+  targetIsBuilding: boolean,
+  targetObject?: ObjectProps | BuildingProps
 ) {
+  console.log(taskTargetResource);
+  console.log(targetObject);
   if (!targetObject) {
-    // find nearest tree and set target
-    villager.goalObjectId = findNearestMapObject(
+    // find nearest mapObject or building and set target
+    villager.goalObjectId = findNearestTarget(
       getHitBoxCenter(villager.hitBox),
-      mapObjects.filter((x) => x.name === taskTargetResource)
-    )?.id;
+      targetIsBuilding ? buildings.filter((x) => x.name === taskTargetResource) : mapObjects.filter((x) => x.name === taskTargetResource)
+    ).id;
+    console.log(villager.goalObjectId);
+
     if (!villager.goalObjectId) {
       villager.currentTask = undefined;
       villager.status = Status.IDLE;
@@ -157,6 +191,7 @@ function handleIdle(
     return villager;
   }
   if (inventoryIsFull(villager)) {
+    console.log("inventoryFull");
     //Inventory vol
     if (onGoal(villager.hitBox, getHitBoxCenter(closestStorage.hitBox))) {
       // On storage
@@ -179,8 +214,9 @@ function handleIdle(
       }
     } else {
       // geen target
+      console.log("inventory is not full so walking to new target");
       villager.status = Status.WALKING_TO_RESOURCE;
-      let nearestMapObject = findNearestMapObject(
+      let nearestMapObject = findNearestTarget(
         getHitBoxCenter(villager.hitBox),
         mapObjects.filter((x) => x.name === taskTargetResource)
       );
@@ -190,7 +226,7 @@ function handleIdle(
   return villager;
 }
 
-function mapObjectHasResources(mapObject: ObjectProps) {
+function sourceHasResourcesLeft(mapObject: ObjectProps | BuildingProps) {
   let mapObjectsItems = mapObject.inventory[0];
   if (mapObject.inventory && mapObjectsItems && mapObjectsItems.amount > 0) {
     return true;
@@ -202,13 +238,13 @@ function achievedNextLevel(experience: number, experienceNeeded: number) {
   return experience >= experienceNeeded;
 }
 
-function findNearestMapObject(position: Position, mapObjects: ObjectProps[]) {
-  let closest: ObjectProps = mapObjects[0];
+function findNearestTarget(position: Position, objects: ObjectProps[] | BuildingProps[]) {
+  let closest: ObjectProps | BuildingProps = objects[0];
   let lowestDistance = 10000;
-  for (let mapObject of mapObjects) {
-    let distance = getDistance({ x: position.x, y: position.y }, { x: mapObject.position.x, y: mapObject.position.y });
+  for (let object of objects) {
+    let distance = getDistance({ x: position.x, y: position.y }, { x: getHitBoxCenter(object.hitBox).x, y: getHitBoxCenter(object.hitBox).y });
     if (distance < lowestDistance) {
-      closest = mapObject;
+      closest = object;
       lowestDistance = distance;
     }
   }
@@ -219,7 +255,7 @@ export function findNearestStorage(position: Position, storages: BuildingProps[]
   let closest: BuildingProps = storages[0];
   let lowestDistance = 10000;
   for (let storage of storages) {
-    let distance = getDistance({ x: position.x, y: position.y }, { x: storage.position.x, y: storage.position.y });
+    let distance = getDistance({ x: position.x, y: position.y }, { x: getHitBoxCenter(storage.hitBox).x, y: getHitBoxCenter(storage.hitBox).y });
     if (distance < lowestDistance) {
       closest = storage;
       lowestDistance = distance;
