@@ -1,5 +1,4 @@
 import { levels } from "../../config/Levels";
-import { resources } from "../../config/Resources";
 import { BuildingProps } from "../../models/BuildingProps";
 import { BuildingType } from "../../models/enums/BuildingType";
 import { Status } from "../../models/enums/Status";
@@ -64,7 +63,7 @@ export function doGatheringTask(
       if (targetObjectCopy) {
         if (mapObjectHasResources(targetObjectCopy)) {
           // Tree has wood
-          targetObjectCopy.inventory[0].amount = retract(targetObjectCopy.inventory[0].amount, 0.05);
+          targetObjectCopy.inventory[0].amount = retract(targetObjectCopy.inventory[0].amount, 0.04);
           mapObjectsCopy = mapObjectsCopy.map((tree) => {
             if (tree.id === targetObjectCopy?.id) {
               return targetObjectCopy;
@@ -74,7 +73,7 @@ export function doGatheringTask(
           mapObjectsChanged = true;
           let toAddResource = villagerCopy.inventoryItems.find((x) => x.resource.id === targetObjectCopy?.inventory[0].resource.id);
           if (toAddResource) {
-            toAddResource.amount = add(toAddResource.amount, 0.02);
+            toAddResource.amount = add(toAddResource.amount, 0.04);
             currentProfession.currentExperience = add(currentProfession.currentExperience, 0.2);
             if (
               achievedNextLevel(currentProfession.currentExperience, currentProfession?.currentLevel.experienceNeededForNextLevel) &&
