@@ -43,7 +43,7 @@ export function doGatheringTask(
   let closestStorage = findNearestStorage(
     getHitBoxCenter(villagerCopy?.hitBox),
     taskTargetResource === "Farm field"
-      ? buildings.filter((x) => x.type === BuildingType.FARMING_FIELD)
+      ? buildings.filter((x) => x.type === BuildingType.MILL)
       : buildings.filter((x) => x.type === BuildingType.TOWN_CENTER)
   );
 
