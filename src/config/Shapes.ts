@@ -1,6 +1,5 @@
 import { Shape } from "../models/Shape";
 import { resources } from "./Resources";
-import { v4 as uuidv4 } from "uuid";
 import { BuildingType } from "../models/enums/BuildingType";
 import { buildingOptions } from "./BuildingOptions";
 import { Availability } from "../models/enums/Availability";

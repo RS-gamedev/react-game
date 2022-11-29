@@ -4,8 +4,6 @@ import { resources } from "./Resources";
 import { Position } from "../models/Position";
 import { trainVillager } from "../utils/BuildingOptionsUtil";
 import { BuildingOptionType } from "../models/enums/BuildingOptionType";
-import { shapes } from "./Shapes";
-import { BuildingType } from "../models/enums/BuildingType";
 
 export const buildingOptions: BuildingOption[] = [
   {

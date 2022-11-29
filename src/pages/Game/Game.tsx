@@ -15,7 +15,7 @@ import { VillagerProps } from "../../models/VillagerProps";
 import Villager from "../../components/Villager/Villager";
 import UpgradeMenu from "../../components/UpgradeMenu/UpgradeMenu";
 import { reduceResourcesFromInventory, canAfford } from "../../utils/ResourceUtils";
-import { setInitialBuildings, setInitialInventory, setInitialMapObjects } from "../../utils/GameUtils";
+import { setInitialBuildings, setInitialInventory } from "../../utils/GameUtils";
 import { doMoveToLocation } from "../../utils/MovementUtils";
 import { executeTasks } from "../../utils/StatusUtils";
 import { InventoryItem } from "../../models/InventoryItem";
@@ -26,6 +26,8 @@ import { Size } from "../../models/Size";
 import { Position } from "../../models/Position";
 import { Availability } from "../../models/enums/Availability";
 import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
+import { Status } from "../../models/enums/Status";
+import { VillagerProfession } from "../../models/VillagerProfession";
 type props = {
   initialMapObjects: ObjectProps[];
   mapSize: Size;
@@ -41,7 +43,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
   const [placementOverlayConfig, setPlacementOverlayConfig] = useState<PlacementOverlayConfig | undefined>();
   const [gameSpeed, setGameSpeed] = useState(1);
 
-  const controlsAreaWidth = 240;
+  const settingsAreaWidth = "240px";
 
   useInterval(() => {
     // GAME LOOP
@@ -256,10 +258,12 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     }
   }, [buildings, selectedVillager]);
 
-  const handleChangeProfessionClick = useCallback((updatedVillager: VillagerProps) => {
+  const handleChangeProfessionClick = useCallback((newVillagerProfessions: VillagerProfession[], villagerId: string) => {
     setVillagers((prev) => {
       return prev.map((vill) => {
-        if (vill.id === updatedVillager.id) return updatedVillager;
+        if (vill.id === villagerId) {
+          vill = {...vill, professions: newVillagerProfessions}
+        };
         return vill;
       });
     });
@@ -305,15 +309,19 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     <div className={styles.background}>
       <div className={styles.actionsArea}>
         <div className={styles.actions} onClick={(event) => event.stopPropagation()}>
-          <Settings onClick={selectShape} shapes={allShapes}></Settings>
+          <Settings onClick={selectShape} shapes={allShapes} width={settingsAreaWidth}></Settings>
           {selectedBuilding ? (
             <UpgradeMenu
               inStock={selectedBuilding.inventory}
               onTrain={onTrain}
               onPlaceBuilding={handleOpenOverlay}
-              selectedBuilding={selectedBuilding}
-              selectedVillager={undefined}
-              selectedMapObject={undefined}
+              buildingOptions={selectedBuilding.buildingOptions}
+              status={Status.NONE}
+              children={{}}
+              name={selectedBuilding.name}
+              objectId={selectedBuilding.id}
+              objectHitbox={selectedBuilding.hitBox}
+              height={"50%"}
             ></UpgradeMenu>
           ) : (
             <></>
@@ -321,22 +329,29 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
           {selectedVillager ? (
             <UpgradeMenu
               onProfessionChange={handleChangeProfessionClick}
+              villagerProfessions={selectedVillager.professions}
               inStock={selectedVillager.inventoryItems}
-              onTrain={onTrain}
-              selectedBuilding={undefined}
-              selectedVillager={selectedVillager}
-              selectedMapObject={undefined}
+              buildingOptions={selectedVillager.buildingOptions}
+              status={Status.NONE}
+              height={"50%"}
+              children={{}}
+              name={selectedVillager.name}
+              objectId={selectedVillager.id}
+              objectHitbox={selectedVillager.hitBox}
             ></UpgradeMenu>
           ) : (
             <></>
           )}
-          {selectedMapObject ? (
+         {selectedMapObject ? (
             <UpgradeMenu
               inStock={selectedMapObject.inventory}
-              onTrain={onTrain}
-              selectedBuilding={undefined}
-              selectedVillager={undefined}
-              selectedMapObject={selectedMapObject}
+              buildingOptions={selectedMapObject.buildingOptions}
+              status={Status.NONE}
+              height={"50%"}
+              children={{}}
+              name={selectedMapObject.name}
+              objectId={selectedMapObject.id}
+              objectHitbox={selectedMapObject.hitBox}
             ></UpgradeMenu>
           ) : (
             <></>
@@ -358,7 +373,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
             centerPosition={placementOverlayConfig.centerPosition}
           />
         )}
-        <div className={styles.resourceArea}>{inventory ? <Resources inventory={inventory}></Resources> : <></>}</div>
+        <div className={styles.resourceArea}>{inventory ? <Resources inventory={inventory} itemsHeight={50}></Resources> : <></>}</div>
 
         {buildings ? (
           buildings?.map((building, index) => {

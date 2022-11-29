@@ -4,7 +4,7 @@ import { Hitbox } from "../../models/Hitbox";
 import Icon from "../Icon/Icon";
 import styles from "./Building.module.css";
 
-type props = {
+type Props = {
   id: string;
   size: { width: number; height: number };
   hitBox: Hitbox;
@@ -16,7 +16,7 @@ type props = {
   image?: string;
 };
 
-const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: props) => {
+const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: Props) => {
   return (
     <div
       className={styles[selected ? `active` : `not-active`] + " " + styles["building"]}

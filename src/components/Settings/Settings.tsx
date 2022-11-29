@@ -6,11 +6,12 @@ import styles from "./Settings.module.css";
 type Props = {
   shapes: Shape[];
   onClick: (shapeId: string) => void;
+  width:string
 };
 
-const Settings = React.memo(({ shapes, onClick }: Props) => {
+const Settings = React.memo(({ shapes, onClick, width }: Props) => {
   return (
-    <div className={styles.settingsBox}>
+    <div className={styles.settingsBox} style={{width:width}}>
       <h3 className={styles.title} style={{ margin: 0 }}>
         Buildings
       </h3>

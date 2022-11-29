@@ -9,13 +9,15 @@ type Props = {
   iconSize: string;
   textSize: string;
   textColor: string;
+  iconHeight: string;
   height: number;
+  width:number;
 };
 
-export default function ResourceItem({ resource, amount, iconSize, textSize, textColor, height }: Props) {
+export default function ResourceItem({ resource, amount, iconSize, textSize, textColor, height, iconHeight, width }: Props) {
   return (
-    <div className={styles.resourceItem}>
-      <Icon color={resource.color} fontSize={iconSize} name={resource.icon} imageName={resource.image} height={height + "px"}></Icon>
+    <div className={styles.resourceItem} style={{height: height + "px", width: width + "px"}}>
+      <Icon color={resource.color} fontSize={iconSize} name={resource.icon} imageName={resource.image} height={iconHeight}></Icon>
       <span style={{ fontSize: textSize, fontWeight: "600", color: textColor }}>{Math.round(amount)}</span>
     </div>
   );

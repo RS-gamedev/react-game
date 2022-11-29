@@ -1,5 +1,6 @@
 .professionPicker {
-  transform: translate(240px, -450px);
+  top:0;
+  left:240px;
   position: absolute;
   background: #4f5158f2;
   z-index: 6;
