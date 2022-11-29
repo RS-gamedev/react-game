@@ -24,9 +24,10 @@ type Props = {
   onPlaceBuilding?: (buildingOption: BuildingOption, centerPosition: Position) => void;
   inStock?: InventoryItem[];
   onProfessionChange?: (selectedVillager: VillagerProps) => void;
+  height: string
 };
 
-const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange, onPlaceBuilding }: Props) => {
+const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange, onPlaceBuilding, height }: Props) => {
   const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
   const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
   const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
@@ -84,7 +85,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
 
   if (selectedBuilding) {
     return (
-      <div className={styles.upgradeMenu}>
+      <div className={styles.upgradeMenu} style={{height: height}}>
         <div className={styles.titleSection}>
           <span className={styles.name}>{selectedBuilding.name}</span>
           <div className={styles.levelSection}>
@@ -135,7 +136,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
 
   if (selectedVillager) {
     return (
-      <div className={styles.upgradeMenu}>
+      <div className={styles.upgradeMenu} style={{height: height}}>
         <div className={`${styles.titleSection} ${jobSelectionOpen && styles.noTopRightBorderRadius}`}>
           <div className={styles.titlePart}>
             <span>{selectedVillager.name}</span>
@@ -189,7 +190,7 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
 
   if (selectedMapObject) {
     return (
-      <div className={styles.upgradeMenu}>
+      <div className={styles.upgradeMenu} style={{height: height}}>
         <div className={styles.titleSection}>
           <span className={styles.name}>{selectedMapObject.name}</span>
           <div className={styles.levelSection}></div>

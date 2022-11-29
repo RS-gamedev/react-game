@@ -314,6 +314,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
               selectedBuilding={selectedBuilding}
               selectedVillager={undefined}
               selectedMapObject={undefined}
+              height={"50%"}
             ></UpgradeMenu>
           ) : (
             <></>
@@ -326,6 +327,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
               selectedBuilding={undefined}
               selectedVillager={selectedVillager}
               selectedMapObject={undefined}
+              height={"50%"}
             ></UpgradeMenu>
           ) : (
             <></>
@@ -337,6 +339,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
               selectedBuilding={undefined}
               selectedVillager={undefined}
               selectedMapObject={selectedMapObject}
+              height={"50%"}
             ></UpgradeMenu>
           ) : (
             <></>

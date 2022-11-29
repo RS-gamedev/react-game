@@ -2,22 +2,19 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import Button from '../components/Button/Button';
+import { resources } from '../config/Resources';
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
-  title: 'Example/Button',
+  title: 'Components/Button',
   component: Button,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   argTypes: {
     backgroundColor: { control: 'color' },
   },
 } as ComponentMeta<typeof Button>;
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
 
 export const ButtonWithIcon = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 ButtonWithIcon.args = {
   height: "80px",
   width: "120px",
@@ -25,11 +22,49 @@ ButtonWithIcon.args = {
   icon: ["fas","home"],
   iconColor: "red"
 };
+export const ActiveButton = Template.bind({});
+ActiveButton.args = {
+  height: "80px",
+  width: "120px",
+  active: true,
+  text: "Active button with icon",
+  icon: ["fas","home"],
+  iconColor: "red"
+};
 
 export const ButtonWithImage = Template.bind({});
 ButtonWithImage.args = {
-  height: "40px",
-  width: "80px",
+  height: "80px",
+  width: "120px",
   text: "Test Button",
   imageName: "villager",
+  imageHeight: "50px"
 };
+
+export const ButtonWithImageAndPrices = Template.bind({});
+ButtonWithImageAndPrices.args = {
+  height: "80px",
+  width: "120px",
+  text: "Test Button",
+  imageName: "villager",
+  price: [
+    {amount: 50,type: resources.find(x => x.name === "Wood")},
+    {amount: 120,type: resources.find(x => x.name === "Stone")},
+    {amount: 200,type: resources.find(x => x.name === "Coins")}
+  ],
+  imageHeight: "35px"
+};
+export const ButtonWithIconAndPrices = Template.bind({});
+ButtonWithIconAndPrices.args = {
+  height: "80px",
+  width: "120px",
+  text: "Test Button",
+  price: [
+    {amount: 50,type: resources.find(x => x.name === "Wood")},
+    {amount: 120,type: resources.find(x => x.name === "Stone")},
+    {amount: 200,type: resources.find(x => x.name === "Coins")}
+  ],
+  icon: ["fas","tree"],
+  iconColor: "red"
+};
+
