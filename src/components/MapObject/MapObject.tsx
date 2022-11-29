@@ -36,7 +36,7 @@ const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClic
           className={
             styles.mapObject +
             " " +
-            `${selected ? styles.selected : styles.nothing} ` +
+            `${selected && styles.selected} ` +
             (showTaskAssigned ? styles.taskAssigned : styles.taskAssignedAfter)
           }
           style={{ left: hitBox.leftTop.x, top: hitBox.leftTop.y }}

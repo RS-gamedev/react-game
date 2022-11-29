@@ -2,10 +2,8 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import UpgradeMenu from "../../components/UpgradeMenu/UpgradeMenu";
 import { levels } from "../../config/Levels";
 import { professions } from "../../config/Professions";
-import { BuildingProps } from "../../models/BuildingProps";
-import { BuildingType } from "../../models/enums/BuildingType";
+import { resources } from "../../config/Resources";
 import { Status } from "../../models/enums/Status";
-import { VillagerProps } from "../../models/VillagerProps";
 export default {
   title: "Components/UpgradeMenu",
   component: UpgradeMenu,
@@ -16,48 +14,47 @@ export default {
 
 const Template: ComponentStory<typeof UpgradeMenu> = (args) => <UpgradeMenu {...args} />;
 
-const testVillager: VillagerProps = {
-  id: "1",
-  buildingOptions: [],
-  hitBox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
-  inventorySlots: 10,
-  inventoryItems: [],
-  name: "villager",
-  price: [],
-  professions: professions.map((x) => {
-    return { active: x.characterImageName === "villager" ? true : false, id: x.id, currentExperience: 0, currentLevel: levels[0], profession: x };
-  }),
-  selected: false,
-  size: { height: 50, width: 50 },
-  status: Status.IDLE,
-  currentTask: undefined,
-  goalObjectId: undefined,
-};
-
-const testBuilding: BuildingProps = {
-  id: "building-1",
-  buildingOptions: [],
-  hitBox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
-  inventory: [],
-  image: "townCenter",
-  level: 0,
-  price: [],
-  type: BuildingType.TOWN_CENTER,
-  name: "Town Center",
-  color: "red",
-  selected: false,
-  size: { height: 50, width: 50 },
-  position: { x: 50, y: 50 },
-};
-
 export const VillagerMenu = Template.bind({});
 VillagerMenu.args = {
-  selectedVillager: testVillager,
+  buildingOptions: [],
+  objectHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
+  villagerProfessions: professions.map((x) => {
+    return { active: x.characterImageName === "lumberjack" ? true : false, id: x.id, currentExperience: 0, currentLevel: levels[0], profession: x };
+  }),
+  name: "Villager",
+  status: Status.IDLE,
   height: "400px",
+  inStock: [{amount: 8, resource: resources.find(x => x.name === "Wood")!}]
+};
+
+export const VillagerMultipleResources = Template.bind({});
+VillagerMultipleResources.args = {
+  buildingOptions: [],
+  objectHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
+  villagerProfessions: professions.map((x) => {
+    return { active: x.characterImageName === "lumberjack" ? true : false, id: x.id, currentExperience: 0, currentLevel: levels[0], profession: x };
+  }),
+  name: "Villager",
+  status: Status.IDLE,
+  height: "400px",
+  inStock: [{amount: 8, resource: resources.find(x => x.name === "Wood")!}, {amount: 8, resource: resources.find(x => x.name === "Stone")!}, {amount: 8, resource: resources.find(x => x.name === "Food")!}]
 };
 
 export const BuildingMenu = Template.bind({});
 BuildingMenu.args = {
-  selectedBuilding: testBuilding,
+  buildingOptions: [],
+  objectHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
+  name: "Town Center",
+  status: Status.NONE,
   height: "400px",
+};
+
+export const MapObjectMenu = Template.bind({});
+MapObjectMenu.args = {
+  buildingOptions: [],
+  objectHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
+  name: "Tree",
+  status: Status.NONE,
+  height: "400px",
+  inStock: [{amount: 50, resource: resources.find(x => x.name === "Wood")!}]
 };

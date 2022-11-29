@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { buildStyles, CircularProgressbarWithChildren } from "react-circular-progressbar";
 import { BuildingOption } from "../../models/BuildingOption";
-import { BuildingProps } from "../../models/BuildingProps";
 import { BuildingOptionType } from "../../models/enums/BuildingOptionType";
 import { Status } from "../../models/enums/Status";
+import { Hitbox } from "../../models/Hitbox";
 import { InventoryItem } from "../../models/InventoryItem";
-import { ObjectProps } from "../../models/ObjectProps";
 import { Position } from "../../models/Position";
 import { VillagerProfession } from "../../models/VillagerProfession";
 import { VillagerProps } from "../../models/VillagerProps";
@@ -16,133 +15,81 @@ import ProfessionPicker from "../ProfessionPicker/ProfessionPicker";
 import ResourceItem from "../Resources/ResourceItem/ResourceItem";
 import styles from "./UpgradeMenu.module.css";
 
-type Props = {
-  selectedBuilding: BuildingProps | undefined;
-  selectedVillager: VillagerProps | undefined;
-  selectedMapObject: ObjectProps | undefined;
-  onTrain: (villager: VillagerProps) => VillagerProps;
+type NeededProps = {
+  buildingOptions: BuildingOption[];
+  name: string;
+  inStock: InventoryItem[];
+  objectHitbox: Hitbox;
+  children: any;
+  height: string;
+  onTrain?: (villager: VillagerProps) => VillagerProps;
   onPlaceBuilding?: (buildingOption: BuildingOption, centerPosition: Position) => void;
-  inStock?: InventoryItem[];
-  onProfessionChange?: (selectedVillager: VillagerProps) => void;
-  height: string
+  onProfessionChange?: (villagerProfessions: VillagerProfession[], villagerId: string) => void;
+  objectId: string;
+  status: Status;
+  villagerProfessions?: VillagerProfession[];
 };
 
-const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, onTrain, inStock, onProfessionChange, onPlaceBuilding, height }: Props) => {
-  const [buildingOptions, setBuildingOptions] = useState<BuildingOption[]>([]);
+const UpgradeMenu = ({
+  buildingOptions,
+  height,
+  inStock,
+  name,
+  objectHitbox,
+  status,
+  onPlaceBuilding,
+  onProfessionChange,
+  onTrain,
+  villagerProfessions,
+  objectId,
+  children,
+}: NeededProps) => {
   const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
   const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
-  const activeProfession = selectedVillager?.professions.find((x) => x.active);
+  const activeProfession = villagerProfessions ? villagerProfessions.find((x) => x.active) : undefined;
 
   useEffect(() => {
-    if (selectedBuilding) {
-      setBuildingOptions(selectedBuilding.buildingOptions);
-      setPosition(getHitBoxCenter(selectedBuilding.hitBox));
-    }
-    if (selectedVillager) {
-      setBuildingOptions(selectedVillager.buildingOptions);
-      setPosition(getHitBoxCenter(selectedVillager.hitBox));
-    }
-    if (selectedMapObject) {
-      setBuildingOptions(selectedMapObject.buildingOptions);
-      setPosition(getHitBoxCenter(selectedMapObject.hitBox));
-    }
-  }, [selectedBuilding, selectedMapObject, selectedVillager]);
+    setPosition((x) => getHitBoxCenter(objectHitbox));
+  }, [objectHitbox]);
 
   const executeBuildingOption = useCallback(
     (buildingOption: BuildingOption) => {
       if (buildingOption.type === BuildingOptionType.TRAIN) {
         let entity = buildingOption.toExecute(position);
-        onTrain(entity);
+        if (onTrain) onTrain(entity);
       }
       if (buildingOption.type === BuildingOptionType.BUILD) {
-        if (onPlaceBuilding && selectedBuilding) onPlaceBuilding(buildingOption, getHitBoxCenter(selectedBuilding.hitBox));
+        if (onPlaceBuilding) onPlaceBuilding(buildingOption, getHitBoxCenter(objectHitbox));
       }
       if (buildingOption.type === BuildingOptionType.UPGRADE) {
       }
     },
-    [onPlaceBuilding, onTrain, position, selectedBuilding]
+    [objectHitbox, onPlaceBuilding, onTrain, position]
   );
 
   const handleChangeProfession = useCallback(
     (villagerProfession: VillagerProfession) => {
-      if (!onProfessionChange || !selectedVillager) return;
-      let selectedVillagerCopy = {
-        ...selectedVillager,
-        currentTask: undefined,
-        status: Status.IDLE,
-        professions: selectedVillager.professions.map((x) => {
-          if (x.profession.id === villagerProfession.profession.id) {
-            return { ...x, active: true };
-          }
-          return { ...x, active: false };
+      if (!onProfessionChange || !villagerProfessions) return;
+      onProfessionChange(
+        villagerProfessions?.map((x) => {
+          return { ...x, active: x.id === villagerProfession.id ? true : false };
         }),
-      };
+        objectId
+      );
       setJobSelectionOpen(false);
-      onProfessionChange(selectedVillagerCopy);
     },
-    [onProfessionChange, selectedVillager]
+    [objectId, onProfessionChange, villagerProfessions]
   );
 
-  if (selectedBuilding) {
-    return (
-      <div className={styles.upgradeMenu} style={{height: height}}>
-        <div className={styles.titleSection}>
-          <span className={styles.name}>{selectedBuilding.name}</span>
-          <div className={styles.levelSection}>
-            <span>{selectedBuilding.level}</span>
-          </div>
+  return (
+    <div className={styles.upgradeMenu} style={{ height: height }}>
+      <div className={`${styles.titleSection} ${jobSelectionOpen && styles.noTopRightBorderRadius}`}>
+        <div className={styles.titlePart}>
+          <span>{name}</span>
+         { status !== Status.NONE && <span style={{ fontSize: "0.8em" }}>{Status[status]}</span>}
         </div>
-        <div className={styles.buildingOptionsSection}>
-          {buildingOptions.map((x) => {
-            return (
-              <Button
-                imageHeight={"35px"}
-                imageName={x.imageName!}
-                key={x.id}
-                icon={x.icon}
-                active={false}
-                disabled={false}
-                price={x.price}
-                iconColor={"#ffffff"}
-                height="100px"
-                width="100px"
-                onClick={() => executeBuildingOption(x)}
-                text={x.name}
-              ></Button>
-            );
-          })}
-        </div>
-        <div className={styles.inventorySection}>
-          {inStock ? (
-            inStock.map((x) => {
-              return (
-                <ResourceItem
-                  resource={x.resource}
-                  amount={Math.round(x.amount)}
-                  iconSize="1em"
-                  textSize="1em"
-                  textColor="#ffffff"
-                  height={15}
-                ></ResourceItem>
-              );
-            })
-          ) : (
-            <></>
-          )}
-        </div>
-      </div>
-    );
-  }
 
-  if (selectedVillager) {
-    return (
-      <div className={styles.upgradeMenu} style={{height: height}}>
-        <div className={`${styles.titleSection} ${jobSelectionOpen && styles.noTopRightBorderRadius}`}>
-          <div className={styles.titlePart}>
-            <span>{selectedVillager.name}</span>
-            <span style={{ fontSize: "0.8em" }}>{Status[selectedVillager.status]}</span>
-          </div>
-
+        { villagerProfessions ? 
           <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>
             {activeProfession?.profession.name !== "None" ? (
               <CircularProgressbarWithChildren
@@ -157,67 +104,56 @@ const UpgradeMenu = ({ selectedBuilding, selectedVillager, selectedMapObject, on
             ) : (
               <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"50px"}></Icon>
             )}
-          </div>
-        </div>
-        <div className={styles.buildingOptionsSection}></div>
-        <div className={styles.inventorySection}>
-          {inStock ? (
-            inStock.map((x, index) => {
-              return (
-                <ResourceItem
-                  key={index}
-                  resource={x.resource}
-                  amount={Math.round(x.amount)}
-                  iconSize="1em"
-                  textSize="1em"
-                  textColor="#ffffff"
-                  height={15}
-                ></ResourceItem>
-              );
-            })
-          ) : (
-            <></>
-          )}
-        </div>
-        <ProfessionPicker
-          villagerProfessions={selectedVillager.professions}
-          open={jobSelectionOpen}
-          onClick={handleChangeProfession}
-        ></ProfessionPicker>
+          </div> : <></>
+        }
       </div>
-    );
-  }
-
-  if (selectedMapObject) {
-    return (
-      <div className={styles.upgradeMenu} style={{height: height}}>
-        <div className={styles.titleSection}>
-          <span className={styles.name}>{selectedMapObject.name}</span>
-          <div className={styles.levelSection}></div>
-        </div>
-        <div className={styles.buildingOptionsSection}></div>
-        <div className={styles.inventorySection}>
-          {inStock ? (
-            inStock.map((x) => {
-              return (
-                <ResourceItem
-                  resource={x.resource}
-                  amount={Math.round(x.amount)}
-                  iconSize="1em"
-                  textSize="1em"
-                  textColor="#ffffff"
-                  height={15}
-                ></ResourceItem>
-              );
-            })
-          ) : (
-            <></>
-          )}
-        </div>
+      <div className={styles.buildingOptionsSection}>
+        {buildingOptions.map((x) => {
+          return (
+            <Button
+              imageHeight={"35px"}
+              imageName={x.imageName!}
+              key={x.id}
+              icon={x.icon}
+              active={false}
+              disabled={false}
+              price={x.price}
+              iconColor={"#ffffff"}
+              height="100px"
+              width="100px"
+              onClick={() => executeBuildingOption(x)}
+              text={x.name}
+            ></Button>
+          );
+        })}
       </div>
-    );
-  }
-  return <></>;
+      <div className={styles.inventorySection}>
+        {inStock ? (
+          inStock.map((x, index) => {
+            return (
+              <ResourceItem
+                key={index}
+                resource={x.resource}
+                amount={Math.round(x.amount)}
+                iconSize="1em"
+                textSize="1em"
+                textColor="#ffffff"
+                height={60}
+                iconHeight={"80%"}
+                width={60}
+              ></ResourceItem>
+            );
+          })
+        ) : (
+          <></>
+        )}
+      </div>
+      {villagerProfessions ? (
+        <ProfessionPicker villagerProfessions={villagerProfessions} open={jobSelectionOpen} onClick={handleChangeProfession}></ProfessionPicker>
+      ) : (
+        <></>
+      )}
+    </div>
+  );
 };
-
 export default UpgradeMenu;

@@ -31,6 +31,12 @@ ActiveButton.args = {
   icon: ["fas","home"],
   iconColor: "red"
 };
+ActiveButton.parameters = {
+  backgrounds: {
+    default: "light",
+  },
+};
+
 
 export const ButtonWithImage = Template.bind({});
 ButtonWithImage.args = {

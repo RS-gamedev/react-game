@@ -1,6 +1,4 @@
 .resourceItem {
-  width: 65px;
-  height: 65px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

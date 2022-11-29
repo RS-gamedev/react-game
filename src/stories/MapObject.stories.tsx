@@ -20,6 +20,12 @@ FreshTree.args = {
     inventory: [{amount: 10, resource: resources.find(x => x.name === "Wood")!}],
     onClick: () => {}
 };
+FreshTree.parameters = {
+    backgrounds: {
+      default: "light",
+    },
+  };
+  
 export const SelectedTree = Template.bind({});
 SelectedTree.args = {
     name: "tree",
@@ -29,9 +35,13 @@ SelectedTree.args = {
     inventory: [{amount: 10, resource: resources.find(x => x.name === "Wood")!}],
     onClick: () => {},
     selected: true
-    
 };
-
+SelectedTree.parameters = {
+    backgrounds: {
+      default: "light",
+    },
+  };
+  
 export const TreeWithDepletedResources = Template.bind({});
 TreeWithDepletedResources.args = {
     name: "tree",
@@ -40,5 +50,10 @@ TreeWithDepletedResources.args = {
     inventoryMax: 10,
     inventory: [{amount:8, resource: resources.find(x => x.name === "Wood")!}],
     onClick: () => {}
-
 }
+TreeWithDepletedResources.parameters = {
+    backgrounds: {
+      default: "light",
+    },
+  };
+  

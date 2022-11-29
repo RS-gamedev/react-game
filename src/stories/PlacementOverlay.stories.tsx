@@ -15,6 +15,12 @@ export const FullScreen = Template.bind({});
 FullScreen.args = {
     fullscreen: true
 }
+FullScreen.parameters = {
+    backgrounds: {
+      default: "light",
+    },
+  };
+  
 export const LocalCircle = Template.bind({});
 LocalCircle.args = {
     fullscreen: false,
@@ -22,6 +28,12 @@ LocalCircle.args = {
     circle: true,
     size: {height: 100, width: 100}
 }
+LocalCircle.parameters = {
+    backgrounds: {
+      default: "light",
+    },
+  };
+  
 
 export const LocalSquare = Template.bind({});
 LocalSquare.args = {
@@ -30,3 +42,9 @@ LocalSquare.args = {
     circle: false,
     size: {height: 100, width: 100}
 }
+LocalSquare.parameters = {
+    backgrounds: {
+      default: "light",
+    },
+  };
+  

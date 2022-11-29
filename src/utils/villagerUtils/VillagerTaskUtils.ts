@@ -72,7 +72,6 @@ export function doGatheringTask(
         if (sourceHasResourcesLeft(targetObjectCopy)) {
           // Tree has wood
           targetObjectCopy.inventory[0].amount = retract(targetObjectCopy.inventory[0].amount, 0.04);
-          console.log(targetObjectCopy.inventory[0].amount);
           mapObjectsCopy = mapObjectsCopy.map((tree) => {
             if (tree.id === targetObjectCopy?.id) {
               mapObjectsChanged = true;
@@ -105,7 +104,6 @@ export function doGatheringTask(
           }
         }
         if (!sourceHasResourcesLeft(targetObjectCopy)) {
-          console.log("removing tree");
           targetObjectCopy = undefined;
           if (targetIsBuilding) {
             buildingsCopy = buildingsCopy.filter((x) => x.id !== villagerCopy?.goalObjectId);
@@ -114,7 +112,6 @@ export function doGatheringTask(
             mapObjectsCopy = mapObjectsCopy.filter((x) => x.id !== villagerCopy?.goalObjectId);
             mapObjectsChanged = true;
           }
-          console.log(targetObjectCopy);
           villagerCopy.goalObjectId = undefined;
           villagerCopy.status = Status.IDLE;
         }
@@ -174,16 +171,12 @@ function handleIdle(
   targetIsBuilding: boolean,
   targetObject?: ObjectProps | BuildingProps
 ) {
-  console.log(taskTargetResource);
-  console.log(targetObject);
   if (!targetObject) {
     // find nearest mapObject or building and set target
     villager.goalObjectId = findNearestTarget(
       getHitBoxCenter(villager.hitBox),
       targetIsBuilding ? buildings.filter((x) => x.name === taskTargetResource) : mapObjects.filter((x) => x.name === taskTargetResource)
     ).id;
-    console.log(villager.goalObjectId);
-
     if (!villager.goalObjectId) {
       villager.currentTask = undefined;
       villager.status = Status.IDLE;
@@ -191,7 +184,6 @@ function handleIdle(
     return villager;
   }
   if (inventoryIsFull(villager)) {
-    console.log("inventoryFull");
     //Inventory vol
     if (onGoal(villager.hitBox, getHitBoxCenter(closestStorage.hitBox))) {
       // On storage
@@ -214,7 +206,6 @@ function handleIdle(
       }
     } else {
       // geen target
-      console.log("inventory is not full so walking to new target");
       villager.status = Status.WALKING_TO_RESOURCE;
       let nearestMapObject = findNearestTarget(
         getHitBoxCenter(villager.hitBox),
