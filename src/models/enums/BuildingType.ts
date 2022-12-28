@@ -6,4 +6,5 @@ export enum BuildingType {
   TENTS,
   MILL,
   FARMING_FIELD,
+  UNDER_CONSTRUCTION
 }

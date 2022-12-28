@@ -6,6 +6,7 @@ import { resources } from "../config/Resources";
 import { professions } from "../config/Professions";
 import { VillagerProfession } from "../models/VillagerProfession";
 import { levels } from "../config/Levels";
+import { buildingOptions } from "../config/BuildingOptions";
 
 export function trainVillager(position: Position) {
   let villagerProfessions: VillagerProfession[] = professions.map((x, index) => {
@@ -27,7 +28,12 @@ export function trainVillager(position: Position) {
     inventorySlots: 10,
     name: "Villager",
     status: Status.IDLE,
-    buildingOptions: [],
+    buildingOptions: [
+      buildingOptions.find(x => x.name === "Build House")!,
+      buildingOptions.find(x => x.name === "Build Town Center")!,
+      buildingOptions.find(x => x.name === "Build Mill")!,
+      buildingOptions.find(x => x.name === "Build Storage")!
+    ],
     price: [{ type: resources.find((x) => x.name === "Wood"), amount: 100 }],
     size: {
       width: 35,

@@ -93,5 +93,5 @@ export const shapes: Shape[] = [
     size: { width: 35, height: 35 },
     availability: Availability.GAME_LEVEL2,
     inventory: [{ resource: resources.find((x) => x.name === "Food")!, amount:0 }],
-  },
+  }
 ];

@@ -254,3 +254,21 @@ export function findNearestStorage(position: Position, storages: BuildingProps[]
   }
   return closest;
 }
+
+
+export function doBuildingTask(
+  villagers: VillagerProps[],
+  villagerId: string,
+  inventoryItems: InventoryItem[],
+  buildings: BuildingProps[],
+  mapObjects: ObjectProps[],
+): GameTickResult {
+  let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
+  
+
+
+
+
+
+  return gameTickResult;
+}

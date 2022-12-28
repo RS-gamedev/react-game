@@ -20,3 +20,9 @@
 .not-active {
   border-color: transparent;
 }
+
+.buildingProgressBar{
+  -webkit-appearance: none;
+  border-radius: 5px;
+  height: 5px;
+}

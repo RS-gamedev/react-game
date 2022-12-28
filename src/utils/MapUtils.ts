@@ -16,6 +16,7 @@ import stone from "../assets/stone.svg";
 import rock from "../assets/rock.svg";
 import miner from "../assets/miner2.svg";
 import pickaxe from "../assets/pickaxe.svg";
+import underConstruction from '../assets/underConstruction.svg';
 import { MapPickerObject } from "../models/MapPickerObject";
 
 export const getImageUrl = (name: string) => {
@@ -56,6 +57,8 @@ export const getImageUrl = (name: string) => {
       return storage;
     case "miner":
       return miner;
+      case "underConstruction":
+        return underConstruction;
     default:
       return tree;
   }

@@ -78,8 +78,9 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     setBuildings(setInitialBuildings({ x: mapSize.height / 2, y: mapSize.height / 2 })!);
   }, [initialMapObjects]);
 
-  function addBuilding(building?: BuildingProps) {
+  function addBuilding(building?: BuildingProps, villagerId?: string) {
     if (!building) return;
+    console.log(villagerId);
     setBuildings((previous) => {
       let toReturn = previous.map((building) => {
         return { ...building, selected: false };
@@ -269,12 +270,13 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     });
   }, []);
 
-  const handleOpenOverlay = (buildingOption: BuildingOption, centerPosition: Position) => {
+  const handleOpenOverlay = (buildingOption: BuildingOption, centerPosition: Position, villagerId?: string) => {
     let toPlaceShape = shapes.find((x) => x.id === buildingOption.shapeId);
+    let fullscreen = (buildingOption.placementRange === 0);
     if (!toPlaceShape) return;
     let overlayConfig: PlacementOverlayConfig = {
-      circle: true,
-      fullscreen: false,
+      circle: (fullscreen) ? false: true,
+      fullscreen: fullscreen,
       show: true,
       size: getIncreasedSizeByRange(toPlaceShape.size, buildingOption.placementRange),
       centerPosition: centerPosition,
@@ -290,17 +292,17 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     return toReturn;
   }
 
-  const handlePlaceBuilding = (event: any) => {
+  const handlePlaceBuilding = (event: any, villagerId?: string) => {
     let clientRect = event.target.parentElement.getBoundingClientRect();
     let xPos = event.pageX - clientRect.left;
     let yPos = event.pageY - clientRect.top;
     if (!placementOverlayConfig || !placementOverlayConfig.selectedShape) return;
-    let building: BuildingProps | undefined = createBuilding({ x: xPos, y: yPos }, placementOverlayConfig?.selectedShape.type);
+    let building: BuildingProps | undefined = createBuilding({ x: xPos, y: yPos }, placementOverlayConfig?.selectedShape.type, false);
     if (building) {
       let result = reduceResourcesFromInventory(inventory!, building.price);
       if (result[1]) {
         setInventory((prev) => result[0]);
-        addBuilding(building);
+        addBuilding(building, villagerId);
       }
     }
   };
@@ -329,6 +331,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
           {selectedVillager ? (
             <UpgradeMenu
               onProfessionChange={handleChangeProfessionClick}
+              onPlaceBuilding={handleOpenOverlay}
               villagerProfessions={selectedVillager.professions}
               inStock={selectedVillager.inventoryItems}
               buildingOptions={selectedVillager.buildingOptions}
@@ -370,6 +373,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
             fullscreen={placementOverlayConfig?.fullscreen}
             circle={placementOverlayConfig.circle}
             size={placementOverlayConfig.size}
+            villagerId={selectedVillager?.id}
             centerPosition={placementOverlayConfig.centerPosition}
           />
         )}

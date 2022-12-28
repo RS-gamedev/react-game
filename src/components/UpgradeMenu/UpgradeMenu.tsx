@@ -23,7 +23,7 @@ type NeededProps = {
   children: any;
   height: string;
   onTrain?: (villager: VillagerProps) => VillagerProps;
-  onPlaceBuilding?: (buildingOption: BuildingOption, centerPosition: Position) => void;
+  onPlaceBuilding?: (buildingOption: BuildingOption, centerPosition: Position, villagerId: string) => void;
   onProfessionChange?: (villagerProfessions: VillagerProfession[], villagerId: string) => void;
   objectId: string;
   status: Status;
@@ -59,7 +59,7 @@ const UpgradeMenu = ({
         if (onTrain) onTrain(entity);
       }
       if (buildingOption.type === BuildingOptionType.BUILD) {
-        if (onPlaceBuilding) onPlaceBuilding(buildingOption, getHitBoxCenter(objectHitbox));
+        if (onPlaceBuilding) onPlaceBuilding(buildingOption, getHitBoxCenter(objectHitbox), objectId!);
       }
       if (buildingOption.type === BuildingOptionType.UPGRADE) {
       }
@@ -86,10 +86,10 @@ const UpgradeMenu = ({
       <div className={`${styles.titleSection} ${jobSelectionOpen && styles.noTopRightBorderRadius}`}>
         <div className={styles.titlePart}>
           <span>{name}</span>
-         { status !== Status.NONE && <span style={{ fontSize: "0.8em" }}>{Status[status]}</span>}
+          {status !== Status.NONE && <span style={{ fontSize: "0.8em" }}>{Status[status]}</span>}
         </div>
 
-        { villagerProfessions ? 
+        {villagerProfessions ? (
           <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>
             {activeProfession?.profession.name !== "None" ? (
               <CircularProgressbarWithChildren
@@ -104,28 +104,32 @@ const UpgradeMenu = ({
             ) : (
               <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"50px"}></Icon>
             )}
-          </div> : <></>
-        }
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <div className={styles.buildingOptionsSection}>
-        {buildingOptions.map((x) => {
-          return (
-            <Button
-              imageHeight={"35px"}
-              imageName={x.imageName!}
-              key={x.id}
-              icon={x.icon}
-              active={false}
-              disabled={false}
-              price={x.price}
-              iconColor={"#ffffff"}
-              height="100px"
-              width="100px"
-              onClick={() => executeBuildingOption(x)}
-              text={x.name}
-            ></Button>
-          );
-        })}
+        <div className={styles.buildingOptionsWrapper}>
+          {buildingOptions.map((x) => {
+            return (
+              <Button
+                imageHeight={"35px"}
+                imageName={x.imageName!}
+                key={x.id}
+                icon={x.icon}
+                active={false}
+                disabled={false}
+                price={x.price}
+                iconColor={"#ffffff"}
+                height="100px"
+                width="100px"
+                onClick={() => executeBuildingOption(x)}
+                text={x.name}
+              ></Button>
+            );
+          })}
+        </div>
       </div>
       <div className={styles.inventorySection}>
         {inStock ? (

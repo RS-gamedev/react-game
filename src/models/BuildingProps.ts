@@ -26,4 +26,5 @@ export type BuildingProps = {
   hitBox: Hitbox;
   image: string;
   inventory: InventoryItem[];
+  constructionPercentage:number;
 };
