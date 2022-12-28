@@ -17,8 +17,6 @@ import rock from "../assets/rock.svg";
 import miner from "../assets/miner2.svg";
 import pickaxe from "../assets/pickaxe.svg";
 import { MapPickerObject } from "../models/MapPickerObject";
-import { ObjectProps } from "../models/ObjectProps";
-import { v4 as uuidv4 } from "uuid";
 
 export const getImageUrl = (name: string) => {
   switch (name) {
@@ -97,7 +95,6 @@ export const generateMap = (width: number, treeAmount: number, stoneAmount: numb
       }
     }
   }
-  let stones: MapPickerObject[] = [];
   for (let i = 0; i < stoneAmount; i++) {
     let stone = {
       name: "rock",

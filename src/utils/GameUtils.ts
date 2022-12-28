@@ -59,8 +59,8 @@ export function setInitialBuildings(position: Position) {
 
 export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | undefined {
   let wood = resources.find((x) => x.name === "Wood");
-  let coins = resources.find((x) => x.name === "Coins");
-  let gems = resources.find((x) => x.name === "Gems");
+  // let coins = resources.find((x) => x.name === "Coins");
+  // let gems = resources.find((x) => x.name === "Gems");
   let stone = resources.find((x) => x.name === "Stone");
   if (!wood || !stone) return undefined;
   let initialMapObjects: ObjectProps[] = map.map((mapObject: MapPickerObject) => {

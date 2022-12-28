@@ -35,7 +35,7 @@ export function canAfford(inventoryItems?: InventoryItem[], price?: Price[]): bo
   if (!inventoryItems || !price) return false;
   let toReturn = true;
   inventoryItems.forEach((inventItem) => {
-    let toCheckPrice = price.find((x) => x.type?.id == inventItem.resource.id);
+    let toCheckPrice = price.find((x) => x.type?.id === inventItem.resource.id);
     if (toCheckPrice && inventItem.amount < toCheckPrice.amount) {
       toReturn = false;
     }
