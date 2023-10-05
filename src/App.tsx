@@ -4,6 +4,11 @@ import { ObjectProps } from "./models/ObjectProps";
 import MapPicker from "./pages/MapPicker/MapPicker";
 import { MapPickerObject } from "./models/MapPickerObject";
 import { setInitialMapObjects } from "./utils/GameUtils";
+import InventoryProvider from "./providers/InventoryProvider";
+import VillagersProvider from "./providers/VillagersProvider";
+import MapObjectsProvider from "./providers/MapObjectsProvider";
+import BuildingsProvider from "./providers/BuildingsProvider";
+import GameManager from "./components/GameManager/GameManager";
 
 function App() {
   const [map, setMap] = useState<ObjectProps[]>([]);
@@ -22,11 +27,7 @@ function App() {
     if (map && map.length > 0) setMapReady(true);
   }, [map]);
 
-  return mapReady ? (
-    <Game initialMapObjects={map} mapSize={{ height: height, width: width }}></Game>
-  ) : (
-    <MapPicker onStart={onStart} mapSize={{ height: height, width: width }}></MapPicker>
-  );
+  return mapReady ? <GameManager initialMapObjects={map} mapSize={{ height: height, width: width }}/> : <MapPicker onStart={onStart} mapSize={{ height: height, width: width }}></MapPicker>;
 }
 
 export default App;

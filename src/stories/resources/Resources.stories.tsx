@@ -9,7 +9,7 @@ export default {
   },
 } as ComponentMeta<typeof Resources>;
 
-const Template: ComponentStory<typeof Resources> = (args) => <Resources {...args} />;
+const Template: ComponentStory<typeof Resources> = (args) => <Resources />;
 
 export const ResourceMenu = Template.bind({});
 ResourceMenu.args = {
@@ -35,5 +35,4 @@ ResourceMenu.args = {
             resource: resources[4]
         }
     ]},
-    itemsHeight: 50
 };

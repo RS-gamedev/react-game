@@ -1,16 +1,21 @@
 import React from "react";
+import { useInventory } from "../../hooks/useInventory";
 import { Inventory } from "../../models/Inventory";
 import ResourceItem from "./ResourceItem/ResourceItem";
 import styles from "./Resources.module.css";
-type Props = {
-  inventory: Inventory;
-  itemsHeight: number;
-};
+// type Props = {
+//   inventory: Inventory;
+//   // itemsHeight: number;
+// };
 
-const Resources = React.memo(({ inventory, itemsHeight }: Props) => {
+const Resources = React.memo(() => {
+  const { inventory } = useInventory();
+
+  console.log(inventory);
+
   return (
     <div className={styles.resources}>
-      {inventory.resources.map((item, index) => {
+      {inventory?.resources.map((item, index) => {
         return (
           <ResourceItem
             key={index}
@@ -20,8 +25,8 @@ const Resources = React.memo(({ inventory, itemsHeight }: Props) => {
             textSize={"0.8em"}
             textColor="#000000"
             iconHeight={"1.5em"}
-            height={itemsHeight}
-            width={itemsHeight}
+            height={50}
+            width={50}
           ></ResourceItem>
         );
       })}

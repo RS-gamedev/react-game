@@ -1,5 +1,5 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import Settings from "../components/Settings/Settings";
+import Settings from "../components/BuySection/BuySection";
 import { shapes } from "../config/Shapes";
 
 export default {

@@ -1,44 +1,46 @@
 import { useCallback, useEffect, useState } from "react";
-import styles from "./Game.module.css";
-import Settings from "../../components/Settings/Settings";
-import { Shape } from "../../models/Shape";
-import { BuildingProps } from "../../models/BuildingProps";
 import Building from "../../components/Building/Building";
-import { shapes } from "../../config/Shapes";
-import { createBuilding } from "../../utils/BuildingUtils";
-import Resources from "../../components/Resources/Resources";
-import { Inventory } from "../../models/Inventory";
-import useInterval from "../../hooks/useInterval";
-import { ObjectProps } from "../../models/ObjectProps";
+import BuySection from "../../components/BuySection/BuySection";
 import MapObject from "../../components/MapObject/MapObject";
-import { VillagerProps } from "../../models/VillagerProps";
-import Villager from "../../components/Villager/Villager";
-import UpgradeMenu from "../../components/UpgradeMenu/UpgradeMenu";
-import { reduceResourcesFromInventory, canAfford } from "../../utils/ResourceUtils";
-import { setInitialBuildings, setInitialInventory } from "../../utils/GameUtils";
-import { doMoveToLocation } from "../../utils/MovementUtils";
-import { executeTasks } from "../../utils/StatusUtils";
-import { InventoryItem } from "../../models/InventoryItem";
 import PlacementOverlay from "../../components/PlacementOverlay/PlacementOverlay";
+import Resources from "../../components/Resources/Resources";
+import UpgradeMenu from "../../components/UpgradeMenu/UpgradeMenu";
+import Villager from "../../components/Villager/Villager";
+import { shapes } from "../../config/Shapes";
+import { useBuildings } from "../../hooks/useBuildings";
+import useInterval from "../../hooks/useInterval";
+import { useInventory } from "../../hooks/useInventory";
+import { useMapObjects } from "../../hooks/useMapObjects";
+import { useVillagers } from "../../hooks/useVillagers";
 import { BuildingOption } from "../../models/BuildingOption";
-import { PlacementOverlayConfig } from "../../models/PlacementOverlayConfig";
-import { Size } from "../../models/Size";
-import { Position } from "../../models/Position";
+import { BuildingProps } from "../../models/BuildingProps";
 import { Availability } from "../../models/enums/Availability";
-import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
 import { Status } from "../../models/enums/Status";
+import { InventoryItem } from "../../models/InventoryItem";
+import { ObjectProps } from "../../models/ObjectProps";
+import { PlacementOverlayConfig } from "../../models/PlacementOverlayConfig";
+import { Position } from "../../models/Position";
+import { Shape } from "../../models/Shape";
+import { Size } from "../../models/Size";
 import { VillagerProfession } from "../../models/VillagerProfession";
+import { VillagerProps } from "../../models/VillagerProps";
+import { createBuilding } from "../../utils/BuildingUtils";
+import { doMoveToLocation } from "../../utils/MovementUtils";
+import { canAfford, reduceResourcesFromInventory } from "../../utils/ResourceUtils";
+import { executeTasks } from "../../utils/StatusUtils";
+import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
+import styles from "./Game.module.css";
 type props = {
-  initialMapObjects: ObjectProps[];
   mapSize: Size;
+  initialMapObjects: ObjectProps[];
 };
 
-const Game = ({ initialMapObjects, mapSize }: props) => {
-  const [villagers, setVillagers] = useState<VillagerProps[]>([]);
-  const [buildings, setBuildings] = useState<BuildingProps[]>([]);
-  const [mapObjects, setMapObjects] = useState<ObjectProps[]>(initialMapObjects);
+const Game = ({ mapSize, initialMapObjects }: props) => {
+  const { buildings, addBuilding, setBuildings } = useBuildings();
+  const { mapObjects, setMapObjects } = useMapObjects();
+  const { villagers, setVillagers } = useVillagers();
+  const { inventory, setInventory } = useInventory();
   const [allShapes, setAllShapes] = useState<Shape[]>(shapes.filter((x) => x.availability === Availability.GAME_LEVEL1));
-  const [inventory, setInventory] = useState<Inventory>({ resources: [] });
   const [gameTick, setGameTick] = useState(0);
   const [placementOverlayConfig, setPlacementOverlayConfig] = useState<PlacementOverlayConfig | undefined>();
   const [gameSpeed, setGameSpeed] = useState(1);
@@ -61,9 +63,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
       setBuildings(result.buildings);
     }
     if (result.inventoryItems) {
-      setInventory((prev) => {
-        return { ...prev, resources: result.inventoryItems! };
-      });
+      setInventory({ ...inventory, resources: result.inventoryItems! });
     }
     if (result.mapObjects) {
       setMapObjects(result.mapObjects);
@@ -74,32 +74,14 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
   }, [gameTick]);
 
   useEffect(() => {
-    setInventory(setInitialInventory()!);
-    setBuildings(setInitialBuildings({ x: mapSize.height / 2, y: mapSize.height / 2 })!);
+    console.log(initialMapObjects);
+    setMapObjects(initialMapObjects);
+    console.log(mapObjects);
   }, [initialMapObjects]);
 
-  function addBuilding(building?: BuildingProps) {
-    if (!building) return;
-    setBuildings((previous) => {
-      let toReturn = previous.map((building) => {
-        return { ...building, selected: false };
-      });
-      toReturn.push(building);
-      return toReturn;
-    });
-    setAllShapes((prev) => {
-      return prev.map((x) => {
-        return { ...x, selected: false };
-      });
-    });
-  }
-
   const trainVillager = useCallback((villager: VillagerProps) => {
-    setVillagers((prev) => {
-      let toReturn = [...prev];
-      toReturn.push(villager);
-      return toReturn;
-    });
+    const updatedVillagers = [...villagers].concat([villager]);
+    setVillagers(updatedVillagers);
   }, []);
 
   const selectShape = useCallback((shapeId: string) => {
@@ -129,24 +111,24 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
   // Deselect other, and select given
   const deselectAllBut = useCallback((event: any, toSelectId: string) => {
     event.stopPropagation();
-    setMapObjects((previous) => {
-      return previous.map((mapObject) => {
-        if (mapObject.id === toSelectId) return { ...mapObject, selected: true };
-        return { ...mapObject, selected: false };
-      });
+    const newMapObjects = mapObjects.map((mapObject) => {
+      if (mapObject.id === toSelectId) return { ...mapObject, selected: true };
+      return { ...mapObject, selected: false };
     });
-    setVillagers((previous) => {
-      return previous.map((villager) => {
-        if (villager.id === toSelectId) return { ...villager, selected: true };
-        return { ...villager, selected: false };
-      });
+    setMapObjects(newMapObjects);
+
+    const newVillagers = villagers.map((villager) => {
+      if (villager.id === toSelectId) return { ...villager, selected: true };
+      return { ...villager, selected: false };
     });
-    setBuildings((previous) => {
-      return previous.map((building) => {
-        if (building.id === toSelectId) return { ...building, selected: true };
-        return { ...building, selected: false };
-      });
+    setVillagers(newVillagers);
+
+    const newBuildings = buildings.map((building) => {
+      if (building.id === toSelectId) return { ...building, selected: true };
+      return { ...building, selected: false };
     });
+    setBuildings(newBuildings);
+
     setAllShapes((prev) => {
       return prev.map((x) => {
         return { ...x, selected: false };
@@ -157,21 +139,18 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
   // Left click handler
   function handleClick(event: any): any {
     if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
-      setBuildings((prev) => {
-        return prev.map((x) => {
-          return { ...x, selected: false };
-        });
+      const newBuildings = buildings.map((x) => {
+        return { ...x, selected: false };
       });
-      setVillagers((prev) => {
-        return prev.map((villager) => {
-          return { ...villager, selected: false };
-        });
+      setBuildings(newBuildings);
+      const newVillagers = villagers.map((villager) => {
+        return { ...villager, selected: false };
       });
-      setMapObjects((prev) => {
-        return prev.map((mapObject) => {
-          return { ...mapObject, selected: false };
-        });
+      setVillagers(newVillagers);
+      const newMapObjects = mapObjects.map((mapObject) => {
+        return { ...mapObject, selected: false };
       });
+      setMapObjects(newMapObjects);
       setAllShapes((prev) => {
         return prev.map((x) => {
           return { ...x, selected: false };
@@ -243,30 +222,37 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     [mapObjects, selectedVillager]
   );
 
-  const handleBuildingRightClick = useCallback((event: any, buildingId: string) => {
-    event.stopPropagation();
-    event.preventDefault();
-    let clickedBuilding = buildings.find((x) => x.id === buildingId);
-    if (selectedVillager && clickedBuilding?.name === "Farm field" && selectedVillager.professions.find(x => x.active)?.profession.name === "Farmer") {
-      selectedVillager.currentTask = (
-        villagers: VillagerProps[],
-        villagerId: string,
-        inventoryItems: InventoryItem[],
-        buildings: BuildingProps[],
-        mapObjects: ObjectProps[]
-      ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, true, "Farm field", buildingId);
-    }
-  }, [buildings, selectedVillager]);
+  const handleBuildingRightClick = useCallback(
+    (event: any, buildingId: string) => {
+      event.stopPropagation();
+      event.preventDefault();
+      let clickedBuilding = buildings.find((x) => x.id === buildingId);
+      if (
+        selectedVillager &&
+        clickedBuilding?.name === "Farm field" &&
+        selectedVillager.professions.find((x) => x.active)?.profession.name === "Farmer"
+      ) {
+        selectedVillager.currentTask = (
+          villagers: VillagerProps[],
+          villagerId: string,
+          inventoryItems: InventoryItem[],
+          buildings: BuildingProps[],
+          mapObjects: ObjectProps[]
+        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, true, "Farm field", buildingId);
+      }
+    },
+    [buildings, selectedVillager]
+  );
 
   const handleChangeProfessionClick = useCallback((newVillagerProfessions: VillagerProfession[], villagerId: string) => {
-    setVillagers((prev) => {
-      return prev.map((vill) => {
-        if (vill.id === villagerId) {
-          vill = {...vill, professions: newVillagerProfessions}
-        };
-        return vill;
-      });
-    });
+    // setVillagers((prev) => {
+    //   return prev.map((vill) => {
+    //     if (vill.id === villagerId) {
+    //       vill = { ...vill, professions: newVillagerProfessions };
+    //     }
+    //     return vill;
+    //   });
+    // });
   }, []);
 
   const handleOpenOverlay = (buildingOption: BuildingOption, centerPosition: Position) => {
@@ -299,8 +285,8 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     if (building) {
       let result = reduceResourcesFromInventory(inventory!, building.price);
       if (result[1]) {
-        setInventory((prev) => result[0]);
-        addBuilding(building);
+        setInventory(result[0]);
+        addBuilding(building, { x: xPos, y: yPos });
       }
     }
   };
@@ -309,7 +295,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
     <div className={styles.background}>
       <div className={styles.actionsArea}>
         <div className={styles.actions} onClick={(event) => event.stopPropagation()}>
-          <Settings onClick={selectShape} shapes={allShapes} width={settingsAreaWidth}></Settings>
+          <BuySection onClick={selectShape} shapes={allShapes} width={settingsAreaWidth}></BuySection>
           {selectedBuilding ? (
             <UpgradeMenu
               inStock={selectedBuilding.inventory}
@@ -342,7 +328,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
           ) : (
             <></>
           )}
-         {selectedMapObject ? (
+          {selectedMapObject ? (
             <UpgradeMenu
               inStock={selectedMapObject.inventory}
               buildingOptions={selectedMapObject.buildingOptions}
@@ -373,7 +359,7 @@ const Game = ({ initialMapObjects, mapSize }: props) => {
             centerPosition={placementOverlayConfig.centerPosition}
           />
         )}
-        <div className={styles.resourceArea}>{inventory ? <Resources inventory={inventory} itemsHeight={50}></Resources> : <></>}</div>
+        <div className={styles.resourceArea}>{inventory ? <Resources></Resources> : <></>}</div>
 
         {buildings ? (
           buildings?.map((building, index) => {
