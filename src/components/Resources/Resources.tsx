@@ -1,18 +1,10 @@
 import React from "react";
 import { useInventory } from "../../hooks/useInventory";
-import { Inventory } from "../../models/Inventory";
 import ResourceItem from "./ResourceItem/ResourceItem";
 import styles from "./Resources.module.css";
-// type Props = {
-//   inventory: Inventory;
-//   // itemsHeight: number;
-// };
 
 const Resources = React.memo(() => {
   const { inventory } = useInventory();
-
-  console.log(inventory);
-
   return (
     <div className={styles.resources}>
       {inventory?.resources.map((item, index) => {

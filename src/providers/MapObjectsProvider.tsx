@@ -26,10 +26,6 @@ const MapObjectsProvider = ({ children }: Props) => {
     createMapObjects: createMapObjects,
   };
 
-  useEffect(() => {
-    console.log(value);
-  }, [mapObjects]);
-
   return <MapObjectsContext.Provider value={value}>{children}</MapObjectsContext.Provider>;
 };
 

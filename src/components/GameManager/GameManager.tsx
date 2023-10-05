@@ -9,7 +9,6 @@ type Props = {
   initialMapObjects: ObjectProps[];
 };
 const GameManager = ({ initialMapObjects }: Props) => {
-  console.log("Init GameManager");
   return (
     <InventoryProvider>
       <VillagersProvider>

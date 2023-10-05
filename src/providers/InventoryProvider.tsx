@@ -12,8 +12,6 @@ type Props = { children: any };
 const InventoryProvider = ({ children }: Props) => {
   const [inventory, setInventory] = useState<Inventory>(setInitialInventory()!);
 
-//   console.log(inventory);
-
   const reduceResources = (resources: Price[]) => {
     if (!inventory) return false;
     const [result, success] = reduceResourcesFromInventory(inventory, resources);

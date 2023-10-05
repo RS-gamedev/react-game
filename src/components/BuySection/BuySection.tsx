@@ -12,9 +12,7 @@ type Props = {
 
 const BuySection = React.memo(({ shapes, onClick, width }: Props) => {
   const { inventory } = useInventory();
-  console.log(inventory);
 
-  
   return (
     <div className={styles.buySection} style={{ width: width }}>
       <h3 className={styles.title} style={{ margin: 0 }}>

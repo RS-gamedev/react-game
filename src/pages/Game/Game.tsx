@@ -118,7 +118,6 @@ const Game = ({ initialMapObjects }: props) => {
   // Deselect other, and select given
   const deselectAllBut = (event: any, toSelectId: string) => {
     event.stopPropagation();
-    console.log(mapObjects);
     const newMapObjects = mapObjects.map((mapObject) => {
       if (mapObject.component.props.id === toSelectId) return { ...mapObject, selected: true };
       return { ...mapObject, selected: false };
