@@ -27,7 +27,7 @@ function App() {
     if (map && map.length > 0) setMapReady(true);
   }, [map]);
 
-  return mapReady ? <GameManager initialMapObjects={map} mapSize={{ height: height, width: width }}/> : <MapPicker onStart={onStart} mapSize={{ height: height, width: width }}></MapPicker>;
+  return mapReady ? <GameManager initialMapObjects={map}/> : <MapPicker onStart={onStart} mapSize={{ height: height, width: width }}></MapPicker>;
 }
 
 export default App;

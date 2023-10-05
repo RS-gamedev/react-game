@@ -12,6 +12,7 @@ import useInterval from "../../hooks/useInterval";
 import { useInventory } from "../../hooks/useInventory";
 import { useMapObjects } from "../../hooks/useMapObjects";
 import { useVillagers } from "../../hooks/useVillagers";
+import { BuildingElementType } from "../../models/Building";
 import { BuildingOption } from "../../models/BuildingOption";
 import { BuildingProps } from "../../models/BuildingProps";
 import { Availability } from "../../models/enums/Availability";
@@ -31,15 +32,15 @@ import { executeTasks } from "../../utils/StatusUtils";
 import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
 import styles from "./Game.module.css";
 type props = {
-  mapSize: Size;
   initialMapObjects: ObjectProps[];
 };
 
-const Game = ({ mapSize, initialMapObjects }: props) => {
+const Game = ({ initialMapObjects }: props) => {
   const { buildings, addBuilding, setBuildings } = useBuildings();
-  const { mapObjects, setMapObjects } = useMapObjects();
+  const { mapObjects, setMapObjects, createMapObjects } = useMapObjects();
   const { villagers, setVillagers } = useVillagers();
   const { inventory, setInventory } = useInventory();
+
   const [allShapes, setAllShapes] = useState<Shape[]>(shapes.filter((x) => x.availability === Availability.GAME_LEVEL1));
   const [gameTick, setGameTick] = useState(0);
   const [placementOverlayConfig, setPlacementOverlayConfig] = useState<PlacementOverlayConfig | undefined>();
@@ -58,7 +59,7 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
   var selectedMapObject = mapObjects.find((x) => x.selected);
 
   useEffect(() => {
-    let result = executeTasks(villagers, inventory.resources, mapObjects, buildings);
+    let result = executeTasks(villagers, inventory.resources, mapObjects, []);
     if (result.buildings) {
       setBuildings(result.buildings);
     }
@@ -74,10 +75,16 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
   }, [gameTick]);
 
   useEffect(() => {
-    console.log(initialMapObjects);
-    setMapObjects(initialMapObjects);
-    console.log(mapObjects);
-  }, [initialMapObjects]);
+    createMapObjects(initialMapObjects);
+  }, []);
+
+  useEffect(() => {
+    console.log("Current objects in game: ", mapObjects);
+  }, [mapObjects]);
+
+  useEffect(() => {
+    console.log("Current buildings in game: ", buildings);
+  }, [buildings]);
 
   const trainVillager = useCallback((villager: VillagerProps) => {
     const updatedVillagers = [...villagers].concat([villager]);
@@ -109,10 +116,11 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
   }, [allShapes]);
 
   // Deselect other, and select given
-  const deselectAllBut = useCallback((event: any, toSelectId: string) => {
+  const deselectAllBut = (event: any, toSelectId: string) => {
     event.stopPropagation();
+    console.log(mapObjects);
     const newMapObjects = mapObjects.map((mapObject) => {
-      if (mapObject.id === toSelectId) return { ...mapObject, selected: true };
+      if (mapObject.component.props.id === toSelectId) return { ...mapObject, selected: true };
       return { ...mapObject, selected: false };
     });
     setMapObjects(newMapObjects);
@@ -124,7 +132,7 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
     setVillagers(newVillagers);
 
     const newBuildings = buildings.map((building) => {
-      if (building.id === toSelectId) return { ...building, selected: true };
+      if (building.component.props.id === toSelectId) return { ...building, selected: true };
       return { ...building, selected: false };
     });
     setBuildings(newBuildings);
@@ -134,7 +142,7 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
         return { ...x, selected: false };
       });
     });
-  }, []);
+  };
 
   // Left click handler
   function handleClick(event: any): any {
@@ -173,8 +181,8 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
-          buildings: BuildingProps[],
-          mapObjects: ObjectProps[]
+          buildings: BuildingElementType[],
+          mapObjects: BuildingElementType[]
         ) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: xPos, y: yPos });
       }
     },
@@ -199,23 +207,31 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
     (event: any, mapObjectId: string) => {
       event.stopPropagation();
       event.preventDefault();
-      let targetObject = mapObjects.find((x) => x.id === mapObjectId);
-      if (selectedVillager && targetObject?.name === "tree" && selectedVillager.professions.find((x) => x.active)?.profession.name === "Lumberjack") {
+      let targetObject = mapObjects.find((x) => x.component.props.id === mapObjectId);
+      if (
+        selectedVillager &&
+        targetObject?.component.props.name === "tree" &&
+        selectedVillager.professions.find((x) => x.active)?.profession.name === "Lumberjack"
+      ) {
         selectedVillager.currentTask = (
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
-          buildings: BuildingProps[],
-          mapObjects: ObjectProps[]
+          buildings: BuildingElementType[],
+          mapObjects: BuildingElementType[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "tree", mapObjectId);
       }
-      if (selectedVillager && targetObject?.name === "rock" && selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner") {
+      if (
+        selectedVillager &&
+        targetObject?.component.props.name === "rock" &&
+        selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner"
+      ) {
         selectedVillager.currentTask = (
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
-          buildings: BuildingProps[],
-          mapObjects: ObjectProps[]
+          buildings: BuildingElementType[],
+          mapObjects: BuildingElementType[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
       }
     },
@@ -226,18 +242,18 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
     (event: any, buildingId: string) => {
       event.stopPropagation();
       event.preventDefault();
-      let clickedBuilding = buildings.find((x) => x.id === buildingId);
+      let clickedBuilding = buildings.find((x) => x.component.props.id === buildingId);
       if (
         selectedVillager &&
-        clickedBuilding?.name === "Farm field" &&
+        clickedBuilding?.component.props.name === "Farm field" &&
         selectedVillager.professions.find((x) => x.active)?.profession.name === "Farmer"
       ) {
         selectedVillager.currentTask = (
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
-          buildings: BuildingProps[],
-          mapObjects: ObjectProps[]
+          buildings: BuildingElementType[],
+          mapObjects: BuildingElementType[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, true, "Farm field", buildingId);
       }
     },
@@ -298,15 +314,15 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
           <BuySection onClick={selectShape} shapes={allShapes} width={settingsAreaWidth}></BuySection>
           {selectedBuilding ? (
             <UpgradeMenu
-              inStock={selectedBuilding.inventory}
+              inStock={selectedBuilding.component.props.inventory}
               onTrain={onTrain}
               onPlaceBuilding={handleOpenOverlay}
-              buildingOptions={selectedBuilding.buildingOptions}
+              buildingOptions={selectedBuilding.component.props.buildingOptions}
               status={Status.NONE}
               children={{}}
-              name={selectedBuilding.name}
-              objectId={selectedBuilding.id}
-              objectHitbox={selectedBuilding.hitBox}
+              name={selectedBuilding.component.props.name}
+              objectId={selectedBuilding.component.props.id}
+              objectHitbox={selectedBuilding.component.props.hitBox}
               height={"50%"}
             ></UpgradeMenu>
           ) : (
@@ -330,14 +346,14 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
           )}
           {selectedMapObject ? (
             <UpgradeMenu
-              inStock={selectedMapObject.inventory}
-              buildingOptions={selectedMapObject.buildingOptions}
+              inStock={selectedMapObject.component.props.inventory}
+              buildingOptions={selectedMapObject.component.props.buildingOptions}
               status={Status.NONE}
               height={"50%"}
               children={{}}
-              name={selectedMapObject.name}
-              objectId={selectedMapObject.id}
-              objectHitbox={selectedMapObject.hitBox}
+              name={selectedMapObject.component.props.name}
+              objectId={selectedMapObject.component.props.id}
+              objectHitbox={selectedMapObject.component.props.hitBox}
             ></UpgradeMenu>
           ) : (
             <></>
@@ -348,7 +364,7 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
         className={styles.gameArea}
         onClick={handleClick}
         onContextMenu={handleRightClick}
-        style={{ width: mapSize.height - 50, height: mapSize.height - 50 }}
+        style={{ width: document.documentElement.clientHeight - 50, height: document.documentElement.clientHeight - 50 }}
       >
         {placementOverlayConfig?.show && (
           <PlacementOverlay
@@ -362,23 +378,15 @@ const Game = ({ mapSize, initialMapObjects }: props) => {
         <div className={styles.resourceArea}>{inventory ? <Resources></Resources> : <></>}</div>
 
         {buildings ? (
-          buildings?.map((building, index) => {
-            return building ? (
-              <Building key={building.id} {...building} onClick={deselectAllBut} onRightClick={handleBuildingRightClick}></Building>
-            ) : (
-              <></>
-            );
+          buildings.map((building) => {
+            return building.component;
           })
         ) : (
           <></>
         )}
         {mapObjects ? (
           mapObjects?.map((mapObject, index) => {
-            return mapObject ? (
-              <MapObject key={mapObject.id} {...mapObject} onClick={deselectAllBut} onRightClick={handleMapObjectRightClick}></MapObject>
-            ) : (
-              <></>
-            );
+            return mapObject.component;
           })
         ) : (
           <></>

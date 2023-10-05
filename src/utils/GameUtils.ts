@@ -1,6 +1,5 @@
 import { resources } from "../config/Resources";
 import { shapes } from "../config/Shapes";
-import { BuildingProps } from "../models/BuildingProps";
 import { BuildingType } from "../models/enums/BuildingType";
 import { Inventory } from "../models/Inventory";
 import { ObjectProps } from "../models/ObjectProps";
@@ -10,6 +9,8 @@ import { Hitbox } from "../models/Hitbox";
 import { MapPickerObject } from "../models/MapPickerObject";
 import { VillagerType } from "../models/enums/VillagerType";
 import { Position } from "../models/Position";
+import Building from "../components/Building/Building";
+import { BuildingElementType } from "../models/Building";
 
 export function setInitialInventory() {
   let wood = resources.find((x) => x.name === "Wood");
@@ -44,17 +45,6 @@ export function setInitialInventory() {
     ],
   };
   return inventoryInit;
-}
-
-export function setInitialBuildings(position: Position) {
-  let townCenter = shapes.find((x) => x.type === BuildingType.TOWN_CENTER);
-  if (townCenter) {
-    let initialBuildings: BuildingProps[] = [createBuilding({ x: position.x, y: position.y }, BuildingType.TOWN_CENTER)!];
-    if (initialBuildings) {
-      return initialBuildings;
-    }
-  }
-  return [];
 }
 
 export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | undefined {
@@ -92,7 +82,7 @@ export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | un
       buildingOptions: [],
       type: VillagerType.VILLAGER,
       inventory: mapObjectInventory,
-      inventoryMax: amount
+      inventoryMax: amount,
     };
   });
   return initialMapObjects;

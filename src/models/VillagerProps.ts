@@ -1,11 +1,10 @@
+import { BuildingElementType } from "./Building";
 import { BuildingOption } from "./BuildingOption";
-import { BuildingProps } from "./BuildingProps";
 import { Status } from "./enums/Status";
+import { GameTickResult } from "./GameTickResult";
 import { Hitbox } from "./Hitbox";
 import { InventoryItem } from "./InventoryItem";
-import { ObjectProps } from "./ObjectProps";
 import { Position } from "./Position";
-import { GameTickResult } from "./GameTickResult";
 import { Price } from "./Price";
 import { VillagerProfession } from "./VillagerProfession";
 
@@ -22,8 +21,8 @@ export type VillagerProps = {
     villagers: VillagerProps[],
     villagerId: string,
     inventoryItems: InventoryItem[],
-    buildings: BuildingProps[],
-    mapObjects: ObjectProps[],
+    buildings: BuildingElementType[],
+    mapObjects: BuildingElementType[],
     goalPosition?: Position
   ) => GameTickResult;
   buildingOptions: BuildingOption[];

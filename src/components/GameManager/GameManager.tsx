@@ -7,19 +7,15 @@ import MapObjectsProvider from "../../providers/MapObjectsProvider";
 import VillagersProvider from "../../providers/VillagersProvider";
 type Props = {
   initialMapObjects: ObjectProps[];
-  mapSize: {
-    width: number;
-    height: number;
-  };
 };
-const GameManager = ({ mapSize, initialMapObjects }: Props) => {
+const GameManager = ({ initialMapObjects }: Props) => {
   console.log("Init GameManager");
   return (
     <InventoryProvider>
       <VillagersProvider>
         <MapObjectsProvider>
-          <BuildingsProvider mapSize={mapSize}>
-            <Game initialMapObjects={initialMapObjects} mapSize={{ height: mapSize.height, width: mapSize.width }}></Game>
+          <BuildingsProvider>
+            <Game initialMapObjects={initialMapObjects}></Game>
           </BuildingsProvider>
         </MapObjectsProvider>
       </VillagersProvider>
