@@ -1,17 +1,22 @@
 import React from "react";
+import { useInventory } from "../../hooks/useInventory";
 import { Shape } from "../../models/Shape";
 import Button from "../Button/Button";
-import styles from "./Settings.module.css";
+import styles from "./BuySection.module.css";
 
 type Props = {
   shapes: Shape[];
   onClick: (shapeId: string) => void;
-  width:string
+  width: string;
 };
 
-const Settings = React.memo(({ shapes, onClick, width }: Props) => {
+const BuySection = React.memo(({ shapes, onClick, width }: Props) => {
+  const { inventory } = useInventory();
+  console.log(inventory);
+
+  
   return (
-    <div className={styles.settingsBox} style={{width:width}}>
+    <div className={styles.buySection} style={{ width: width }}>
       <h3 className={styles.title} style={{ margin: 0 }}>
         Buildings
       </h3>
@@ -37,4 +42,4 @@ const Settings = React.memo(({ shapes, onClick, width }: Props) => {
     </div>
   );
 });
-export default Settings;
+export default BuySection;
