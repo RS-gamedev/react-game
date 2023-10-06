@@ -8,12 +8,14 @@ type props = {
   hitBox: Hitbox;
   size: Size;
   children: JSX.Element;
+  onClick: (e: any) => void;
 };
 
-const EntityWrapper = React.memo(({ children, selected, size, hitBox }: props) => {
+const EntityWrapper = React.memo(({ children, selected, onClick, size, hitBox }: props) => {
   console.log("rendering entity wrapper");
   return (
     <div
+      onClick={onClick}
       className={styles[selected ? `active` : `not-active`] + " " + styles["entity"]}
       style={{
         width: size.width,

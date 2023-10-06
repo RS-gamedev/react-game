@@ -11,18 +11,18 @@ type Props = {
   icon?: IconProp;
   color: string;
   selected: boolean;
-  onClick: (event: any, buildingId: string) => void;
-  onRightClick: (event: any, buildingId: string) => void;
+  // onClick: (event: any, buildingId: string) => void;
+  // onRightClick: (event: any, buildingId: string) => void;
   image?: string;
 };
 
-const Building = ({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: Props) => {
+const Building = ({ id, size, hitBox, icon, color, selected, image }: Props) => {
   console.log(selected);
   return (
     <div
       className={styles["building"]}
-      onClick={(event) => onClick(event, id)}
-      onContextMenu={(event) => onRightClick(event, id)}
+      // onClick={(event) => onClick(event, id)}
+      // onContextMenu={(event) => onRightClick(event, id)}
     >
       <Icon fontSize={size.width - 15 + "px"} color={color} imageName={image} height={size.height - 15 + "px"}></Icon>
     </div>

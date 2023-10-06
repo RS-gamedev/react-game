@@ -35,7 +35,7 @@ type props = {
 };
 
 const Game = ({ initialMapObjects }: props) => {
-  const { buildings, addBuilding, setBuildings } = useBuildings();
+  const { buildings, addBuilding, setBuildings, selectBuilding, deselectAll } = useBuildings();
   const { mapObjects, setMapObjects, createMapObjects } = useMapObjects();
   const { villagers, setVillagers } = useVillagers();
   const { inventory, setInventory } = useInventory();
@@ -147,10 +147,11 @@ const Game = ({ initialMapObjects }: props) => {
   function handleClick(event: any): any {
     console.log("handleClick");
     if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
-      const newBuildings = buildings.map((x) => {
-        return { ...x, selected: false };
-      });
-      setBuildings(newBuildings);
+      // const newBuildings = buildings.map((x) => {
+      //   return { ...x, selected: false };
+      // });
+      // setBuildings(newBuildings);
+      deselectAll();
       const newVillagers = villagers.map((villager) => {
         return { ...villager, selected: false };
       });
@@ -379,7 +380,12 @@ const Game = ({ initialMapObjects }: props) => {
         {buildings ? (
           buildings.map((building) => {
             return (
-              <EntityWrapper hitBox={building.component.props.hitBox} size={building.component.props.size} selected={building.selected}>
+              <EntityWrapper
+                onClick={(e) => selectBuilding(building.component.props.id)}
+                hitBox={building.component.props.hitBox}
+                size={building.component.props.size}
+                selected={building.selected}
+              >
                 {building.component}
               </EntityWrapper>
             );
@@ -390,7 +396,12 @@ const Game = ({ initialMapObjects }: props) => {
         {mapObjects ? (
           mapObjects?.map((mapObject) => {
             return (
-              <EntityWrapper hitBox={mapObject.component.props.hitBox} size={mapObject.component.props.size} selected={mapObject.selected}>
+              <EntityWrapper
+                onClick={selectBuilding}
+                hitBox={mapObject.component.props.hitBox}
+                size={mapObject.component.props.size}
+                selected={mapObject.selected}
+              >
                 {mapObject.component}
               </EntityWrapper>
             );
