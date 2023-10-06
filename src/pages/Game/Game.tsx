@@ -167,6 +167,7 @@ const Game = ({ initialMapObjects }: props) => {
           mapObjects: EntityElementType[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
       }
+      selectedVillager && updateVillager(selectedVillager);
     },
     [mapObjects, selectedVillager]
   );
