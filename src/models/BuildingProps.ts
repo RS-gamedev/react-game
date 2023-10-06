@@ -1,5 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { BuildingOption } from "./BuildingOption";
+import { BuyOption } from "./BuyOption";
 import { BuildingType } from "./enums/BuildingType";
 import { Hitbox } from "./Hitbox";
 import { InventoryItem } from "./InventoryItem";
@@ -22,7 +22,7 @@ export type BuildingProps = {
   level: number;
   type: BuildingType;
   selected: boolean;
-  buildingOptions: BuildingOption[];
+  buyOptions: BuyOption[];
   hitBox: Hitbox;
   image: string;
   inventory: InventoryItem[];

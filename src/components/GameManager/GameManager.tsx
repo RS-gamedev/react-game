@@ -1,12 +1,12 @@
 import React from "react";
-import { ObjectProps } from "../../models/ObjectProps";
+import { MapObjectProps } from "../../models/MapObjectProps";
 import Game from "../../pages/Game/Game";
 import BuildingsProvider from "../../providers/BuildingsProvider";
 import InventoryProvider from "../../providers/InventoryProvider";
 import MapObjectsProvider from "../../providers/MapObjectsProvider";
 import VillagersProvider from "../../providers/VillagersProvider";
 type Props = {
-  initialMapObjects: ObjectProps[];
+  initialMapObjects: MapObjectProps[];
 };
 const GameManager = ({ initialMapObjects }: Props) => {
   return (

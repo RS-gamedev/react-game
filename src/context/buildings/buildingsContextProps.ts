@@ -8,4 +8,6 @@ export type BuildingsContextProps = {
     setBuildings: (buildings: EntityElementType[]) => void;
     selectBuilding: (buildingId: string) => void;
     deselectAllBuildings: () => void
+    // nearestStorage: (position: Position) => string
+    // nearest
 }

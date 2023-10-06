@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import GameManager from "./components/GameManager/GameManager";
 import { MapPickerObject } from "./models/MapPickerObject";
-import { ObjectProps } from "./models/ObjectProps";
+import { MapObjectProps } from "./models/MapObjectProps";
 import MapPicker from "./pages/MapPicker/MapPicker";
 import { setInitialMapObjects } from "./utils/GameUtils";
 
 function App() {
-  const [map, setMap] = useState<ObjectProps[]>([]);
+  const [map, setMap] = useState<MapObjectProps[]>([]);
   const [mapReady, setMapReady] = useState(false);
 
   const height = document.documentElement.clientHeight;

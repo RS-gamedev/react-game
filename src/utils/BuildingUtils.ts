@@ -20,7 +20,7 @@ function constructBuilding(position: Position, shape: Shape) {
     size: shape.size,
     type: shape.type,
     image: shape.image,
-    buildingOptions: shape.buildingOptions,
+    buyOptions: shape.buyOptions,
     hitBox: hitbox,
     inventory: shape.inventory.map(x => {return {...x, amount: 100}})
   };

@@ -1,5 +1,5 @@
 import { EntityElementType } from "./EntityElementType";
-import { BuildingOption } from "./BuildingOption";
+import { BuyOption } from "./BuyOption";
 import { Status } from "./enums/Status";
 import { GameTickResult } from "./GameTickResult";
 import { Hitbox } from "./Hitbox";
@@ -25,7 +25,7 @@ export type VillagerProps = {
     mapObjects: EntityElementType[],
     goalPosition?: Position
   ) => GameTickResult;
-  buildingOptions: BuildingOption[];
+  buyOptions: BuyOption[];
   hitBox: Hitbox;
   size: { width: number; height: number };
   professions: VillagerProfession[];

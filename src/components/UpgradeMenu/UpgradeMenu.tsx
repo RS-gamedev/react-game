@@ -1,29 +1,28 @@
-import { useCallback, useEffect, useState } from "react";
-import { buildStyles, CircularProgressbarWithChildren } from "react-circular-progressbar";
-import { BuildingOption } from "../../models/BuildingOption";
-import { BuildingOptionType } from "../../models/enums/BuildingOptionType";
-import { Status } from "../../models/enums/Status";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
+import { CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
+import { useVillagers } from "../../hooks/useVillagers";
+import { BuildingProps } from "../../models/BuildingProps";
+import { BuyOption } from "../../models/BuyOption";
 import { Hitbox } from "../../models/Hitbox";
 import { InventoryItem } from "../../models/InventoryItem";
 import { Position } from "../../models/Position";
 import { VillagerProfession } from "../../models/VillagerProfession";
-import { VillagerProps } from "../../models/VillagerProps";
+import { Status } from "../../models/enums/Status";
 import { getHitBoxCenter } from "../../utils/HitboxUtils";
-import Button from "../Button/Button";
 import Icon from "../Icon/Icon";
 import ProfessionPicker from "../ProfessionPicker/ProfessionPicker";
 import ResourceItem from "../Resources/ResourceItem/ResourceItem";
 import styles from "./UpgradeMenu.module.css";
+import UpgradeMenuItem from "./UpgradeMenuItem";
 
 type NeededProps = {
-  buildingOptions: BuildingOption[];
+  buyOptions: BuyOption[];
   name: string;
   inStock: InventoryItem[];
   objectHitbox: Hitbox;
   children: any;
   height: string;
-  onTrain?: (villager: VillagerProps) => VillagerProps;
-  onPlaceBuilding?: (buildingOption: BuildingOption, centerPosition: Position) => void;
+  onPlaceBuilding?: (buyOption: BuyOption, centerPosition: Position) => void;
   onProfessionChange?: (villagerProfessions: VillagerProfession[], villagerId: string) => void;
   objectId: string;
   status: Status;
@@ -31,7 +30,7 @@ type NeededProps = {
 };
 
 const UpgradeMenu = ({
-  buildingOptions,
+  buyOptions,
   height,
   inStock,
   name,
@@ -39,11 +38,12 @@ const UpgradeMenu = ({
   status,
   onPlaceBuilding,
   onProfessionChange,
-  onTrain,
   villagerProfessions,
   objectId,
   children,
 }: NeededProps) => {
+  const { trainVillager } = useVillagers();
+
   const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
   const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
   const activeProfession = villagerProfessions ? villagerProfessions.find((x) => x.active) : undefined;
@@ -52,20 +52,21 @@ const UpgradeMenu = ({
     setPosition((x) => getHitBoxCenter(objectHitbox));
   }, [objectHitbox]);
 
-  const executeBuildingOption = useCallback(
-    (buildingOption: BuildingOption) => {
-      if (buildingOption.type === BuildingOptionType.TRAIN) {
-        let entity = buildingOption.toExecute(position);
-        if (onTrain) onTrain(entity);
-      }
-      if (buildingOption.type === BuildingOptionType.BUILD) {
-        if (onPlaceBuilding) onPlaceBuilding(buildingOption, getHitBoxCenter(objectHitbox));
-      }
-      if (buildingOption.type === BuildingOptionType.UPGRADE) {
-      }
-    },
-    [objectHitbox, onPlaceBuilding, onTrain, position]
-  );
+  // const executeBuildingOption = useCallback(
+  //   (buildingOption: BuyOption) => {
+  //     if (buildingOption.type === BuildingOptionType.TRAIN) {
+  //       let entity = buildingOption.toExecute(position);
+  //       if (onTrain) onTrain(entity);
+  //     }
+  //     if (buildingOption.type === BuildingOptionType.BUILD) {
+  //       if (onPlaceBuilding) onPlaceBuilding(buildingOption, getHitBoxCenter(objectHitbox));
+  //     }
+  //     if (buildingOption.type === BuildingOptionType.UPGRADE) {
+  //     }
+  //   },
+  //   [objectHitbox, onPlaceBuilding, onTrain, position]
+  // );
+  const handleClick = (e: SyntheticEvent, buyOption: BuyOption) => {};
 
   const handleChangeProfession = useCallback(
     (villagerProfession: VillagerProfession) => {
@@ -86,10 +87,10 @@ const UpgradeMenu = ({
       <div className={`${styles.titleSection} ${jobSelectionOpen && styles.noTopRightBorderRadius}`}>
         <div className={styles.titlePart}>
           <span>{name}</span>
-         { status !== Status.NONE && <span style={{ fontSize: "0.8em" }}>{Status[status]}</span>}
+          {status !== Status.NONE && <span style={{ fontSize: "0.8em" }}>{Status[status]}</span>}
         </div>
 
-        { villagerProfessions ? 
+        {villagerProfessions ? (
           <div className={`${styles.levelSection}`} onClick={() => setJobSelectionOpen((prev) => !prev)}>
             {activeProfession?.profession.name !== "None" ? (
               <CircularProgressbarWithChildren
@@ -104,28 +105,15 @@ const UpgradeMenu = ({
             ) : (
               <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"50px"}></Icon>
             )}
-          </div> : <></>
-        }
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
-      <div className={styles.buildingOptionsSection}>
-        {buildingOptions.map((x) => {
-          return (
-            <Button
-              imageHeight={"35px"}
-              imageName={x.imageName!}
-              key={x.id}
-              icon={x.icon}
-              active={false}
-              disabled={false}
-              price={x.price}
-              iconColor={"#ffffff"}
-              height="100px"
-              width="100px"
-              onClick={() => executeBuildingOption(x)}
-              text={x.name}
-            ></Button>
-          );
-        })}
+      <div className={styles.buyOptionsSection}>
+        {buyOptions?.map((buyOption) => (
+          <UpgradeMenuItem key={buyOption.id} onClick={(e: SyntheticEvent) => handleClick(e, buyOption)} buyOption={buyOption} />
+        ))}
       </div>
       <div className={styles.inventorySection}>
         {inStock ? (

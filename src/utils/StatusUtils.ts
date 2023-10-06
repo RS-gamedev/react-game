@@ -13,7 +13,7 @@ export function getEmptyGameTickResultObject() {
 }
 
 export function executeTasks(
-  villagers: VillagerProps[],
+  villagers: EntityElementType[],
   inventoryItems: InventoryItem[],
   mapObjects: EntityElementType[],
   buildings: EntityElementType[]
@@ -30,8 +30,8 @@ export function executeTasks(
     let toUseMapObjects = gameTickResult.mapObjects || mapObjectsCopy;
     let toUseBuildings = gameTickResult.buildings || buildingsCopy;
 
-    if (villager.currentTask) {
-      let resultFromVillager = villager.currentTask(toUseVillagers, villager.id, toUseInventoryItems, toUseBuildings, toUseMapObjects);
+    if (villager.component.props.currentTask) {
+      let resultFromVillager = villager.component.props.currentTask(toUseVillagers, villager.component.props.id, toUseInventoryItems, toUseBuildings, toUseMapObjects);
       if (resultFromVillager.villagers) {
         gameTickResult.villagers = resultFromVillager.villagers;
       }

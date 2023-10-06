@@ -1,8 +1,8 @@
 import { Shape } from "../models/Shape";
 import { resources } from "./Resources";
 import { BuildingType } from "../models/enums/BuildingType";
-import { buildingOptions } from "./BuildingOptions";
 import { Availability } from "../models/enums/Availability";
+import { buyOptions } from "./BuyOptions";
 
 export const shapes: Shape[] = [
   {
@@ -17,7 +17,7 @@ export const shapes: Shape[] = [
       { type: resources.find((x) => x.name === "Coins"), amount: 50 },
     ],
     type: BuildingType.HOUSE,
-    buildingOptions: [],
+    buyOptions: [],
     size: { width: 45, height: 45 },
     availability: Availability.GAME_LEVEL1,
     inventory: [],
@@ -35,7 +35,7 @@ export const shapes: Shape[] = [
       { type: resources.find((x) => x.name === "Stone"), amount: 100 },
     ],
     type: BuildingType.TOWN_CENTER,
-    buildingOptions: [buildingOptions.find((x) => x.name === "Train Villager")!],
+    buyOptions: [buyOptions.find((x) => x.name === "Train Villager")!],
     size: { width: 75, height: 75 },
     availability: Availability.GAME_LEVEL1,
     inventory: [],
@@ -49,7 +49,7 @@ export const shapes: Shape[] = [
     selected: false,
     price: [{ type: resources.find((x) => x.name === "Coins"), amount: 50 }],
     type: BuildingType.TENTS,
-    buildingOptions: [],
+    buyOptions: [],
     size: { width: 45, height: 45 },
     availability: Availability.GAME_LEVEL1,
     inventory: [],
@@ -63,7 +63,7 @@ export const shapes: Shape[] = [
     selected: false,
     price: [{ type: resources.find((x) => x.name === "Wood"), amount: 50 }],
     type: BuildingType.MILL,
-    buildingOptions: [buildingOptions.find((x) => x.name === "Place field")!],
+    buyOptions: [buyOptions.find((x) => x.name === "Place field")!],
     size: { width: 50, height: 50 },
     availability: Availability.GAME_LEVEL1,
     inventory: [],
@@ -77,7 +77,7 @@ export const shapes: Shape[] = [
     selected: false,
     price: [{ type: resources.find((x) => x.name === "Gems"), amount: 150 }],
     type: BuildingType.GUARD_TOWER,
-    buildingOptions: [],
+    buyOptions: [],
     size: { width: 50, height: 50 },
     availability: Availability.GAME_LEVEL2,
     inventory: [],
@@ -89,7 +89,7 @@ export const shapes: Shape[] = [
     selected: false,
     price: [{ type: resources.find((x) => x.name === "Wood"), amount: 25 }],
     type: BuildingType.FARMING_FIELD,
-    buildingOptions: [],
+    buyOptions: [],
     size: { width: 35, height: 35 },
     availability: Availability.GAME_LEVEL2,
     inventory: [{ resource: resources.find((x) => x.name === "Food")!, amount:0 }],

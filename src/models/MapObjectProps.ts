@@ -1,18 +1,17 @@
-import { BuildingOption } from "./BuildingOption";
+import { BuyOption } from "./BuyOption";
 import { VillagerType } from "./enums/VillagerType";
 import { Hitbox } from "./Hitbox";
 import { InventoryItem } from "./InventoryItem";
 import { Size } from "./Size";
 
-export type ObjectProps = {
+export type MapObjectProps = {
   id: string;
   position: {
     x: number;
     y: number;
   };
   name: string;
-  selected: boolean;
-  buildingOptions: BuildingOption[];
+  buyOptions: BuyOption[];
   hitBox: Hitbox;
   type: VillagerType;
   inventory: InventoryItem[];

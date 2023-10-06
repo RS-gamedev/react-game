@@ -3,7 +3,7 @@ import { resources } from "../config/Resources";
 import { Hitbox } from "../models/Hitbox";
 import { Inventory } from "../models/Inventory";
 import { MapPickerObject } from "../models/MapPickerObject";
-import { ObjectProps } from "../models/ObjectProps";
+import { MapObjectProps } from "../models/MapObjectProps";
 import { VillagerType } from "../models/enums/VillagerType";
 
 export function setInitialInventory() {
@@ -41,11 +41,11 @@ export function setInitialInventory() {
   return inventoryInit;
 }
 
-export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | undefined {
+export function setInitialMapObjects(map: MapPickerObject[]): MapObjectProps[] | undefined {
   let wood = resources.find((x) => x.name === "Wood");
   let stone = resources.find((x) => x.name === "Stone");
   if (!wood || !stone) return undefined;
-  let initialMapObjects: ObjectProps[] = map.map((mapObject: MapPickerObject) => {
+  let initialMapObjects: MapObjectProps[] = map.map((mapObject: MapPickerObject) => {
     let hitBox: Hitbox = {
       leftTop: {
         x: mapObject.position!.x - mapObject.size! / 2,
@@ -71,7 +71,7 @@ export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | un
       selected: false,
       hitBox: hitBox,
       size: { width: mapObject.size || 0, height: mapObject.size || 0 },
-      buildingOptions: [],
+      buyOptions: [],
       type: VillagerType.VILLAGER,
       inventory: mapObjectInventory,
       inventoryMax: amount,

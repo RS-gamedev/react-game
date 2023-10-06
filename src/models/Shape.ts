@@ -1,5 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { BuildingOption } from "./BuildingOption";
+import { BuyOption } from "./BuyOption";
 import { Availability } from "./enums/Availability";
 import { BuildingType } from "./enums/BuildingType";
 import { InventoryItem } from "./InventoryItem";
@@ -15,7 +15,7 @@ export type Shape = {
   price: Price[];
   type: BuildingType;
   size: { width: number; height: number };
-  buildingOptions: BuildingOption[];
+  buyOptions: BuyOption[];
   availability: Availability;
   inventory: InventoryItem[];
 };

@@ -1,43 +1,38 @@
-import { BuildingOption } from "../models/BuildingOption";
 import { v4 as uuidv4 } from "uuid";
+import { BuyOption } from "../models/BuyOption";
 import { resources } from "./Resources";
-import { Position } from "../models/Position";
-import { trainVillager } from "../utils/BuildingOptionsUtil";
-import { BuildingOptionType } from "../models/enums/BuildingOptionType";
 
-export const buildingOptions: BuildingOption[] = [
+export type BuyOptionIdentifier = "TRAIN_VILLAGER" | "UPGRADE_VILLAGER" | "UPGRADE_BUILDING" | "PLACE_BUILDING";
+
+export const buyOptions: BuyOption[] = [
   {
     id: uuidv4(),
     name: "Train Villager",
-    toExecute: trainVillager,
     price: [{ type: resources.find((x) => x.name === "Wood"), amount: 100 }],
     imageName: "villager",
-    type: BuildingOptionType.TRAIN,
+    type: "TRAIN_VILLAGER",
   },
   {
     id: uuidv4(),
     name: "Upgrade Town center",
     icon: ["fas", "coins"],
-    toExecute: (position: Position) => {},
     price: [{ type: resources.find((x) => x.name === "Coins"), amount: 100 }],
     imageName: "none",
-    type: BuildingOptionType.UPGRADE,
+    type: "UPGRADE_BUILDING",
   },
   {
     id: uuidv4(),
     name: "Upgade Villagers",
     icon: ["fas", "gem"],
-    toExecute: (position: Position) => {},
     price: [{ type: resources.find((x) => x.name === "Gem"), amount: 100 }],
     imageName: "none",
-    type: BuildingOptionType.BUILD,
+    type: "UPGRADE_VILLAGER",
   },
   {
     id: uuidv4(),
     name: "Place field",
-    toExecute: (position: Position) => {},
     imageName: "field",
-    type: BuildingOptionType.BUILD,
+    type: "PLACE_BUILDING",
     price: [{ type: resources.find((x) => x.name === "Wood"), amount: 25 }],
     shapeId: "farm-field",
     placementRange: 50,

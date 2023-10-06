@@ -9,12 +9,11 @@ type props = {
   name: string;
   hitBox: Hitbox;
   size: { width: number; height: number };
-  onClick: (event: any, villagerId: string) => void;
   selected: boolean;
   professions: VillagerProfession[];
 };
 
-export default function Villager({ id, name, size, hitBox, onClick, selected, professions }: props) {
+export default function Villager({ id, name, size, hitBox, selected, professions }: props) {
   const [activeProfession, setActiveProfession] = useState<VillagerProfession>();
 
   useEffect(() => {
@@ -32,7 +31,6 @@ export default function Villager({ id, name, size, hitBox, onClick, selected, pr
         left: hitBox.leftTop.x,
         top: hitBox.leftTop.y,
       }}
-      onClick={(event) => onClick(event, id)}
     >
       <Icon height={size.height - 10 + "px"} fontSize="1em" imageName={activeProfession?.profession.characterImageName}></Icon>
     </div>
