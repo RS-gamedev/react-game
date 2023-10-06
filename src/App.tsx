@@ -1,14 +1,9 @@
-import Game from "./pages/Game/Game";
 import { useEffect, useState } from "react";
+import GameManager from "./components/GameManager/GameManager";
+import { MapPickerObject } from "./models/MapPickerObject";
 import { ObjectProps } from "./models/ObjectProps";
 import MapPicker from "./pages/MapPicker/MapPicker";
-import { MapPickerObject } from "./models/MapPickerObject";
 import { setInitialMapObjects } from "./utils/GameUtils";
-import InventoryProvider from "./providers/InventoryProvider";
-import VillagersProvider from "./providers/VillagersProvider";
-import MapObjectsProvider from "./providers/MapObjectsProvider";
-import BuildingsProvider from "./providers/BuildingsProvider";
-import GameManager from "./components/GameManager/GameManager";
 
 function App() {
   const [map, setMap] = useState<ObjectProps[]>([]);

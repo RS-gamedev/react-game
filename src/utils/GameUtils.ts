@@ -1,16 +1,10 @@
-import { resources } from "../config/Resources";
-import { shapes } from "../config/Shapes";
-import { BuildingType } from "../models/enums/BuildingType";
-import { Inventory } from "../models/Inventory";
-import { ObjectProps } from "../models/ObjectProps";
 import { v4 as uuidv4 } from "uuid";
-import { createBuilding } from "./BuildingUtils";
+import { resources } from "../config/Resources";
 import { Hitbox } from "../models/Hitbox";
+import { Inventory } from "../models/Inventory";
 import { MapPickerObject } from "../models/MapPickerObject";
+import { ObjectProps } from "../models/ObjectProps";
 import { VillagerType } from "../models/enums/VillagerType";
-import { Position } from "../models/Position";
-import Building from "../components/Building/Building";
-import { BuildingElementType } from "../models/Building";
 
 export function setInitialInventory() {
   let wood = resources.find((x) => x.name === "Wood");
@@ -49,8 +43,6 @@ export function setInitialInventory() {
 
 export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | undefined {
   let wood = resources.find((x) => x.name === "Wood");
-  let coins = resources.find((x) => x.name === "Coins");
-  let gems = resources.find((x) => x.name === "Gems");
   let stone = resources.find((x) => x.name === "Stone");
   if (!wood || !stone) return undefined;
   let initialMapObjects: ObjectProps[] = map.map((mapObject: MapPickerObject) => {

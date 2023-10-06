@@ -1,11 +1,9 @@
 import { levels } from "../../config/Levels";
 import { BuildingElementType } from "../../models/Building";
-import { BuildingProps } from "../../models/BuildingProps";
 import { BuildingType } from "../../models/enums/BuildingType";
 import { Status } from "../../models/enums/Status";
 import { GameTickResult } from "../../models/GameTickResult";
 import { InventoryItem } from "../../models/InventoryItem";
-import { ObjectProps } from "../../models/ObjectProps";
 import { Position } from "../../models/Position";
 import { VillagerProps } from "../../models/VillagerProps";
 import { getHitBoxCenter, onGoal } from "../HitboxUtils";

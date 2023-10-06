@@ -1,8 +1,6 @@
 import { BuildingElementType } from "../models/Building";
-import { BuildingProps } from "../models/BuildingProps";
 import { GameTickResult } from "../models/GameTickResult";
 import { InventoryItem } from "../models/InventoryItem";
-import { ObjectProps } from "../models/ObjectProps";
 import { VillagerProps } from "../models/VillagerProps";
 
 export function getEmptyGameTickResultObject() {

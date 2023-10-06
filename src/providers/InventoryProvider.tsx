@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { resources } from "../config/Resources";
-import { InventoryContext } from "../context/inventory/inventoryContext";
 import { InventoryContextProps } from "../context/inventory/InventoryContextProps";
+import { InventoryContext } from "../context/inventory/inventoryContext";
 import { Inventory } from "../models/Inventory";
 import { Price } from "../models/Price";
 import { setInitialInventory } from "../utils/GameUtils";
