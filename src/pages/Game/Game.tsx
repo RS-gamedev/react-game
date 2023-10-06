@@ -147,10 +147,10 @@ const Game = ({ initialMapObjects }: props) => {
   function handleClick(event: any): any {
     console.log("handleClick");
     if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
-      // const newBuildings = buildings.map((x) => {
-      //   return { ...x, selected: false };
-      // });
-      // setBuildings(newBuildings);
+      const newBuildings = buildings.map((x) => {
+        return { ...x, selected: false };
+      });
+      setBuildings(newBuildings);
       const newVillagers = villagers.map((villager) => {
         return { ...villager, selected: false };
       });
@@ -201,42 +201,42 @@ const Game = ({ initialMapObjects }: props) => {
     [inventory, trainVillager]
   );
 
-  function handleVillagerRightClick() {}
+  // function handleVillagerRightClick() {}
 
-  const handleMapObjectRightClick = useCallback(
-    (event: any, mapObjectId: string) => {
-      event.stopPropagation();
-      event.preventDefault();
-      let targetObject = mapObjects.find((x) => x.component.props.id === mapObjectId);
-      if (
-        selectedVillager &&
-        targetObject?.component.props.name === "tree" &&
-        selectedVillager.professions.find((x) => x.active)?.profession.name === "Lumberjack"
-      ) {
-        selectedVillager.currentTask = (
-          villagers: VillagerProps[],
-          villagerId: string,
-          inventoryItems: InventoryItem[],
-          buildings: EntityElementType[],
-          mapObjects: EntityElementType[]
-        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "tree", mapObjectId);
-      }
-      if (
-        selectedVillager &&
-        targetObject?.component.props.name === "rock" &&
-        selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner"
-      ) {
-        selectedVillager.currentTask = (
-          villagers: VillagerProps[],
-          villagerId: string,
-          inventoryItems: InventoryItem[],
-          buildings: EntityElementType[],
-          mapObjects: EntityElementType[]
-        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
-      }
-    },
-    [mapObjects, selectedVillager]
-  );
+  // const handleMapObjectRightClick = useCallback(
+  //   (event: any, mapObjectId: string) => {
+  //     event.stopPropagation();
+  //     event.preventDefault();
+  //     let targetObject = mapObjects.find((x) => x.component.props.id === mapObjectId);
+  //     if (
+  //       selectedVillager &&
+  //       targetObject?.component.props.name === "tree" &&
+  //       selectedVillager.professions.find((x) => x.active)?.profession.name === "Lumberjack"
+  //     ) {
+  //       selectedVillager.currentTask = (
+  //         villagers: VillagerProps[],
+  //         villagerId: string,
+  //         inventoryItems: InventoryItem[],
+  //         buildings: EntityElementType[],
+  //         mapObjects: EntityElementType[]
+  //       ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "tree", mapObjectId);
+  //     }
+  //     if (
+  //       selectedVillager &&
+  //       targetObject?.component.props.name === "rock" &&
+  //       selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner"
+  //     ) {
+  //       selectedVillager.currentTask = (
+  //         villagers: VillagerProps[],
+  //         villagerId: string,
+  //         inventoryItems: InventoryItem[],
+  //         buildings: EntityElementType[],
+  //         mapObjects: EntityElementType[]
+  //       ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
+  //     }
+  //   },
+  //   [mapObjects, selectedVillager]
+  // );
 
   const handleBuildingRightClick = useCallback(
     (event: any, buildingId: string) => {
@@ -309,7 +309,7 @@ const Game = ({ initialMapObjects }: props) => {
   return (
     <div className={styles.background}>
       <div className={styles.actionsArea}>
-        <div className={styles.actions} onClick={(event) => event.stopPropagation()}>
+        <div className={styles.actions}>
           <BuySection onClick={selectShape} shapes={allShapes} width={settingsAreaWidth}></BuySection>
           {selectedBuilding ? (
             <UpgradeMenu

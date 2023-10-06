@@ -13,7 +13,7 @@ type Props = { children: any };
 
 function setInitialBuildings(
   position: Position,
-  onClick: (buildingId: string) => void,
+  onClick: (e: any, buildingId: string) => void,
   onRightClick: (buildingId: string) => void
 ): EntityElementType[] {
   let townCenter = shapes.find((x) => x.type === BuildingType.TOWN_CENTER);
@@ -23,7 +23,7 @@ function setInitialBuildings(
     const buildingElements = initialBuildings.map((buildingProps) => {
       return {
         component: (
-          <Building {...buildingProps} onClick={() => onClick(buildingProps.id)} onRightClick={() => onRightClick(buildingProps.id)}></Building>
+          <Building {...buildingProps} onClick={(e) => onClick(e, buildingProps.id)} onRightClick={() => onRightClick(buildingProps.id)}></Building>
         ),
         selected: false,
         updated: false,
@@ -40,7 +40,8 @@ function setInitialBuildings(
 const BuildingsProvider = ({ children }: Props) => {
   const [buildings, setBuildings] = useState<EntityElementType[]>();
 
-  const onBuildingClick = (buildingId: string) => {
+  const onBuildingClick = (event: any, buildingId: string) => {
+    event.stopPropagation();
     setBuildings((prev) => {
       const result = prev?.map((building) => {
         if (building.component.props.id === buildingId) {
@@ -82,7 +83,9 @@ const BuildingsProvider = ({ children }: Props) => {
       });
 
       const newBuilding: EntityElementType = {
-        component: <Building {...building} onClick={() => onBuildingClick(building.id)} onRightClick={() => onBuildingRightClick(building.id)} />,
+        component: (
+          <Building {...building} onClick={(event) => onBuildingClick(event, building.id)} onRightClick={() => onBuildingRightClick(building.id)} />
+        ),
         selected: true,
         updated: false,
       };

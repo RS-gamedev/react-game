@@ -9,16 +9,14 @@ type props = {
   id: string;
   name: string;
   position: Position;
-  selected: boolean;
   onClick: (event: any, id: string) => void;
   onRightClick: (event: any, mapObjectId: string) => void;
   hitBox: Hitbox;
-  size: { height: string; width: string };
   inventoryMax: number;
   inventory: InventoryItem[];
 };
 
-const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClick, size, inventoryMax, inventory }: props) => {
+const MapObject = React.memo(({ id, name, hitBox, onClick, onRightClick, inventoryMax, inventory }: props) => {
   const [showTaskAssigned, setShowTaskAssigned] = useState<boolean>(false);
 
   function handleRightClick(event: any) {

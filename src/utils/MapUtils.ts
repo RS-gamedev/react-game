@@ -95,7 +95,6 @@ export const generateMap = (width: number, treeAmount: number, stoneAmount: numb
       }
     }
   }
-  let stones: MapPickerObject[] = [];
   for (let i = 0; i < stoneAmount; i++) {
     let stone = {
       name: "rock",
