@@ -14,25 +14,37 @@ type ActionType =
   | { type: "SET"; payload: EntityElementType[] }
   | { type: "DESELECT"; payload: string }
   | { type: "DESELECT_ALL"; payload: null }
+  | { type: "UPDATE"; payload: EntityElementType }
   | { type: "ADD"; payload: { villager: VillagerProps; position: Position } };
 
 function reducer(state: EntityElementType[], action: ActionType): EntityElementType[] {
   switch (action.type) {
     case "SELECT":
-      return state.map((villager) => (villager.component.props.id === action.payload ? { ...villager, selected: true } : villager));
+      return state.map((villagerEntity) =>
+        villagerEntity.component.props.id === action.payload ? { ...villagerEntity, selected: true } : villagerEntity
+      );
     case "ADD":
       const newVillager: EntityElementType = {
         component: <Villager {...action.payload.villager} />,
         selected: true,
         updated: false,
       };
-      return [...state.map((villager) => ({ ...villager, selected: false })), newVillager];
+      return [...state.map((villagerEntity) => ({ ...villagerEntity, selected: false })), newVillager];
     case "OVERWRITE":
       return action.payload({ x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 });
     case "DESELECT_ALL":
-      return [...state.map((villager) => ({ ...villager, selected: false }))];
+      return [...state.map((villagerEntity) => ({ ...villagerEntity, selected: false }))];
     case "SET":
       return action.payload;
+    case "UPDATE":
+      return [
+        ...state.map((villagerEntity) => {
+          if (villagerEntity.component.props.id === action.payload.component.props.id) {
+            return action.payload;
+          }
+          return villagerEntity;
+        }),
+      ];
     default:
       return state;
   }
@@ -55,6 +67,10 @@ const VillagersProvider = ({ children }: Props) => {
     dispatch({ type: "DESELECT_ALL", payload: null });
   };
 
+  const updateVillager = (villagerEntity: EntityElementType) => {
+    dispatch({ type: "UPDATE", payload: villagerEntity });
+  };
+
   const moveVillager = (villagerId: string, position: Position) => {}; // figure out
 
   const trainVillager = (position: Position) => {
@@ -69,6 +85,7 @@ const VillagersProvider = ({ children }: Props) => {
     deselectAllVillagers: deselectAllVillagers,
     moveVillager: moveVillager,
     trainVillager: trainVillager,
+    updateVillager: updateVillager,
   };
 
   return <VillagersContext.Provider value={value}>{children}</VillagersContext.Provider>;

@@ -1,21 +1,5 @@
 .villager {
-  position: absolute;
-  transition: all 300ms ease-out;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-}
-
-.villager:hover {
-  border-color: #32353f59;
-}
-
-.selected {
-  border-color: #32353f !important;
-}
-.nothing {
-  border-color: transparent;
+  position: relative;
+  width:100%;
+  height:100%;
 }

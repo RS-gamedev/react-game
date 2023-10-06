@@ -2,12 +2,13 @@ import { createContext } from "react";
 import { VillagersContextProps } from "./villagersContextProps";
 
 const initialContext: VillagersContextProps = {
-    villagers: [],
-    setVillagers: () => { },
-    deselectAllVillagers: () => {},
-    moveVillager: () => {},
-    selectVillager: () => {},
-    trainVillager: () => {}
-}
+  villagers: [],
+  setVillagers: () => {},
+  deselectAllVillagers: () => {},
+  moveVillager: () => {},
+  selectVillager: () => {},
+  trainVillager: () => {},
+  updateVillager: () => {},
+};
 
 export const VillagersContext = createContext<VillagersContextProps>(initialContext);

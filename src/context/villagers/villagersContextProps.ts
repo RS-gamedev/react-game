@@ -8,4 +8,5 @@ export type VillagersContextProps = {
   deselectAllVillagers: () => void;
   moveVillager: (villagerId: string, position: Position) => void;
   trainVillager: (position: Position) => void;
+  updateVillager: (villager: EntityElementType) => void
 };

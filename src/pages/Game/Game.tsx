@@ -36,7 +36,7 @@ type props = {
 const Game = ({ initialMapObjects }: props) => {
   const { buildings, addBuilding, setBuildings, selectBuilding, deselectAllBuildings } = useBuildings();
   const { mapObjects, createMapObjects, setMapObjects, selectMapObject, deselectAllMapObjects } = useMapObjects();
-  const { villagers, setVillagers, deselectAllVillagers, moveVillager, selectVillager, trainVillager } = useVillagers();
+  const { villagers, setVillagers, deselectAllVillagers, moveVillager, selectVillager, updateVillager } = useVillagers();
   const { inventory, setInventory } = useInventory();
 
   const [allShapes, setAllShapes] = useState<Shape[]>(shapes.filter((x) => x.availability === Availability.GAME_LEVEL1));
@@ -76,11 +76,6 @@ const Game = ({ initialMapObjects }: props) => {
     createMapObjects(initialMapObjects);
   }, []);
 
-  const train = useCallback((villager: VillagerProps) => {
-    // const updatedVillagers = [...villagers].concat([villager]);
-    // setVillagers(updatedVillagers);
-  }, []);
-
   const selectShape = useCallback((shapeId: string) => {
     setAllShapes((prev) => {
       return prev.map((x) => {
@@ -105,30 +100,6 @@ const Game = ({ initialMapObjects }: props) => {
     }
   }, [allShapes]);
 
-  const deselectAllBut = (event: any, toSelectId: string) => {
-    // event.stopPropagation();
-    // const newMapObjects = mapObjects.map((mapObject) => {
-    //   if (mapObject.component.props.id === toSelectId) return { ...mapObject, selected: true };
-    //   return { ...mapObject, selected: false };
-    // });
-    // setMapObjects(newMapObjects);
-    // const newVillagers = villagers.map((villager) => {
-    //   if (villager.id === toSelectId) return { ...villager, selected: true };
-    //   return { ...villager, selected: false };
-    // });
-    // setVillagers(newVillagers);
-    // const newBuildings = buildings.map((building) => {
-    //   if (building.component.props.id === toSelectId) return { ...building, selected: true };
-    //   return { ...building, selected: false };
-    // });
-    // setBuildings(newBuildings);
-    // setAllShapes((prev) => {
-    //   return prev.map((x) => {
-    //     return { ...x, selected: false };
-    //   });
-    // });
-  };
-
   // Left click handler
   function handleClick(event: any): any {
     // if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
@@ -147,73 +118,58 @@ const Game = ({ initialMapObjects }: props) => {
   }
 
   // Right click handler
-  const handleRightClick = useCallback(
-    (event: any) => {
+  const handleRightClick = useCallback((event: any) => {
+    event.preventDefault();
+    let clientRect = event.currentTarget.getBoundingClientRect();
+    let xPos = event.pageX - clientRect.left;
+    let yPos = event.pageY - clientRect.top;
+    if (selectedVillager) {
+      selectedVillager.component.props.currentTask = (
+        villagers: VillagerProps[],
+        villagerId: string,
+        inventoryItems: InventoryItem[],
+        buildings: EntityElementType[],
+        mapObjects: EntityElementType[]
+      ) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: xPos, y: yPos });
+      updateVillager(selectedVillager);
+    }
+  }, []);
+  // function handleVillagerRightClick() {}
+
+  const handleMapObjectRightClick = useCallback(
+    (event: any, mapObjectId: string) => {
+      event.stopPropagation();
       event.preventDefault();
-      let clientRect = event.currentTarget.getBoundingClientRect();
-      let xPos = event.pageX - clientRect.left;
-      let yPos = event.pageY - clientRect.top;
-      if (selectedVillager) {
+      let targetObject = mapObjects.find((x) => x.component.props.id === mapObjectId);
+      if (
+        selectedVillager &&
+        targetObject?.component.props.name === "tree" &&
+        selectedVillager.component.props.professions.find((x: VillagerProfession) => x.active)?.profession.name === "Lumberjack"
+      ) {
         selectedVillager.component.props.currentTask = (
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
           buildings: EntityElementType[],
           mapObjects: EntityElementType[]
-        ) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: xPos, y: yPos });
+        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "tree", mapObjectId);
+      }
+      if (
+        selectedVillager &&
+        targetObject?.component.props.name === "rock" &&
+        selectedVillager.component.props.professions.find((x: VillagerProfession) => x.active)?.profession.name === "Miner"
+      ) {
+        selectedVillager.component.props.currentTask = (
+          villagers: VillagerProps[],
+          villagerId: string,
+          inventoryItems: InventoryItem[],
+          buildings: EntityElementType[],
+          mapObjects: EntityElementType[]
+        ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
       }
     },
-    [selectedVillager]
+    [mapObjects, selectedVillager]
   );
-  // const onTrain = useCallback(
-
-  // (entity: any) => {
-  //   let result = reduceResourcesFromInventory(inventory, entity.price);
-  //   if (result[1]) {
-  //     setInventory(result[0]);
-  //     trainVillager(entity);
-  //   }
-  //   return entity;
-  // },
-  // [inventory, trainVillager]
-  // );
-
-  // function handleVillagerRightClick() {}
-
-  // const handleMapObjectRightClick = useCallback(
-  //   (event: any, mapObjectId: string) => {
-  //     event.stopPropagation();
-  //     event.preventDefault();
-  //     let targetObject = mapObjects.find((x) => x.component.props.id === mapObjectId);
-  //     if (
-  //       selectedVillager &&
-  //       targetObject?.component.props.name === "tree" &&
-  //       selectedVillager.professions.find((x) => x.active)?.profession.name === "Lumberjack"
-  //     ) {
-  //       selectedVillager.currentTask = (
-  //         villagers: VillagerProps[],
-  //         villagerId: string,
-  //         inventoryItems: InventoryItem[],
-  //         buildings: EntityElementType[],
-  //         mapObjects: EntityElementType[]
-  //       ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "tree", mapObjectId);
-  //     }
-  //     if (
-  //       selectedVillager &&
-  //       targetObject?.component.props.name === "rock" &&
-  //       selectedVillager.professions.find((x) => x.active)?.profession.name === "Miner"
-  //     ) {
-  //       selectedVillager.currentTask = (
-  //         villagers: VillagerProps[],
-  //         villagerId: string,
-  //         inventoryItems: InventoryItem[],
-  //         buildings: EntityElementType[],
-  //         mapObjects: EntityElementType[]
-  //       ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
-  //     }
-  //   },
-  //   [mapObjects, selectedVillager]
-  // );
 
   const handleBuildingRightClick = useCallback(
     (event: any, buildingId: string) => {
@@ -386,6 +342,7 @@ const Game = ({ initialMapObjects }: props) => {
             <EntityWrapper
               entityId={building.component.props.id}
               onClick={handleSelectBuilding}
+              onRightClick={handleBuildingRightClick}
               hitBox={building.component.props.hitBox}
               size={building.component.props.size}
               selected={building.selected}
@@ -401,6 +358,7 @@ const Game = ({ initialMapObjects }: props) => {
               key={mapObject.component.props.id}
               entityId={mapObject.component.props.id}
               onClick={handleSelectMapObject}
+              onRightClick={handleMapObjectRightClick}
               hitBox={mapObject.component.props.hitBox}
               size={mapObject.component.props.size}
               selected={mapObject.selected}
@@ -415,6 +373,7 @@ const Game = ({ initialMapObjects }: props) => {
               key={villager.component.props.id}
               entityId={villager.component.props.id}
               onClick={handleSelectVillager}
+              onRightClick={() => {}}
               hitBox={villager.component.props.hitBox}
               size={villager.component.props.size}
               selected={villager.component.props.selected}

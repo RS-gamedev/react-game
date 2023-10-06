@@ -9,18 +9,10 @@
   width:100%;
 }
 
-.mapObject:hover {
-  border-color: #32353f59;
-}
-
 .taskAssignedAfter {
   border-color: transparent;
 }
 
-.selected {
-  border-color: #32353f !important;
-  border-radius: 10px;
-}
 .taskAssigned {
   border-color: #32353f !important;
 }
