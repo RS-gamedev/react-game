@@ -157,7 +157,7 @@ export function doGatheringTask(
   if (buildingsChanged) {
     gameTickResult.buildings = buildingsCopy;
   }
-  gameTickResult.villagers = villagersCopy;
+  // gameTickResult.villagers = villagersCopy;
   return gameTickResult;
 }
 

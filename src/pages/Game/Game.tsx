@@ -132,23 +132,10 @@ const Game = ({ initialMapObjects }: props) => {
   // Left click handler
   function handleClick(event: any): any {
     // if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
-    // const newBuildings = buildings.map((x) => {
-    //   return { ...x, selected: false };
-    // });
-    // setBuildings(newBuildings);
-    // deselectAll();
     console.log("handling click in game");
     deselectAllBuildings();
     deselectAllMapObjects();
     deselectAllVillagers();
-    // const newVillagers = villagers.map((villager) => {
-    //   return { ...villager, selected: false };
-    // });
-    // setVillagers(newVillagers);
-    // const newMapObjects = mapObjects.map((mapObject) => {
-    //   return { ...mapObject, selected: false };
-    // });
-    // setMapObjects(newMapObjects);
     setAllShapes((prev) => {
       return prev.map((x) => {
         return { ...x, selected: false };
@@ -178,9 +165,6 @@ const Game = ({ initialMapObjects }: props) => {
     },
     [selectedVillager]
   );
-  const onTrain = () => {
-    // trainVillager()
-  };
   // const onTrain = useCallback(
 
   // (entity: any) => {
@@ -317,6 +301,12 @@ const Game = ({ initialMapObjects }: props) => {
     e.stopPropagation();
   }, []);
 
+  const handleSelectVillager = useCallback((e: SyntheticEvent, villagerId: string) => {
+    deselectAll();
+    selectVillager(villagerId);
+    e.stopPropagation();
+  }, []);
+
   // const handleMapObjectClick = () => {
   //   console.log("TEST");
   // }
@@ -424,12 +414,10 @@ const Game = ({ initialMapObjects }: props) => {
             <EntityWrapper
               key={villager.component.props.id}
               entityId={villager.component.props.id}
-              onClick={(e) => {
-                return selectVillager(villager.component.props.component.props.id);
-              }}
+              onClick={handleSelectVillager}
               hitBox={villager.component.props.hitBox}
               size={villager.component.props.size}
-              selected={villager.selected}
+              selected={villager.component.props.selected}
             >
               {villager.component}
             </EntityWrapper>

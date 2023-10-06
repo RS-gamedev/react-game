@@ -7,7 +7,7 @@ import { professions } from "../config/Professions";
 import { VillagerProfession } from "../models/VillagerProfession";
 import { levels } from "../config/Levels";
 
-export function trainVillager(position: Position) {
+export function createVillager(position: Position) {
   let villagerProfessions: VillagerProfession[] = professions.map((x, index) => {
     return {
       id: uuidv4(),

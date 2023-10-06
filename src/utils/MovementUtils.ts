@@ -67,6 +67,6 @@ export function doMoveToLocation(
     }
     return vill;
   });
-  gameTickResult.villagers = villagersCopy;
+  // gameTickResult.villagers = villagersCopy;
   return gameTickResult;
 }

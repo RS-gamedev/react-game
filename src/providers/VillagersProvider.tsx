@@ -5,11 +5,13 @@ import { VillagersContextProps } from "../context/villagers/villagersContextProp
 import { EntityElementType } from "../models/EntityElementType";
 import { Position } from "../models/Position";
 import { VillagerProps } from "../models/VillagerProps";
+import { createVillager } from "../utils/BuildingOptionsUtil";
 
 // Action types
 type ActionType =
   | { type: "SELECT"; payload: string }
   | { type: "OVERWRITE"; payload: (position: Position) => EntityElementType[] }
+  | { type: "SET"; payload: EntityElementType[] }
   | { type: "DESELECT"; payload: string }
   | { type: "DESELECT_ALL"; payload: null }
   | { type: "ADD"; payload: { villager: VillagerProps; position: Position } };
@@ -19,16 +21,18 @@ function reducer(state: EntityElementType[], action: ActionType): EntityElementT
     case "SELECT":
       return state.map((villager) => (villager.component.props.id === action.payload ? { ...villager, selected: true } : villager));
     case "ADD":
-      const newBuilding: EntityElementType = {
+      const newVillager: EntityElementType = {
         component: <Villager {...action.payload.villager} />,
         selected: true,
         updated: false,
       };
-      return [...state.map((villager) => ({ ...villager, selected: false })), newBuilding];
+      return [...state.map((villager) => ({ ...villager, selected: false })), newVillager];
     case "OVERWRITE":
       return action.payload({ x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 });
     case "DESELECT_ALL":
       return [...state.map((villager) => ({ ...villager, selected: false }))];
+    case "SET":
+      return action.payload;
     default:
       return state;
   }
@@ -39,15 +43,24 @@ const VillagersProvider = ({ children }: Props) => {
   // const [villagers, setVillagers] = useState<VillagerProps[]>([]);
   const [villagers, dispatch] = useReducer(reducer, []);
 
-  const selectVillager = (villagerId: string) => {};
+  const selectVillager = (villagerId: string) => {
+    dispatch({ type: "SELECT", payload: villagerId });
+  };
 
-  const setVillagers = (villagers: VillagerProps[]) => {};
+  const setVillagers = (villagers: EntityElementType[]) => {
+    dispatch({ type: "SET", payload: villagers });
+  };
 
-  const deselectAllVillagers = () => {};
+  const deselectAllVillagers = () => {
+    dispatch({ type: "DESELECT_ALL", payload: null });
+  };
 
   const moveVillager = (villagerId: string, position: Position) => {}; // figure out
 
-  const trainVillager = (position: Position) => {};
+  const trainVillager = (position: Position) => {
+    const newVillager = createVillager(position);
+    dispatch({ type: "ADD", payload: { position: position, villager: newVillager } });
+  };
 
   const value: VillagersContextProps = {
     villagers: villagers,
