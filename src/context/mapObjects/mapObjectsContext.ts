@@ -3,8 +3,11 @@ import { MapObjectContextProps } from "./mapObjectsContextProps";
 
 const initialContext: MapObjectContextProps = {
     mapObjects: [],
-    setMapObjects: () => { },
-    createMapObjects: () => { }
+    setMapObjects: () => {},
+    createMapObjects: () => { },
+    addMapObject: () => {},
+    deselectAllMapObjects: () => {},
+    selectMapObject: () => {}
 }
 
 export const MapObjectsContext = createContext<MapObjectContextProps>(initialContext);

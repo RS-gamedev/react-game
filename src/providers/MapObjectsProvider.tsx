@@ -1,41 +1,79 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import MapObject from "../components/MapObject/MapObject";
 import { MapObjectsContext } from "../context/mapObjects/mapObjectsContext";
 import { MapObjectContextProps } from "../context/mapObjects/mapObjectsContextProps";
 import { EntityElementType } from "../models/EntityElementType";
 import { ObjectProps } from "../models/ObjectProps";
+import { Position } from "../models/Position";
+
+// Action types
+type ActionType =
+  | { type: "SELECT"; payload: string }
+  | { type: "OVERWRITE"; payload: ObjectProps[] }
+  | { type: "DESELECT"; payload: string }
+  | { type: "SET"; payload: EntityElementType[] }
+  | { type: "DESELECT_ALL"; payload: null }
+  | { type: "ADD"; payload: { mapObject: ObjectProps; position: Position } };
+
+function mapObjectsReducer(state: EntityElementType[], action: ActionType): EntityElementType[] {
+  switch (action.type) {
+    case "SELECT":
+      return state.map((mapObject) => (mapObject.component.props.id === action.payload ? { ...mapObject, selected: true } : mapObject));
+    case "ADD":
+      const newBuilding: EntityElementType = {
+        component: <MapObject {...action.payload.mapObject} />,
+        selected: true,
+        updated: false,
+      };
+      return [...state.map((mapObject) => ({ ...mapObject, selected: false })), newBuilding];
+    case "OVERWRITE":
+      return action.payload.map((mapObject) => {
+        return { component: <MapObject {...mapObject} />, selected: false, updated: false };
+      });
+    case "DESELECT_ALL":
+      return [...state.map((mapObject) => ({ ...mapObject, selected: false }))];
+    case "SET":
+      return action.payload;
+    default:
+      return state;
+  }
+}
 
 type Props = { children: any };
-
 const MapObjectsProvider = ({ children }: Props) => {
-  const [mapObjects, setMapObjects] = useState<EntityElementType[]>([]);
+  const [mapObjects, dispatch] = useReducer(mapObjectsReducer, []);
+
   console.log("Init mapobjectsprovider");
-  const onMapObjectClick = (event: any, mapObjectId: string) => {
-    event.stopPropagation();
-    setMapObjects((prev) => {
-      const result = prev?.map((mapObject) => {
-        if (mapObject.component.props.id === mapObjectId) {
-          return { ...mapObject, selected: true };
-        }
-        return mapObject;
-      });
-      return result;
-    });
+
+  const addMapObject = (mapObject: ObjectProps, position: Position) => {
+    dispatch({ type: "ADD", payload: { mapObject, position } });
+  };
+
+  const deselectAllMapObjects = () => {
+    dispatch({ type: "DESELECT_ALL", payload: null });
+  };
+
+  const selectMapObject = (mapObjectId: string) => {
+    console.log("selecting map object");
+    dispatch({ type: "SELECT", payload: mapObjectId });
   };
 
   const createMapObjects = (mapObjects: ObjectProps[]) => {
     console.log("creating Map Objects");
-    setMapObjects(
-      mapObjects.map((mapObject) => {
-        return { component: <MapObject {...mapObject} onClick={(e) => onMapObjectClick(e, mapObject.id)} onRightClick={() => {}} />, selected: false, updated: false };
-      })
-    );
+    dispatch({ type: "OVERWRITE", payload: mapObjects });
+  };
+
+  const setMapObjects = (mapObjectsEntities: EntityElementType[]) => {
+    dispatch({ type: "SET", payload: mapObjectsEntities });
   };
 
   const value: MapObjectContextProps = {
     mapObjects: mapObjects || [],
     setMapObjects: setMapObjects,
     createMapObjects: createMapObjects,
+    deselectAllMapObjects: deselectAllMapObjects,
+    selectMapObject: selectMapObject,
+    addMapObject,
   };
 
   return <MapObjectsContext.Provider value={value}>{children}</MapObjectsContext.Provider>;

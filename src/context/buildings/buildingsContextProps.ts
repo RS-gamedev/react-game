@@ -7,5 +7,5 @@ export type BuildingsContextProps = {
     addBuilding: (buildingId: BuildingProps, position: Position) => void;
     setBuildings: (buildings: EntityElementType[]) => void;
     selectBuilding: (buildingId: string) => void;
-    deselectAll: () => void
+    deselectAllBuildings: () => void
 }

@@ -17,7 +17,6 @@ FreshTree.args = {
   hitBox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
   inventoryMax: 10,
   inventory: [{ amount: 10, resource: resources.find((x) => x.name === "Wood")! }],
-  onClick: () => {},
 };
 FreshTree.parameters = {
   backgrounds: {
@@ -31,7 +30,6 @@ SelectedTree.args = {
   hitBox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
   inventoryMax: 10,
   inventory: [{ amount: 10, resource: resources.find((x) => x.name === "Wood")! }],
-  onClick: () => {},
 };
 SelectedTree.parameters = {
   backgrounds: {
@@ -45,7 +43,6 @@ TreeWithDepletedResources.args = {
   hitBox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
   inventoryMax: 10,
   inventory: [{ amount: 8, resource: resources.find((x) => x.name === "Wood")! }],
-  onClick: () => {},
 };
 TreeWithDepletedResources.parameters = {
   backgrounds: {

@@ -28,7 +28,6 @@ function setInitialBuildings(
       };
     });
     if (buildingElements) {
-      console.log("Setting initial buildings");
       return buildingElements;
     }
   }
@@ -37,25 +36,25 @@ function setInitialBuildings(
 
 // Action types
 type ActionType =
-  | { type: "SELECT_BUILDING"; payload: string }
-  | { type: "INIT_BUILDINGS"; payload: (position: Position) => EntityElementType[] }
-  | { type: "DESELECT_BUILDING"; payload: string }
+  | { type: "SELECT"; payload: string }
+  | { type: "OVERWRITE"; payload: (position: Position) => EntityElementType[] }
+  | { type: "DESELECT"; payload: string }
   | { type: "DESELECT_ALL"; payload: null }
-  | { type: "ADD_BUILDING"; payload: { building: BuildingProps; position: Position } };
+  | { type: "ADD"; payload: { building: BuildingProps; position: Position } };
 
 // Reducer function
 function buildingsReducer(state: EntityElementType[], action: ActionType): EntityElementType[] {
   switch (action.type) {
-    case "SELECT_BUILDING":
+    case "SELECT":
       return state.map((building) => (building.component.props.id === action.payload ? { ...building, selected: true } : building));
-    case "ADD_BUILDING":
+    case "ADD":
       const newBuilding: EntityElementType = {
         component: <Building {...action.payload.building} />,
         selected: true,
         updated: false,
       };
       return [...state.map((building) => ({ ...building, selected: false })), newBuilding];
-    case "INIT_BUILDINGS":
+    case "OVERWRITE":
       return action.payload({ x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 });
     case "DESELECT_ALL":
       return [...state.map((building) => ({ ...building, selected: false }))];
@@ -66,37 +65,32 @@ function buildingsReducer(state: EntityElementType[], action: ActionType): Entit
 
 const BuildingsProvider = ({ children }: Props) => {
   const [buildings, dispatch] = useReducer(buildingsReducer, []);
+
   // Event handler to add a new building
   const addBuilding = (building: BuildingProps, position: Position) => {
-    dispatch({ type: "ADD_BUILDING", payload: { building, position } });
+    dispatch({ type: "ADD", payload: { building, position } });
   };
 
   // Event handler to select a building
   const selectBuilding = (buildingId: string) => {
-    console.log("selecting building");
-    dispatch({ type: "SELECT_BUILDING", payload: buildingId });
+    dispatch({ type: "SELECT", payload: buildingId });
   };
 
-  const deselectAll = () => {
+  const deselectAllBuildings = () => {
     dispatch({ type: "DESELECT_ALL", payload: null });
   };
 
   useEffect(() => {
     console.log("init buildingsprovider");
-    console.log(buildings);
-    dispatch({ type: "INIT_BUILDINGS", payload: setInitialBuildings });
+    dispatch({ type: "OVERWRITE", payload: setInitialBuildings });
   }, []);
-
-  useEffect(() => {
-    console.log("buildings in provider: ", buildings);
-  }, [buildings]);
 
   const value: BuildingsContextProps = {
     buildings: buildings || [],
     addBuilding,
     setBuildings: (newBuildings) => {},
     selectBuilding: selectBuilding,
-    deselectAll: deselectAll,
+    deselectAllBuildings: deselectAllBuildings,
   };
 
   return <BuildingsContext.Provider value={value}>{children}</BuildingsContext.Provider>;

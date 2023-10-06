@@ -6,7 +6,7 @@ const initialContext: BuildingsContextProps = {
   addBuilding: () => {},
   setBuildings: () => {},
   selectBuilding: () => {},
-  deselectAll: () => {},
+  deselectAllBuildings: () => {},
 };
 
 export const BuildingsContext = createContext<BuildingsContextProps>(initialContext);

@@ -12,11 +12,11 @@ const GameManager = ({ initialMapObjects }: Props) => {
   return (
     <InventoryProvider>
       <VillagersProvider>
-        <MapObjectsProvider>
-          <BuildingsProvider>
+        <BuildingsProvider>
+          <MapObjectsProvider>
             <Game initialMapObjects={initialMapObjects}></Game>
-          </BuildingsProvider>
-        </MapObjectsProvider>
+          </MapObjectsProvider>
+        </BuildingsProvider>
       </VillagersProvider>
     </InventoryProvider>
   );

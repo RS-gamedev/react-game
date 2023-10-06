@@ -70,7 +70,7 @@ export function setInitialMapObjects(map: MapPickerObject[]): ObjectProps[] | un
       position: mapObject.position!,
       selected: false,
       hitBox: hitBox,
-      size: { width: mapObject.size + "px", height: mapObject.size + "px" },
+      size: { width: mapObject.size || 0, height: mapObject.size || 0 },
       buildingOptions: [],
       type: VillagerType.VILLAGER,
       inventory: mapObjectInventory,

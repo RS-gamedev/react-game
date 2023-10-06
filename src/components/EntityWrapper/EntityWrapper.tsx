@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Hitbox } from "../../models/Hitbox";
 import { Size } from "../../models/Size";
 import styles from "./EntityWrapper.module.css";
@@ -8,20 +8,21 @@ type props = {
   hitBox: Hitbox;
   size: Size;
   children: JSX.Element;
-  onClick: (e: any) => void;
+  entityId: string;
+  onClick: (e: SyntheticEvent, id: string) => void;
 };
 
-const EntityWrapper = React.memo(({ children, selected, onClick, size, hitBox }: props) => {
-  console.log("rendering entity wrapper");
+const EntityWrapper = React.memo(({ children, selected, size, onClick, hitBox, entityId }: props) => {
+  const handleClick = (e: SyntheticEvent) => onClick(e, entityId);
   return (
     <div
-      onClick={onClick}
+      onClick={handleClick}
       className={styles[selected ? `active` : `not-active`] + " " + styles["entity"]}
       style={{
-        width: size.width,
-        height: size.height,
-        left: hitBox.leftTop.x,
-        top: hitBox.leftTop.y,
+        width: size.width + "px",
+        height: size.height + "px",
+        left: hitBox.leftTop.x + "px",
+        top: hitBox.leftTop.y + "px",
         position: "absolute",
         display: "flex",
         alignItems: "center",

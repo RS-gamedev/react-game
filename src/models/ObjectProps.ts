@@ -2,6 +2,7 @@ import { BuildingOption } from "./BuildingOption";
 import { VillagerType } from "./enums/VillagerType";
 import { Hitbox } from "./Hitbox";
 import { InventoryItem } from "./InventoryItem";
+import { Size } from "./Size";
 
 export type ObjectProps = {
   id: string;
@@ -16,8 +17,5 @@ export type ObjectProps = {
   type: VillagerType;
   inventory: InventoryItem[];
   inventoryMax: number;
-  size: {
-    height: string;
-    width: string;
-  };
+  size: Size;
 };

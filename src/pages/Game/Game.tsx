@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import BuySection from "../../components/BuySection/BuySection";
 import EntityWrapper from "../../components/EntityWrapper/EntityWrapper";
 import PlacementOverlay from "../../components/PlacementOverlay/PlacementOverlay";
@@ -26,7 +26,7 @@ import { Availability } from "../../models/enums/Availability";
 import { Status } from "../../models/enums/Status";
 import { createBuilding } from "../../utils/BuildingUtils";
 import { doMoveToLocation } from "../../utils/MovementUtils";
-import { canAfford, reduceResourcesFromInventory } from "../../utils/ResourceUtils";
+import { reduceResourcesFromInventory } from "../../utils/ResourceUtils";
 import { executeTasks } from "../../utils/StatusUtils";
 import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
 import styles from "./Game.module.css";
@@ -35,8 +35,8 @@ type props = {
 };
 
 const Game = ({ initialMapObjects }: props) => {
-  const { buildings, addBuilding, setBuildings, selectBuilding, deselectAll } = useBuildings();
-  const { mapObjects, setMapObjects, createMapObjects } = useMapObjects();
+  const { buildings, addBuilding, setBuildings, selectBuilding, deselectAllBuildings } = useBuildings();
+  const { mapObjects, createMapObjects, setMapObjects, selectMapObject, deselectAllMapObjects } = useMapObjects();
   const { villagers, setVillagers } = useVillagers();
   const { inventory, setInventory } = useInventory();
 
@@ -44,7 +44,6 @@ const Game = ({ initialMapObjects }: props) => {
   const [gameTick, setGameTick] = useState(0);
   const [placementOverlayConfig, setPlacementOverlayConfig] = useState<PlacementOverlayConfig | undefined>();
   const [gameSpeed, setGameSpeed] = useState(1);
-
   const settingsAreaWidth = "240px";
 
   useInterval(() => {
@@ -67,6 +66,7 @@ const Game = ({ initialMapObjects }: props) => {
     }
     if (result.mapObjects) {
       setMapObjects(result.mapObjects);
+      // setMapObjects(result.mapObjects);
     }
     if (result.villagers) {
       setVillagers(result.villagers);
@@ -76,14 +76,6 @@ const Game = ({ initialMapObjects }: props) => {
   useEffect(() => {
     createMapObjects(initialMapObjects);
   }, []);
-
-  useEffect(() => {
-    console.log("Current objects in game: ", mapObjects);
-  }, [mapObjects]);
-
-  useEffect(() => {
-    console.log("Current buildings in game: ", buildings);
-  }, [buildings]);
 
   const trainVillager = useCallback((villager: VillagerProps) => {
     const updatedVillagers = [...villagers].concat([villager]);
@@ -114,60 +106,57 @@ const Game = ({ initialMapObjects }: props) => {
     }
   }, [allShapes]);
 
-  // Deselect other, and select given
   const deselectAllBut = (event: any, toSelectId: string) => {
-    console.log("deselecting all but");
-    event.stopPropagation();
-    const newMapObjects = mapObjects.map((mapObject) => {
-      if (mapObject.component.props.id === toSelectId) return { ...mapObject, selected: true };
-      return { ...mapObject, selected: false };
-    });
-    setMapObjects(newMapObjects);
+    // event.stopPropagation();
+    // const newMapObjects = mapObjects.map((mapObject) => {
+    //   if (mapObject.component.props.id === toSelectId) return { ...mapObject, selected: true };
+    //   return { ...mapObject, selected: false };
+    // });
+    // setMapObjects(newMapObjects);
+    // const newVillagers = villagers.map((villager) => {
+    //   if (villager.id === toSelectId) return { ...villager, selected: true };
+    //   return { ...villager, selected: false };
+    // });
+    // setVillagers(newVillagers);
+    // const newBuildings = buildings.map((building) => {
+    //   if (building.component.props.id === toSelectId) return { ...building, selected: true };
+    //   return { ...building, selected: false };
+    // });
+    // setBuildings(newBuildings);
+    // setAllShapes((prev) => {
+    //   return prev.map((x) => {
+    //     return { ...x, selected: false };
+    //   });
+    // });
+  };
 
+  // Left click handler
+  function handleClick(event: any): any {
+    // if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
+    // const newBuildings = buildings.map((x) => {
+    //   return { ...x, selected: false };
+    // });
+    // setBuildings(newBuildings);
+    // deselectAll();
+    console.log("handling click in game");
+    deselectAllBuildings();
+    deselectAllMapObjects();
     const newVillagers = villagers.map((villager) => {
-      if (villager.id === toSelectId) return { ...villager, selected: true };
       return { ...villager, selected: false };
     });
     setVillagers(newVillagers);
-
-    const newBuildings = buildings.map((building) => {
-      if (building.component.props.id === toSelectId) return { ...building, selected: true };
-      return { ...building, selected: false };
-    });
-    setBuildings(newBuildings);
-
+    // const newMapObjects = mapObjects.map((mapObject) => {
+    //   return { ...mapObject, selected: false };
+    // });
+    // setMapObjects(newMapObjects);
     setAllShapes((prev) => {
       return prev.map((x) => {
         return { ...x, selected: false };
       });
     });
-  };
-
-  // Left click handler
-  function handleClick(event: any): any {
-    console.log("handleClick");
-    if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
-      // const newBuildings = buildings.map((x) => {
-      //   return { ...x, selected: false };
-      // });
-      // setBuildings(newBuildings);
-      deselectAll();
-      const newVillagers = villagers.map((villager) => {
-        return { ...villager, selected: false };
-      });
-      setVillagers(newVillagers);
-      const newMapObjects = mapObjects.map((mapObject) => {
-        return { ...mapObject, selected: false };
-      });
-      setMapObjects(newMapObjects);
-      setAllShapes((prev) => {
-        return prev.map((x) => {
-          return { ...x, selected: false };
-        });
-      });
-      setPlacementOverlayConfig(undefined);
-      return;
-    }
+    setPlacementOverlayConfig(undefined);
+    return;
+    // }
   }
 
   // Right click handler
@@ -307,6 +296,28 @@ const Game = ({ initialMapObjects }: props) => {
     }
   };
 
+  const deselectAll = () => {
+    deselectAllBuildings();
+    deselectAllMapObjects();
+  };
+
+  const handleSelectMapObject = useCallback((e: SyntheticEvent, mapObjectId: string) => {
+    console.log("handling select mapobject click");
+    deselectAll();
+    selectMapObject(mapObjectId);
+    e.stopPropagation();
+  }, []);
+
+  const handleSelectBuilding = useCallback((e: SyntheticEvent, buildingId: string) => {
+    deselectAll();
+    selectBuilding(buildingId);
+    e.stopPropagation();
+  }, []);
+
+  // const handleMapObjectClick = () => {
+  //   console.log("TEST");
+  // }
+
   return (
     <div className={styles.background}>
       <div className={styles.actionsArea}>
@@ -381,7 +392,8 @@ const Game = ({ initialMapObjects }: props) => {
           buildings.map((building) => {
             return (
               <EntityWrapper
-                onClick={(e) => selectBuilding(building.component.props.id)}
+                entityId={building.component.props.id}
+                onClick={handleSelectBuilding}
                 hitBox={building.component.props.hitBox}
                 size={building.component.props.size}
                 selected={building.selected}
@@ -397,7 +409,9 @@ const Game = ({ initialMapObjects }: props) => {
           mapObjects?.map((mapObject) => {
             return (
               <EntityWrapper
-                onClick={selectBuilding}
+                key={mapObject.component.props.id}
+                entityId={mapObject.component.props.id}
+                onClick={handleSelectMapObject}
                 hitBox={mapObject.component.props.hitBox}
                 size={mapObject.component.props.size}
                 selected={mapObject.selected}
@@ -411,6 +425,17 @@ const Game = ({ initialMapObjects }: props) => {
         )}
         {villagers ? (
           villagers?.map((villager, index) => {
+            // <EntityWrapper
+            // key={villager.id}
+            //   onClick={(e) => {
+            //     return selectVillager(e, villager.component.props.id);
+            //   }}
+            //   hitBox={mapObject.component.props.hitBox}
+            //   size={mapObject.component.props.size}
+            //   selected={mapObject.selected}
+            // >
+            //   {mapObject.component}
+            // </EntityWrapper>;
             return villager ? <Villager key={villager.id} {...villager} onClick={deselectAllBut}></Villager> : <></>;
           })
         ) : (
