@@ -2,13 +2,13 @@ import { useState } from "react";
 import MapObject from "../components/MapObject/MapObject";
 import { MapObjectsContext } from "../context/mapObjects/mapObjectsContext";
 import { MapObjectContextProps } from "../context/mapObjects/mapObjectsContextProps";
-import { BuildingElementType } from "../models/Building";
+import { EntityElementType } from "../models/EntityElementType";
 import { ObjectProps } from "../models/ObjectProps";
 
 type Props = { children: any };
 
 const MapObjectsProvider = ({ children }: Props) => {
-  const [mapObjects, setMapObjects] = useState<BuildingElementType[]>([]);
+  const [mapObjects, setMapObjects] = useState<EntityElementType[]>([]);
   console.log("Init mapobjectsprovider");
 
   const createMapObjects = (mapObjects: ObjectProps[]) => {

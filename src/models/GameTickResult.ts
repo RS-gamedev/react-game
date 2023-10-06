@@ -1,12 +1,10 @@
-import { BuildingElementType } from "./Building";
-import { BuildingProps } from "./BuildingProps";
+import { EntityElementType } from "./EntityElementType";
 import { InventoryItem } from "./InventoryItem";
-import { ObjectProps } from "./ObjectProps";
 import { VillagerProps } from "./VillagerProps";
 
 export type GameTickResult = {
   villagers: VillagerProps[] | undefined;
-  buildings: BuildingElementType[] | undefined;
-  mapObjects: BuildingElementType[] | undefined;
+  buildings: EntityElementType[] | undefined;
+  mapObjects: EntityElementType[] | undefined;
   inventoryItems: InventoryItem[] | undefined;
 };

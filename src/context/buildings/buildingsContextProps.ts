@@ -1,9 +1,9 @@
-import { BuildingElementType } from "../../models/Building";
+import { EntityElementType } from "../../models/EntityElementType";
 import { BuildingProps } from "../../models/BuildingProps"
 import { Position } from "../../models/Position"
 
 export type BuildingsContextProps = {
-    buildings: BuildingElementType[];
+    buildings: EntityElementType[];
     addBuilding: (buildingId: BuildingProps, position: Position) => void;
-    setBuildings: (buildings: BuildingElementType[]) => void;
+    setBuildings: (buildings: EntityElementType[]) => void;
 }

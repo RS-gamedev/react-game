@@ -1,5 +1,5 @@
 import { levels } from "../../config/Levels";
-import { BuildingElementType } from "../../models/Building";
+import { EntityElementType } from "../../models/EntityElementType";
 import { BuildingType } from "../../models/enums/BuildingType";
 import { Status } from "../../models/enums/Status";
 import { GameTickResult } from "../../models/GameTickResult";
@@ -16,8 +16,8 @@ export function doGatheringTask(
   villagers: VillagerProps[],
   villagerId: string,
   inventoryItems: InventoryItem[],
-  buildings: BuildingElementType[],
-  mapObjects: BuildingElementType[],
+  buildings: EntityElementType[],
+  mapObjects: EntityElementType[],
   targetIsBuilding: boolean,
   taskTargetResource: string, // tree, stone, field
   initialTargetId: string
@@ -74,14 +74,14 @@ export function doGatheringTask(
           mapObjectsCopy = mapObjectsCopy.map((tree) => {
             if (tree.component.props.id === targetObjectCopy?.component.props.id) {
               mapObjectsChanged = true;
-              return targetObjectCopy as BuildingElementType;
+              return targetObjectCopy as EntityElementType;
             }
             return tree;
           });
           buildingsCopy = buildingsCopy.map((building) => {
             if (building.component.props.id === targetObjectCopy?.component.props.id) {
               buildingsChanged = true;
-              return targetObjectCopy as BuildingElementType;
+              return targetObjectCopy as EntityElementType;
             }
             return building;
           });
@@ -163,12 +163,12 @@ export function doGatheringTask(
 
 function handleIdle(
   villager: VillagerProps,
-  buildings: BuildingElementType[],
-  mapObjects: BuildingElementType[],
-  closestStorage: BuildingElementType,
+  buildings: EntityElementType[],
+  mapObjects: EntityElementType[],
+  closestStorage: EntityElementType,
   taskTargetResource: string,
   targetIsBuilding: boolean,
-  targetObject?: BuildingElementType
+  targetObject?: EntityElementType
 ) {
   if (!targetObject) {
     // find nearest mapObject or building and set target
@@ -216,7 +216,7 @@ function handleIdle(
   return villager;
 }
 
-function sourceHasResourcesLeft(mapObject: BuildingElementType) {
+function sourceHasResourcesLeft(mapObject: EntityElementType) {
   let mapObjectsItems = mapObject.component.props.inventory[0];
   if (mapObject.component.props.inventory && mapObjectsItems && mapObjectsItems.amount > 0) {
     return true;
@@ -228,7 +228,7 @@ function achievedNextLevel(experience: number, experienceNeeded: number) {
   return experience >= experienceNeeded;
 }
 
-function findNearestTarget(position: Position, objects: BuildingElementType[]) {
+function findNearestTarget(position: Position, objects: EntityElementType[]) {
   let closest = objects[0];
   let lowestDistance = 10000;
   for (let object of objects) {
@@ -241,8 +241,8 @@ function findNearestTarget(position: Position, objects: BuildingElementType[]) {
   return closest;
 }
 
-export function findNearestStorage(position: Position, storages: BuildingElementType[]) {
-  let closest: BuildingElementType = storages[0];
+export function findNearestStorage(position: Position, storages: EntityElementType[]) {
+  let closest: EntityElementType = storages[0];
   let lowestDistance = 10000;
   for (let storage of storages) {
     let distance = getDistance({ x: position.x, y: position.y }, { x: getHitBoxCenter(storage.component.props.hitBox).x, y: getHitBoxCenter(storage.component.props.hitBox).y });

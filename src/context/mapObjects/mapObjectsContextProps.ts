@@ -1,8 +1,8 @@
-import { BuildingElementType } from "../../models/Building"
+import { EntityElementType } from "../../models/EntityElementType"
 import { ObjectProps } from "../../models/ObjectProps";
 
 export type MapObjectContextProps = {
-    setMapObjects: (mapObjects: BuildingElementType[]) => void
+    setMapObjects: (mapObjects: EntityElementType[]) => void
     createMapObjects: (mapObjects: ObjectProps[]) => void;
-    mapObjects: BuildingElementType[],
+    mapObjects: EntityElementType[],
 }

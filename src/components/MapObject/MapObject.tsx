@@ -36,14 +36,12 @@ const MapObject = React.memo(({ id, name, hitBox, selected, onClick, onRightClic
           className={
             styles.mapObject +
             " " +
-            `${selected && styles.selected} ` +
             (showTaskAssigned ? styles.taskAssigned : styles.taskAssignedAfter)
           }
-          style={{ left: hitBox.leftTop.x, top: hitBox.leftTop.y }}
           onClick={(event) => onClick(event, id)}
           onContextMenu={handleRightClick}
         >
-          <Icon fontSize="1em" imageName={name} height={size.height}></Icon>
+          <Icon fontSize="1em" imageName={name}></Icon>
           {(inventory[0].amount < inventoryMax) && <progress className={styles.inventoryProgressBar} style={{width:'100%'}} value={inventory[0].amount} max={inventoryMax}></progress>}
         </div>
       ) : (

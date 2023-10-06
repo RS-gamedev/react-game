@@ -1,0 +1,17 @@
+.not-active {
+  border-color: transparent;
+}
+.active {
+  border-color: #32353f !important;
+}
+
+.entity {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 5px;
+  transition: border-color 300ms;
+}
+
+.entity:hover {
+  border-color: #32353f59;
+}

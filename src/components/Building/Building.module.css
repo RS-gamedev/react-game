@@ -1,22 +1,10 @@
 .building {
-  border: 1px solid transparent;
-  border-radius: 10px;
-  transition: border-color 300ms;
-  padding: 5px;
   color: red;
-}
-
-.building:hover {
-  border-color: #32353f59;
-}
-
-.active {
-  border-color: #32353f !important;
+  height: 100%;
+  width:100%;
+  position: relative;
 }
 
 .building svg {
   height: 0.5em !important;
-}
-.not-active {
-  border-color: transparent;
 }

@@ -1,4 +1,4 @@
-import { BuildingElementType } from "../models/Building";
+import { EntityElementType } from "../models/EntityElementType";
 import { Status } from "../models/enums/Status";
 import { GameTickResult } from "../models/GameTickResult";
 import { Hitbox } from "../models/Hitbox";
@@ -39,8 +39,8 @@ export function doMoveToLocation(
   villagers: VillagerProps[],
   villagerId: string,
   inventoryItems: InventoryItem[],
-  buildings: BuildingElementType[],
-  mapObjects: BuildingElementType[],
+  buildings: EntityElementType[],
+  mapObjects: EntityElementType[],
   goalPosition: Position
 ): GameTickResult {
   let villagersCopy = [...villagers];

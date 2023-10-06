@@ -1,4 +1,4 @@
-import { BuildingElementType } from "../models/Building";
+import { EntityElementType } from "../models/EntityElementType";
 import { GameTickResult } from "../models/GameTickResult";
 import { InventoryItem } from "../models/InventoryItem";
 import { VillagerProps } from "../models/VillagerProps";
@@ -15,8 +15,8 @@ export function getEmptyGameTickResultObject() {
 export function executeTasks(
   villagers: VillagerProps[],
   inventoryItems: InventoryItem[],
-  mapObjects: BuildingElementType[],
-  buildings: BuildingElementType[]
+  mapObjects: EntityElementType[],
+  buildings: EntityElementType[]
 ): GameTickResult {
   let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
   let villagersCopy = [...villagers];

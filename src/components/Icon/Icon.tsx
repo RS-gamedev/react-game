@@ -27,7 +27,7 @@ type props = {
   color?: string;
   fontSize: string;
   imageName?: string;
-  height: string;
+  height?: string;
 };
 
 library.add(

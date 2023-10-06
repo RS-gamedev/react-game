@@ -1,4 +1,4 @@
-import { BuildingElementType } from "./Building";
+import { EntityElementType } from "./EntityElementType";
 import { BuildingOption } from "./BuildingOption";
 import { Status } from "./enums/Status";
 import { GameTickResult } from "./GameTickResult";
@@ -21,8 +21,8 @@ export type VillagerProps = {
     villagers: VillagerProps[],
     villagerId: string,
     inventoryItems: InventoryItem[],
-    buildings: BuildingElementType[],
-    mapObjects: BuildingElementType[],
+    buildings: EntityElementType[],
+    mapObjects: EntityElementType[],
     goalPosition?: Position
   ) => GameTickResult;
   buildingOptions: BuildingOption[];

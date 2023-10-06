@@ -16,26 +16,17 @@ type Props = {
   image?: string;
 };
 
-const Building = React.memo(({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: Props) => {
+const Building = ({ id, size, hitBox, icon, color, onClick, selected, onRightClick, image }: Props) => {
+  console.log(selected);
   return (
     <div
-      className={styles[selected ? `active` : `not-active`] + " " + styles["building"]}
-      style={{
-        width: size.width,
-        height: size.height,
-        left: hitBox.leftTop.x,
-        top: hitBox.leftTop.y,
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className={styles["building"]}
       onClick={(event) => onClick(event, id)}
       onContextMenu={(event) => onRightClick(event, id)}
     >
-      <Icon fontSize={size.width - 10 + "px"} color={color} imageName={image} height={size.height - 10 + "px"}></Icon>
+      <Icon fontSize={size.width - 15 + "px"} color={color} imageName={image} height={size.height - 15 + "px"}></Icon>
     </div>
   );
-});
+};
 
 export default Building;

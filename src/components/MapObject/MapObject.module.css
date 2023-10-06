@@ -1,9 +1,12 @@
 .mapObject {
-  position: absolute;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  padding: 5px;
-  transition: border-color 300ms;
+  position: relative;
+  width:100%;
+  height:100%;
+}
+
+.mapObject img {
+  height: 100%;
+  width:100%;
 }
 
 .mapObject:hover {

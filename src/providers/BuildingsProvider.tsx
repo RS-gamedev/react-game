@@ -2,8 +2,8 @@ import { BuildingsContext } from "../context/buildings/buildingsContext";
 import { BuildingsContextProps } from "../context/buildings/buildingsContextProps";
 import { BuildingProps } from "../models/BuildingProps";
 import { Position } from "../models/Position";
-import { useState } from "react";
-import { BuildingElementType } from "../models/Building";
+import { useEffect, useState } from "react";
+import { EntityElementType } from "../models/EntityElementType";
 import { BuildingType } from "../models/enums/BuildingType";
 import { shapes } from "../config/Shapes";
 import { createBuilding } from "../utils/BuildingUtils";
@@ -15,7 +15,7 @@ function setInitialBuildings(
   position: Position,
   onClick: (buildingId: string) => void,
   onRightClick: (buildingId: string) => void
-): BuildingElementType[] {
+): EntityElementType[] {
   let townCenter = shapes.find((x) => x.type === BuildingType.TOWN_CENTER);
   if (townCenter) {
     const townCenter = createBuilding({ x: position.x, y: position.y }, BuildingType.TOWN_CENTER);
@@ -30,6 +30,7 @@ function setInitialBuildings(
       };
     });
     if (buildingElements) {
+      console.log("Setting initial buildings");
       return buildingElements;
     }
   }
@@ -37,14 +38,17 @@ function setInitialBuildings(
 }
 
 const BuildingsProvider = ({ children }: Props) => {
+  const [buildings, setBuildings] = useState<EntityElementType[]>();
+
   const onBuildingClick = (buildingId: string) => {
     setBuildings((prev) => {
-      return prev.map((building) => {
+      const result = prev?.map((building) => {
         if (building.component.props.id === buildingId) {
           return { ...building, selected: true };
         }
         return building;
       });
+      return result;
     });
   };
 
@@ -52,27 +56,37 @@ const BuildingsProvider = ({ children }: Props) => {
     console.log("right clicked building");
   };
 
-  const [buildings, setBuildings] = useState<BuildingElementType[]>(
-    setInitialBuildings(
-      { x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 },
-      onBuildingClick,
-      onBuildingRightClick
-    )
-  );
+  useEffect(() => {
+    console.log("init buildingsprovider");
+    console.log(buildings);
+    if (!buildings || buildings?.length === 0) {
+      setBuildings(
+        setInitialBuildings(
+          { x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 },
+          onBuildingClick,
+          onBuildingRightClick
+        )
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("buildings in provider: ", buildings);
+  }, [buildings]);
 
   const addBuilding = (building: BuildingProps, position: Position) => {
     console.log("adding building");
     setBuildings((previous) => {
-      let toReturn = previous.map((building) => {
+      let toReturn = previous?.map((building) => {
         return { ...building, selected: false };
       });
 
-      const newBuilding: BuildingElementType = {
+      const newBuilding: EntityElementType = {
         component: <Building {...building} onClick={() => onBuildingClick(building.id)} onRightClick={() => onBuildingRightClick(building.id)} />,
         selected: true,
         updated: false,
       };
-      toReturn.push(newBuilding);
+      toReturn?.push(newBuilding);
       return toReturn;
     });
   };

@@ -70,7 +70,7 @@ export const generateMap = (width: number, treeAmount: number, stoneAmount: numb
   for (let i = 0; i < treeAmount; i++) {
     let object = {
       name: "tree",
-      size: 30,
+      size: 40,
       position: { x: generateCoordinate(Math.random()), y: generateCoordinate(Math.random()) },
       previewSize: {
         width: 10,
@@ -99,7 +99,7 @@ export const generateMap = (width: number, treeAmount: number, stoneAmount: numb
   for (let i = 0; i < stoneAmount; i++) {
     let stone = {
       name: "rock",
-      size: 30,
+      size: 40,
       position: { x: generateCoordinate(i), y: generateCoordinate(Math.random()) },
       previewSize: {
         width: 10,

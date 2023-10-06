@@ -10,7 +10,7 @@ import useInterval from "../../hooks/useInterval";
 import { useInventory } from "../../hooks/useInventory";
 import { useMapObjects } from "../../hooks/useMapObjects";
 import { useVillagers } from "../../hooks/useVillagers";
-import { BuildingElementType } from "../../models/Building";
+import { EntityElementType } from "../../models/EntityElementType";
 import { BuildingOption } from "../../models/BuildingOption";
 import { BuildingProps } from "../../models/BuildingProps";
 import { InventoryItem } from "../../models/InventoryItem";
@@ -29,6 +29,7 @@ import { canAfford, reduceResourcesFromInventory } from "../../utils/ResourceUti
 import { executeTasks } from "../../utils/StatusUtils";
 import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
 import styles from "./Game.module.css";
+import EntityWrapper from "../../components/EntityWrapper/EntityWrapper";
 type props = {
   initialMapObjects: ObjectProps[];
 };
@@ -51,16 +52,16 @@ const Game = ({ initialMapObjects }: props) => {
     setGameTick((prev) => prev + 1);
   }, 50 / gameSpeed);
 
-  var selectedShape = allShapes.find((x) => x.selected);
-  var selectedBuilding = buildings.find((x) => x.selected);
-  var selectedVillager = villagers.find((x) => x.selected);
-  var selectedMapObject = mapObjects.find((x) => x.selected);
+  var selectedShape = allShapes.find((shape) => shape.selected);
+  var selectedBuilding = buildings.find((building) => building.selected);
+  var selectedVillager = villagers.find((villager) => villager.selected);
+  var selectedMapObject = mapObjects.find((mapObject) => mapObject.selected);
 
   useEffect(() => {
     let result = executeTasks(villagers, inventory.resources, mapObjects, []);
-    if (result.buildings) {
-      setBuildings(result.buildings);
-    }
+    // if (result.buildings) {
+    //   setBuildings(result.buildings);
+    // }
     if (result.inventoryItems) {
       setInventory({ ...inventory, resources: result.inventoryItems! });
     }
@@ -115,6 +116,7 @@ const Game = ({ initialMapObjects }: props) => {
 
   // Deselect other, and select given
   const deselectAllBut = (event: any, toSelectId: string) => {
+    console.log("deselecting all but");
     event.stopPropagation();
     const newMapObjects = mapObjects.map((mapObject) => {
       if (mapObject.component.props.id === toSelectId) return { ...mapObject, selected: true };
@@ -143,11 +145,12 @@ const Game = ({ initialMapObjects }: props) => {
 
   // Left click handler
   function handleClick(event: any): any {
+    console.log("handleClick");
     if (!selectedShape || !canAfford(inventory?.resources, selectedShape.price)) {
-      const newBuildings = buildings.map((x) => {
-        return { ...x, selected: false };
-      });
-      setBuildings(newBuildings);
+      // const newBuildings = buildings.map((x) => {
+      //   return { ...x, selected: false };
+      // });
+      // setBuildings(newBuildings);
       const newVillagers = villagers.map((villager) => {
         return { ...villager, selected: false };
       });
@@ -178,8 +181,8 @@ const Game = ({ initialMapObjects }: props) => {
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
-          buildings: BuildingElementType[],
-          mapObjects: BuildingElementType[]
+          buildings: EntityElementType[],
+          mapObjects: EntityElementType[]
         ) => doMoveToLocation(villagers, villagerId, inventoryItems, buildings, mapObjects, { x: xPos, y: yPos });
       }
     },
@@ -214,8 +217,8 @@ const Game = ({ initialMapObjects }: props) => {
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
-          buildings: BuildingElementType[],
-          mapObjects: BuildingElementType[]
+          buildings: EntityElementType[],
+          mapObjects: EntityElementType[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "tree", mapObjectId);
       }
       if (
@@ -227,8 +230,8 @@ const Game = ({ initialMapObjects }: props) => {
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
-          buildings: BuildingElementType[],
-          mapObjects: BuildingElementType[]
+          buildings: EntityElementType[],
+          mapObjects: EntityElementType[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
       }
     },
@@ -249,8 +252,8 @@ const Game = ({ initialMapObjects }: props) => {
           villagers: VillagerProps[],
           villagerId: string,
           inventoryItems: InventoryItem[],
-          buildings: BuildingElementType[],
-          mapObjects: BuildingElementType[]
+          buildings: EntityElementType[],
+          mapObjects: EntityElementType[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, true, "Farm field", buildingId);
       }
     },
@@ -258,14 +261,13 @@ const Game = ({ initialMapObjects }: props) => {
   );
 
   const handleChangeProfessionClick = useCallback((newVillagerProfessions: VillagerProfession[], villagerId: string) => {
-    // setVillagers((prev) => {
-    //   return prev.map((vill) => {
-    //     if (vill.id === villagerId) {
-    //       vill = { ...vill, professions: newVillagerProfessions };
-    //     }
-    //     return vill;
-    //   });
-    // });
+    const newVillagers = villagers.map((vill) => {
+      if (vill.id === villagerId) {
+        vill = { ...vill, professions: newVillagerProfessions };
+      }
+      return vill;
+    });
+    setVillagers(newVillagers);
   }, []);
 
   const handleOpenOverlay = (buildingOption: BuildingOption, centerPosition: Position) => {
@@ -376,14 +378,22 @@ const Game = ({ initialMapObjects }: props) => {
 
         {buildings ? (
           buildings.map((building) => {
-            return building.component;
+            return (
+              <EntityWrapper hitBox={building.component.props.hitBox} size={building.component.props.size} selected={building.selected}>
+                {building.component}
+              </EntityWrapper>
+            );
           })
         ) : (
           <></>
         )}
         {mapObjects ? (
-          mapObjects?.map((mapObject, index) => {
-            return mapObject.component;
+          mapObjects?.map((mapObject) => {
+            return (
+              <EntityWrapper hitBox={mapObject.component.props.hitBox} size={mapObject.component.props.size} selected={mapObject.selected}>
+                {mapObject.component}
+              </EntityWrapper>
+            );
           })
         ) : (
           <></>
