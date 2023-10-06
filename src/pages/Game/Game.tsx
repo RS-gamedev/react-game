@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import BuySection from "../../components/BuySection/BuySection";
+import EntityWrapper from "../../components/EntityWrapper/EntityWrapper";
 import PlacementOverlay from "../../components/PlacementOverlay/PlacementOverlay";
 import Resources from "../../components/Resources/Resources";
 import UpgradeMenu from "../../components/UpgradeMenu/UpgradeMenu";
@@ -10,9 +11,9 @@ import useInterval from "../../hooks/useInterval";
 import { useInventory } from "../../hooks/useInventory";
 import { useMapObjects } from "../../hooks/useMapObjects";
 import { useVillagers } from "../../hooks/useVillagers";
-import { EntityElementType } from "../../models/EntityElementType";
 import { BuildingOption } from "../../models/BuildingOption";
 import { BuildingProps } from "../../models/BuildingProps";
+import { EntityElementType } from "../../models/EntityElementType";
 import { InventoryItem } from "../../models/InventoryItem";
 import { ObjectProps } from "../../models/ObjectProps";
 import { PlacementOverlayConfig } from "../../models/PlacementOverlayConfig";
@@ -29,7 +30,6 @@ import { canAfford, reduceResourcesFromInventory } from "../../utils/ResourceUti
 import { executeTasks } from "../../utils/StatusUtils";
 import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
 import styles from "./Game.module.css";
-import EntityWrapper from "../../components/EntityWrapper/EntityWrapper";
 type props = {
   initialMapObjects: ObjectProps[];
 };
@@ -59,9 +59,9 @@ const Game = ({ initialMapObjects }: props) => {
 
   useEffect(() => {
     let result = executeTasks(villagers, inventory.resources, mapObjects, []);
-    // if (result.buildings) {
-    //   setBuildings(result.buildings);
-    // }
+    if (result.buildings) {
+      setBuildings(result.buildings);
+    }
     if (result.inventoryItems) {
       setInventory({ ...inventory, resources: result.inventoryItems! });
     }
