@@ -9,6 +9,8 @@ const initialContext: VillagersContextProps = {
   selectVillager: () => {},
   trainVillager: () => {},
   updateVillager: () => {},
+  performVillagerActions: () => {},
+  setVillagerAction: () => {}
 };
 
 export const VillagersContext = createContext<VillagersContextProps>(initialContext);

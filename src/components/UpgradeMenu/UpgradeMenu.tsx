@@ -42,12 +42,9 @@ const UpgradeMenu = React.memo(
     // onProfessionChange,
     villagerProfessions,
   }: NeededProps) => {
-    // const { trainVillager } = useVillagers();
+    const { trainVillager } = useVillagers();
     const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
     const activeProfession = villagerProfessions ? villagerProfessions.find((x) => x.active) : undefined;
-
-    console.log("UpgradeMenu Render");
-
     // useEffect(() => {
     //   setPosition((x) => getHitBoxCenter(objectHitbox));
     // }, [objectHitbox]);
@@ -67,13 +64,13 @@ const UpgradeMenu = React.memo(
     //   [objectHitbox, onPlaceBuilding, onTrain, position]
     // );
     const handleClick = (e: SyntheticEvent, buyOption: BuyOption) => {
-      // switch (buyOption.type) {
-      //   case "TRAIN_VILLAGER":
-      //     trainVillager({ x: selectedEntityHitbox.leftTop.x, y: selectedEntityHitbox.leftTop.y });
-      //     break;
-      //   default:
-      //     break;
-      // }
+      switch (buyOption.type) {
+        case "TRAIN_VILLAGER":
+          trainVillager({ x: selectedEntityHitbox.leftTop.x, y: selectedEntityHitbox.leftTop.y });
+          break;
+        default:
+          break;
+      }
     };
 
     // const handleChangeProfession = useCallback(

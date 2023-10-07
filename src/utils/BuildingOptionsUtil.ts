@@ -21,7 +21,7 @@ export function createVillager(position: Position) {
 
   let newVillager: VillagerProps = {
     selected: false,
-    currentTask: undefined,
+    currentAction: undefined,
     id: uuidv4(),
     inventoryItems: [],
     inventorySlots: 10,

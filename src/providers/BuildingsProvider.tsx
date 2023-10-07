@@ -1,13 +1,13 @@
+import { useEffect, useReducer } from "react";
+import Building from "../components/Building/Building";
+import { shapes } from "../config/Shapes";
 import { BuildingsContext } from "../context/buildings/buildingsContext";
 import { BuildingsContextProps } from "../context/buildings/buildingsContextProps";
 import { BuildingProps } from "../models/BuildingProps";
-import { Position } from "../models/Position";
-import { useEffect, useReducer, useState } from "react";
 import { EntityElementType } from "../models/EntityElementType";
 import { BuildingType } from "../models/enums/BuildingType";
-import { shapes } from "../config/Shapes";
+import { Position } from "../models/Position";
 import { createBuilding } from "../utils/BuildingUtils";
-import Building from "../components/Building/Building";
 
 type Props = { children: any };
 
@@ -51,7 +51,6 @@ function buildingsReducer(state: EntityElementType[], action: ActionType): Entit
       const newBuilding: EntityElementType = {
         component: <Building {...action.payload.building} />,
         selected: true,
-        updated: false,
       };
       return [...state.map((building) => ({ ...building, selected: false })), newBuilding];
     case "OVERWRITE":
@@ -88,7 +87,6 @@ const BuildingsProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    console.log("init buildingsprovider");
     dispatch({ type: "OVERWRITE", payload: setInitialBuildings });
   }, []);
 

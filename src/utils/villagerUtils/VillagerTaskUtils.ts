@@ -39,7 +39,7 @@ export function doGatheringTask(
   let inventoryItemsChanged: boolean = false;
   let buildingsChanged: boolean = false;
   if (!villagerCopy) return gameTickResult;
-  let closestStorage = findNearestStorage(
+  let closestStorage = getNearest(
     getHitBoxCenter(villagerCopy?.hitBox),
     taskTargetResource === "Farm field"
       ? buildings.filter((building) => building.component.props.type === BuildingType.MILL)
@@ -172,12 +172,12 @@ function handleIdle(
 ) {
   if (!targetObject) {
     // find nearest mapObject or building and set target
-    villager.goalObjectId = findNearestTarget(
+    villager.goalObjectId = getNearest(
       getHitBoxCenter(villager.hitBox),
       targetIsBuilding ? buildings.filter((x) => x.component.props.name === taskTargetResource) : mapObjects.filter((x) => x.component.props.name === taskTargetResource)
     ).component.props.id;
     if (!villager.goalObjectId) {
-      villager.currentTask = undefined;
+      villager.currentAction = undefined;
       villager.status = Status.IDLE;
     }
     return villager;
@@ -206,7 +206,7 @@ function handleIdle(
     } else {
       // geen target
       villager.status = Status.WALKING_TO_RESOURCE;
-      let nearestMapObject = findNearestTarget(
+      let nearestMapObject = getNearest(
         getHitBoxCenter(villager.hitBox),
         mapObjects.filter((x) => x.component.props.name === taskTargetResource)
       );
@@ -228,23 +228,10 @@ function achievedNextLevel(experience: number, experienceNeeded: number) {
   return experience >= experienceNeeded;
 }
 
-function findNearestTarget(position: Position, objects: EntityElementType[]) {
-  let closest = objects[0];
+export function getNearest(position: Position, entity: EntityElementType[]) {
+  let closest: EntityElementType = entity[0];
   let lowestDistance = 10000;
-  for (let object of objects) {
-    let distance = getDistance({ x: position.x, y: position.y }, { x: getHitBoxCenter(object.component.props.hitBox).x, y: getHitBoxCenter(object.component.props.hitBox).y });
-    if (distance < lowestDistance) {
-      closest = object;
-      lowestDistance = distance;
-    }
-  }
-  return closest;
-}
-
-export function findNearestStorage(position: Position, storages: EntityElementType[]) {
-  let closest: EntityElementType = storages[0];
-  let lowestDistance = 10000;
-  for (let storage of storages) {
+  for (let storage of entity) {
     let distance = getDistance({ x: position.x, y: position.y }, { x: getHitBoxCenter(storage.component.props.hitBox).x, y: getHitBoxCenter(storage.component.props.hitBox).y });
     if (distance < lowestDistance) {
       closest = storage;

@@ -15,17 +15,8 @@ type props = {
 };
 
 const EntityWrapper = React.memo(({ children, selected, size, onClick, hitBox, entityId }: props) => {
-  // const { villagers, moveVillager } = useVillagers();
-
-  console.log("MapObject Render");
-
-  // const selectedVillager = villagers.find((vill) => vill.selected);
-
   const handleClick = (e: SyntheticEvent) => onClick(e, entityId);
   const handleRightClick = (e: any) => {
-    // if (selectedVillager) {
-      // update villager to gather from mapObject
-    // }
   };
   return (
     <div

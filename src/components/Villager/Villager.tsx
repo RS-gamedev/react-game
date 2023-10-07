@@ -4,7 +4,7 @@ import { VillagerProfession } from "../../models/VillagerProfession";
 import Icon from "../Icon/Icon";
 import styles from "./Villager.module.css";
 
-type props = {
+export type VillagerComponentProps = {
   id: string;
   name: string;
   hitBox: Hitbox;
@@ -13,7 +13,7 @@ type props = {
   professions: VillagerProfession[];
 };
 
-export default function Villager({ id, name, size, professions }: props) {
+const Villager = ({ id, name, size, professions }: VillagerComponentProps) => {
   const [activeProfession, setActiveProfession] = useState<VillagerProfession>();
 
   useEffect(() => {
@@ -30,3 +30,4 @@ export default function Villager({ id, name, size, professions }: props) {
     </div>
   );
 }
+export default Villager;

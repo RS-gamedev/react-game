@@ -17,14 +17,7 @@ export type VillagerProps = {
   inventoryItems: InventoryItem[];
   price: Price[];
   selected: boolean;
-  currentTask?: (
-    villagers: VillagerProps[],
-    villagerId: string,
-    inventoryItems: InventoryItem[],
-    buildings: EntityElementType[],
-    mapObjects: EntityElementType[],
-    goalPosition?: Position
-  ) => GameTickResult;
+  currentAction: Function | undefined;
   buyOptions: BuyOption[];
   hitBox: Hitbox;
   size: { width: number; height: number };

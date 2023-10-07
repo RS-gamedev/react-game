@@ -24,7 +24,6 @@ function mapObjectsReducer(state: EntityElementType[], action: ActionType): Enti
       const newBuilding: EntityElementType = {
         component: <MapObject {...action.payload.mapObject} />,
         selected: true,
-        updated: false,
       };
       return [...state.map((mapObject) => ({ ...mapObject, selected: false })), newBuilding];
     case "OVERWRITE":
@@ -52,30 +51,23 @@ type Props = { children: any };
 const MapObjectsProvider = ({ children }: Props) => {
   const [mapObjects, dispatch] = useReducer(mapObjectsReducer, []);
 
-  console.log("Init mapobjectsprovider");
-
   const addMapObject = (mapObject: MapObjectProps, position: Position) => {
-    console.log("ADD MapObject");
     dispatch({ type: "ADD", payload: { mapObject, position } });
   };
 
   const deselectAllMapObjects = () => {
-    console.log("DESELECT_ALL MapObjects");
     dispatch({ type: "DESELECT_ALL", payload: null });
   };
 
   const selectMapObject = (mapObjectId: string) => {
-    console.log("SELECT map object");
     dispatch({ type: "SELECT", payload: mapObjectId });
   };
 
   const createMapObjects = (mapObjects: MapObjectProps[]) => {
-    console.log("OVERWRITE MapObjects");
     dispatch({ type: "OVERWRITE", payload: mapObjects });
   };
 
   const setMapObjects = (mapObjectsEntities: EntityElementType[]) => {
-    console.log("SET mapObjects");
     dispatch({ type: "SET", payload: mapObjectsEntities });
   };
 
