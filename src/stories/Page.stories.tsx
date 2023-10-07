@@ -12,7 +12,7 @@ export default {
   },
 } as ComponentMeta<typeof Game>;
 
-const Template: ComponentStory<typeof Game> = (args) => <Game {...args} />;
+const Template: ComponentStory<typeof Game> = (args) => <Game />;
 
 // export const LoggedOut = Template.bind({});
 

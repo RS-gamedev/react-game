@@ -4,6 +4,10 @@ import { MapPickerObject } from "./models/MapPickerObject";
 import { MapObjectProps } from "./models/MapObjectProps";
 import MapPicker from "./pages/MapPicker/MapPicker";
 import { setInitialMapObjects } from "./utils/GameUtils";
+import InventoryProvider from "./providers/InventoryProvider";
+import VillagersProvider from "./providers/VillagersProvider";
+import BuildingsProvider from "./providers/BuildingsProvider";
+import MapObjectsProvider from "./providers/MapObjectsProvider";
 
 function App() {
   const [map, setMap] = useState<MapObjectProps[]>([]);
@@ -22,7 +26,19 @@ function App() {
     if (map && map.length > 0) setMapReady(true);
   }, [map]);
 
-  return mapReady ? <GameManager initialMapObjects={map}/> : <MapPicker onStart={onStart} mapSize={{ height: height, width: width }}></MapPicker>;
+  return mapReady ? (
+    <InventoryProvider>
+      <VillagersProvider>
+        <BuildingsProvider>
+          <MapObjectsProvider>
+            <GameManager initialMapObjects={map} />
+          </MapObjectsProvider>
+        </BuildingsProvider>
+      </VillagersProvider>
+    </InventoryProvider>
+  ) : (
+    <MapPicker onStart={onStart} mapSize={{ height: height, width: width }}></MapPicker>
+  );
 }
 
 export default App;

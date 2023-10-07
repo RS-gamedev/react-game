@@ -14,7 +14,7 @@ type props = {
   inventory: InventoryItem[];
 };
 
-const MapObject = React.memo(({ id, name, hitBox, inventoryMax, inventory }: props) => {
+const MapObject = ({ id, name, hitBox, inventoryMax, inventory }: props) => {
   const [showTaskAssigned, setShowTaskAssigned] = useState<boolean>(false);
 
   return (
@@ -31,5 +31,5 @@ const MapObject = React.memo(({ id, name, hitBox, inventoryMax, inventory }: pro
       )}
     </>
   );
-});
+};
 export default MapObject;

@@ -33,7 +33,14 @@ function reducer(state: EntityElementType[], action: ActionType): EntityElementT
     case "OVERWRITE":
       return action.payload({ x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 });
     case "DESELECT_ALL":
-      return [...state.map((villagerEntity) => ({ ...villagerEntity, selected: false }))];
+      if (state.find((villagerEntity) => villagerEntity.selected)) {
+        return [
+          ...state.map((villagerEntity) => {
+            return villagerEntity.selected ? { ...villagerEntity, selected: false } : villagerEntity;
+          }),
+        ];
+      }
+      return state;
     case "SET":
       return action.payload;
     case "UPDATE":
@@ -52,7 +59,6 @@ function reducer(state: EntityElementType[], action: ActionType): EntityElementT
 type Props = { children: any };
 
 const VillagersProvider = ({ children }: Props) => {
-  // const [villagers, setVillagers] = useState<VillagerProps[]>([]);
   const [villagers, dispatch] = useReducer(reducer, []);
 
   const selectVillager = (villagerId: string) => {

@@ -13,30 +13,27 @@ import { useVillagers } from "../../hooks/useVillagers";
 import { BuildingProps } from "../../models/BuildingProps";
 import { BuyOption } from "../../models/BuyOption";
 import { EntityElementType } from "../../models/EntityElementType";
+import { Availability } from "../../models/enums/Availability";
+import { Status } from "../../models/enums/Status";
 import { InventoryItem } from "../../models/InventoryItem";
-import { MapObjectProps } from "../../models/MapObjectProps";
 import { PlacementOverlayConfig } from "../../models/PlacementOverlayConfig";
 import { Position } from "../../models/Position";
 import { Shape } from "../../models/Shape";
 import { Size } from "../../models/Size";
 import { VillagerProfession } from "../../models/VillagerProfession";
 import { VillagerProps } from "../../models/VillagerProps";
-import { Availability } from "../../models/enums/Availability";
-import { Status } from "../../models/enums/Status";
 import { createBuilding } from "../../utils/BuildingUtils";
 import { doMoveToLocation } from "../../utils/MovementUtils";
 import { reduceResourcesFromInventory } from "../../utils/ResourceUtils";
 import { executeTasks } from "../../utils/StatusUtils";
 import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
 import styles from "./Game.module.css";
-type props = {
-  initialMapObjects: MapObjectProps[];
-};
 
-const Game = ({ initialMapObjects }: props) => {
+const Game = () => {
   const { buildings, addBuilding, setBuildings, selectBuilding, deselectAllBuildings } = useBuildings();
   const { mapObjects, createMapObjects, setMapObjects, selectMapObject, deselectAllMapObjects } = useMapObjects();
   const { villagers, setVillagers, deselectAllVillagers, moveVillager, selectVillager, updateVillager } = useVillagers();
+
   const { inventory, setInventory } = useInventory();
 
   const [allShapes, setAllShapes] = useState<Shape[]>(shapes.filter((x) => x.availability === Availability.GAME_LEVEL1));
@@ -65,16 +62,11 @@ const Game = ({ initialMapObjects }: props) => {
     }
     if (result.mapObjects) {
       setMapObjects(result.mapObjects);
-      // setMapObjects(result.mapObjects);
     }
     if (result.villagers) {
       setVillagers(result.villagers);
     }
   }, [gameTick]);
-
-  useEffect(() => {
-    createMapObjects(initialMapObjects);
-  }, []);
 
   const selectShape = useCallback((shapeId: string) => {
     setAllShapes((prev) => {
@@ -167,7 +159,7 @@ const Game = ({ initialMapObjects }: props) => {
           mapObjects: EntityElementType[]
         ) => doGatheringTask(villagers, villagerId, inventoryItems, buildings, mapObjects, false, "stone", mapObjectId);
       }
-      selectedVillager && updateVillager(selectedVillager);
+      // selectedVillager && updateVillager(selectedVillager);
     },
     [mapObjects, selectedVillager]
   );
@@ -243,12 +235,13 @@ const Game = ({ initialMapObjects }: props) => {
   const deselectAll = () => {
     deselectAllBuildings();
     deselectAllMapObjects();
+    deselectAllVillagers();
   };
 
   const handleSelectMapObject = useCallback((e: SyntheticEvent, mapObjectId: string) => {
-    console.log("handling select mapobject click");
     deselectAll();
     selectMapObject(mapObjectId);
+    console.log(selectMapObject);
     e.stopPropagation();
   }, []);
 
@@ -261,12 +254,9 @@ const Game = ({ initialMapObjects }: props) => {
   const handleSelectVillager = useCallback((e: SyntheticEvent, villagerId: string) => {
     deselectAll();
     selectVillager(villagerId);
+    console.log(villagerId);
     e.stopPropagation();
   }, []);
-
-  // const handleMapObjectClick = () => {
-  //   console.log("TEST");
-  // }
 
   return (
     <div className={styles.background}>
@@ -276,14 +266,14 @@ const Game = ({ initialMapObjects }: props) => {
 
           {selectedBuilding ? (
             <UpgradeMenu
+              key={selectedBuilding.component.props.id}
               inStock={selectedBuilding.component.props.inventory}
-              onPlaceBuilding={handleOpenOverlay}
+              // onPlaceBuilding={handleOpenOverlay}
               buyOptions={selectedBuilding.component.props.buyOptions}
               status={Status.NONE}
-              children={{}}
               name={selectedBuilding.component.props.name}
-              objectId={selectedBuilding.component.props.id}
-              objectHitbox={selectedBuilding.component.props.hitBox}
+              entityId={selectedBuilding.component.props.id}
+              selectedEntityHitbox={selectedBuilding.component.props.hitBox}
               height={"50%"}
             ></UpgradeMenu>
           ) : (
@@ -291,30 +281,30 @@ const Game = ({ initialMapObjects }: props) => {
           )}
           {selectedVillager ? (
             <UpgradeMenu
-              onProfessionChange={handleChangeProfessionClick}
+              key={selectedVillager.component.props.id}
+              // onProfessionChange={handleChangeProfessionClick}
               villagerProfessions={selectedVillager.component.props.professions}
               inStock={selectedVillager.component.props.inventoryItems}
               buyOptions={selectedVillager.component.props.buyOptions}
               status={Status.NONE}
               height={"50%"}
-              children={{}}
               name={selectedVillager.component.props.name}
-              objectId={selectedVillager.component.props.id}
-              objectHitbox={selectedVillager.component.props.hitBox}
+              entityId={selectedVillager.component.props.id}
+              selectedEntityHitbox={selectedVillager.component.props.hitBox}
             ></UpgradeMenu>
           ) : (
             <></>
           )}
           {selectedMapObject ? (
             <UpgradeMenu
+              key={selectedMapObject.component.props.id}
               inStock={selectedMapObject.component.props.inventory}
               buyOptions={selectedMapObject.component.props.buyOptions}
               status={Status.NONE}
               height={"50%"}
-              children={{}}
               name={selectedMapObject.component.props.name}
-              objectId={selectedMapObject.component.props.id}
-              objectHitbox={selectedMapObject.component.props.hitBox}
+              entityId={selectedMapObject.component.props.id}
+              selectedEntityHitbox={selectedMapObject.component.props.hitBox}
             ></UpgradeMenu>
           ) : (
             <></>
@@ -343,7 +333,7 @@ const Game = ({ initialMapObjects }: props) => {
             <EntityWrapper
               entityId={building.component.props.id}
               onClick={handleSelectBuilding}
-              onRightClick={handleBuildingRightClick}
+              // onRightClick={handleBuildingRightClick}
               hitBox={building.component.props.hitBox}
               size={building.component.props.size}
               selected={building.selected}
@@ -359,7 +349,7 @@ const Game = ({ initialMapObjects }: props) => {
               key={mapObject.component.props.id}
               entityId={mapObject.component.props.id}
               onClick={handleSelectMapObject}
-              onRightClick={handleMapObjectRightClick}
+              // onRightClick={handleMapObjectRightClick}
               hitBox={mapObject.component.props.hitBox}
               size={mapObject.component.props.size}
               selected={mapObject.selected}
@@ -368,16 +358,16 @@ const Game = ({ initialMapObjects }: props) => {
             </EntityWrapper>
           );
         })}
-        {villagers?.map((villager, index) => {
+        {villagers?.map((villager) => {
           return (
             <EntityWrapper
               key={villager.component.props.id}
               entityId={villager.component.props.id}
               onClick={handleSelectVillager}
-              onRightClick={() => {}}
+              // onRightClick={() => {}}
               hitBox={villager.component.props.hitBox}
               size={villager.component.props.size}
-              selected={villager.component.props.selected}
+              selected={villager.selected}
             >
               {villager.component}
             </EntityWrapper>

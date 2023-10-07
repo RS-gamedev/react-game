@@ -17,8 +17,8 @@ const Resources = React.memo(() => {
             textSize={"0.8em"}
             textColor="#000000"
             iconHeight={"1.5em"}
-            height={50}
-            width={50}
+            height={"50px"}
+            width={"50px"}
           ></ResourceItem>
         );
       })}

@@ -13,17 +13,18 @@ import ProfessionPicker from "../ProfessionPicker/ProfessionPicker";
 import ResourceItem from "../Resources/ResourceItem/ResourceItem";
 import styles from "./UpgradeMenu.module.css";
 import UpgradeMenuItem from "./UpgradeMenuItem";
+import { useBuildings } from "../../hooks/useBuildings";
+import { useMapObjects } from "../../hooks/useMapObjects";
 
 type NeededProps = {
   buyOptions: BuyOption[];
   name: string;
   inStock: InventoryItem[];
-  objectHitbox: Hitbox;
-  children: any;
   height: string;
-  onPlaceBuilding?: (buyOption: BuyOption, centerPosition: Position) => void;
-  onProfessionChange?: (villagerProfessions: VillagerProfession[], villagerId: string) => void;
-  objectId: string;
+  // onPlaceBuilding?: (buyOption: BuyOption, centerPosition: Position) => void;
+  // onProfessionChange?: (villagerProfessions: VillagerProfession[], villagerId: string) => void;
+  entityId: string;
+  selectedEntityHitbox: Hitbox;
   status: Status;
   villagerProfessions?: VillagerProfession[];
 };
@@ -34,23 +35,22 @@ const UpgradeMenu = React.memo(
     height,
     inStock,
     name,
-    objectHitbox,
+    selectedEntityHitbox,
     status,
-    onPlaceBuilding,
-    onProfessionChange,
+    entityId,
+    // onPlaceBuilding,
+    // onProfessionChange,
     villagerProfessions,
-    objectId,
-    children,
   }: NeededProps) => {
-    const { trainVillager } = useVillagers();
-
-    const [position, setPosition] = useState<Position>({ x: 500, y: 500 });
+    // const { trainVillager } = useVillagers();
     const [jobSelectionOpen, setJobSelectionOpen] = useState(false);
     const activeProfession = villagerProfessions ? villagerProfessions.find((x) => x.active) : undefined;
 
-    useEffect(() => {
-      setPosition((x) => getHitBoxCenter(objectHitbox));
-    }, [objectHitbox]);
+    console.log("UpgradeMenu Render");
+
+    // useEffect(() => {
+    //   setPosition((x) => getHitBoxCenter(objectHitbox));
+    // }, [objectHitbox]);
 
     // const executeBuildingOption = useCallback(
     //   (buildingOption: BuyOption) => {
@@ -67,29 +67,28 @@ const UpgradeMenu = React.memo(
     //   [objectHitbox, onPlaceBuilding, onTrain, position]
     // );
     const handleClick = (e: SyntheticEvent, buyOption: BuyOption) => {
-      console.log(e, buyOption);
-      switch (buyOption.type) {
-        case "TRAIN_VILLAGER":
-          trainVillager({ x: 300, y: 300 });
-          break;
-        default:
-          break;
-      }
+      // switch (buyOption.type) {
+      //   case "TRAIN_VILLAGER":
+      //     trainVillager({ x: selectedEntityHitbox.leftTop.x, y: selectedEntityHitbox.leftTop.y });
+      //     break;
+      //   default:
+      //     break;
+      // }
     };
 
-    const handleChangeProfession = useCallback(
-      (villagerProfession: VillagerProfession) => {
-        if (!onProfessionChange || !villagerProfessions) return;
-        onProfessionChange(
-          villagerProfessions?.map((x) => {
-            return { ...x, active: x.id === villagerProfession.id ? true : false };
-          }),
-          objectId
-        );
-        setJobSelectionOpen(false);
-      },
-      [objectId, onProfessionChange, villagerProfessions]
-    );
+    // const handleChangeProfession = useCallback(
+    //   (villagerProfession: VillagerProfession) => {
+    //     if (!onProfessionChange || !villagerProfessions) return;
+    //     onProfessionChange(
+    //       villagerProfessions?.map((x) => {
+    //         return { ...x, active: x.id === villagerProfession.id ? true : false };
+    //       }),
+    //       entityId
+    //     );
+    //     setJobSelectionOpen(false);
+    //   },
+    //   [entityId, onProfessionChange, villagerProfessions]
+    // );
 
     return (
       <div className={styles.upgradeMenu} style={{ height: height }}>
@@ -112,7 +111,7 @@ const UpgradeMenu = React.memo(
                   <span>{`Level ${activeProfession?.currentLevel.level}`}</span>
                 </CircularProgressbarWithChildren>
               ) : (
-                <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"50px"}></Icon>
+                <Icon fontSize={"1em"} imageName={activeProfession?.profession.image} height={"1em"}></Icon>
               )}
             </div>
           ) : (
@@ -134,10 +133,10 @@ const UpgradeMenu = React.memo(
                   amount={Math.round(x.amount)}
                   iconSize="1em"
                   textSize="1em"
+                  height={"100%"}
+                  width={"60px"}
                   textColor="#ffffff"
-                  height={60}
-                  iconHeight={"80%"}
-                  width={60}
+                  iconHeight={"1em"}
                 ></ResourceItem>
               );
             })
@@ -145,11 +144,11 @@ const UpgradeMenu = React.memo(
             <></>
           )}
         </div>
-        {villagerProfessions ? (
+        {/* {villagerProfessions ? (
           <ProfessionPicker villagerProfessions={villagerProfessions} open={jobSelectionOpen} onClick={handleChangeProfession}></ProfessionPicker>
         ) : (
           <></>
-        )}
+        )} */}
       </div>
     );
   }

@@ -17,7 +17,7 @@ const Template: ComponentStory<typeof UpgradeMenu> = (args) => <UpgradeMenu {...
 export const VillagerMenu = Template.bind({});
 VillagerMenu.args = {
   buyOptions: [],
-  objectHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
+  selectedEntityHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
   villagerProfessions: professions.map((x) => {
     return { active: x.characterImageName === "lumberjack" ? true : false, id: x.id, currentExperience: 0, currentLevel: levels[0], profession: x };
   }),
@@ -30,7 +30,7 @@ VillagerMenu.args = {
 export const VillagerMultipleResources = Template.bind({});
 VillagerMultipleResources.args = {
   buyOptions: [],
-  objectHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
+  selectedEntityHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
   villagerProfessions: professions.map((x) => {
     return { active: x.characterImageName === "lumberjack" ? true : false, id: x.id, currentExperience: 0, currentLevel: levels[0], profession: x };
   }),
@@ -43,7 +43,7 @@ VillagerMultipleResources.args = {
 export const BuildingMenu = Template.bind({});
 BuildingMenu.args = {
   buyOptions: [],
-  objectHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
+  selectedEntityHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
   name: "Town Center",
   status: Status.NONE,
   height: "400px",
@@ -52,7 +52,7 @@ BuildingMenu.args = {
 export const MapObjectMenu = Template.bind({});
 MapObjectMenu.args = {
   buyOptions: [],
-  objectHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
+  selectedEntityHitbox: { leftTop: { x: 10, y: 10 }, rightBottom: { x: 50, y: 50 } },
   name: "Tree",
   status: Status.NONE,
   height: "400px",

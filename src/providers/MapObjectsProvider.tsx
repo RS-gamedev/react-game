@@ -18,7 +18,8 @@ type ActionType =
 function mapObjectsReducer(state: EntityElementType[], action: ActionType): EntityElementType[] {
   switch (action.type) {
     case "SELECT":
-      return state.map((mapObject) => (mapObject.component.props.id === action.payload ? { ...mapObject, selected: true } : mapObject));
+      const result = state.map((mapObject) => (mapObject.component.props.id === action.payload ? { ...mapObject, selected: true } : mapObject));
+      return result;
     case "ADD":
       const newBuilding: EntityElementType = {
         component: <MapObject {...action.payload.mapObject} />,
@@ -31,7 +32,15 @@ function mapObjectsReducer(state: EntityElementType[], action: ActionType): Enti
         return { component: <MapObject {...mapObject} />, selected: false, updated: false };
       });
     case "DESELECT_ALL":
-      return [...state.map((mapObject) => ({ ...mapObject, selected: false }))];
+      if (state.find((mapObject) => mapObject.selected)) {
+        return [
+          ...state.map((mapObject) => {
+            return mapObject.selected ? { ...mapObject, selected: false } : mapObject;
+          }),
+        ];
+      }
+      return state;
+
     case "SET":
       return action.payload;
     default:
@@ -46,24 +55,27 @@ const MapObjectsProvider = ({ children }: Props) => {
   console.log("Init mapobjectsprovider");
 
   const addMapObject = (mapObject: MapObjectProps, position: Position) => {
+    console.log("ADD MapObject");
     dispatch({ type: "ADD", payload: { mapObject, position } });
   };
 
   const deselectAllMapObjects = () => {
+    console.log("DESELECT_ALL MapObjects");
     dispatch({ type: "DESELECT_ALL", payload: null });
   };
 
   const selectMapObject = (mapObjectId: string) => {
-    console.log("selecting map object");
+    console.log("SELECT map object");
     dispatch({ type: "SELECT", payload: mapObjectId });
   };
 
   const createMapObjects = (mapObjects: MapObjectProps[]) => {
-    console.log("creating Map Objects");
+    console.log("OVERWRITE MapObjects");
     dispatch({ type: "OVERWRITE", payload: mapObjects });
   };
 
   const setMapObjects = (mapObjectsEntities: EntityElementType[]) => {
+    console.log("SET mapObjects");
     dispatch({ type: "SET", payload: mapObjectsEntities });
   };
 

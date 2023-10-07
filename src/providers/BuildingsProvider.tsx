@@ -57,7 +57,14 @@ function buildingsReducer(state: EntityElementType[], action: ActionType): Entit
     case "OVERWRITE":
       return action.payload({ x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 });
     case "DESELECT_ALL":
-      return [...state.map((building) => ({ ...building, selected: false }))];
+      if (state.find((building) => building.selected)) {
+        return [
+          ...state.map((building) => {
+            return building.selected ? { ...building, selected: false } : building;
+          }),
+        ];
+      }
+      return state;
     default:
       return state;
   }

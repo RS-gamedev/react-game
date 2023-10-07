@@ -1,12 +1,13 @@
 import { SyntheticEvent } from "react";
 import Button from "../Button/Button";
 import { BuyOption } from "../../models/BuyOption";
+import React from "react";
 
 type props = {
   buyOption: BuyOption;
   onClick: (e: SyntheticEvent) => void;
 };
-const UpgradeMenuItem = ({ buyOption, onClick }: props) => {
+const UpgradeMenuItem = React.memo(({ buyOption, onClick }: props) => {
   return (
     <Button
       imageHeight={"35px"}
@@ -23,6 +24,6 @@ const UpgradeMenuItem = ({ buyOption, onClick }: props) => {
       text={buyOption.name}
     ></Button>
   );
-};
+});
 
 export default UpgradeMenuItem;
