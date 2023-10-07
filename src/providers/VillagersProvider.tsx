@@ -8,7 +8,6 @@ import { Position } from "../models/Position";
 import { VillagerEntity } from "../models/VillagerEntity";
 import { VillagerProps } from "../models/VillagerProps";
 import { createVillager } from "../utils/BuildingOptionsUtil";
-import { getNewPosition } from "../utils/MovementUtils";
 
 const createVillagerEntity = (villager: VillagerProps): VillagerEntity => {
   return {
@@ -37,8 +36,11 @@ function reducer(state: VillagerEntity[], action: ActionType): VillagerEntity[] 
     case "SELECT":
       return [
         ...state.map((villagerEntity) => {
-          const updatedVillagerProps = { ...villagerEntity.villager, selected: true };
-          return createVillagerEntity(updatedVillagerProps);
+          if(villagerEntity.villager.id === action.payload){
+            const updatedVillagerProps = { ...villagerEntity.villager, selected: true };
+            return createVillagerEntity(updatedVillagerProps);
+          }
+          return villagerEntity;
         }),
       ];
     case "ADD":
@@ -62,7 +64,7 @@ function reducer(state: VillagerEntity[], action: ActionType): VillagerEntity[] 
     case "UPDATE":
       return [
         ...state.map((villagerEntity) => {
-          if (villagerEntity.component.props.id === action.payload.component["props"].id) {
+          if (villagerEntity.villager.id === action.payload.component["props"].id) {
             return action.payload;
           }
           return villagerEntity;
@@ -74,7 +76,7 @@ function reducer(state: VillagerEntity[], action: ActionType): VillagerEntity[] 
           if (!villagerEntity.villager.currentAction) return villagerEntity;
           let updatedVillagerProps: VillagerProps = villagerEntity.villager.currentAction(
             action.payload.villagers,
-            villagerEntity.component.props.id,
+            villagerEntity.villager.id,
             action.payload.inventory,
             action.payload.buildings,
             action.payload.mapObjects

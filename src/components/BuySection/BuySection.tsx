@@ -10,7 +10,7 @@ type Props = {
   width: string;
 };
 
-const BuySection = ({ shapes, onClick, width }: Props) => {
+const BuySection = React.memo(({ shapes, onClick, width }: Props) => {
   const { inventory } = useInventory();
 
   return (
@@ -39,5 +39,5 @@ const BuySection = ({ shapes, onClick, width }: Props) => {
       </div>
     </div>
   );
-};
+});
 export default BuySection;

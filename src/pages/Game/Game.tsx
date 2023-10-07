@@ -30,8 +30,7 @@ import styles from "./Game.module.css";
 const Game = () => {
   const { buildings, addBuilding, setBuildings, selectBuilding, deselectAllBuildings } = useBuildings();
   const { mapObjects, createMapObjects, setMapObjects, selectMapObject, deselectAllMapObjects } = useMapObjects();
-  const { villagers, setVillagers, deselectAllVillagers, moveVillager, selectVillager, updateVillager, performVillagerActions, setVillagerAction } =
-    useVillagers();
+  const { villagers, setVillagers, deselectAllVillagers, selectVillager, performVillagerActions, setVillagerAction } = useVillagers();
 
   const { inventory, setInventory } = useInventory();
 
@@ -80,15 +79,10 @@ const Game = () => {
   }, [allShapes]);
 
   // Left click handler
-  function handleClick(event: any): any {
+  const handleClick = (event: any): any => {
     deselectAllBuildings();
     deselectAllMapObjects();
     deselectAllVillagers();
-    setAllShapes((prev) => {
-      return prev.map((x) => {
-        return { ...x, selected: false };
-      });
-    });
     setPlacementOverlayConfig(undefined);
     return;
   }
@@ -351,12 +345,12 @@ const Game = () => {
         {villagers?.map((villager) => {
           return (
             <EntityWrapper
-              key={villager.component.props.id}
-              entityId={villager.component.props.id}
+              key={villager.villager.id}
+              entityId={villager.villager.id}
               onClick={handleSelectVillager}
               // onRightClick={() => {}}
-              hitBox={villager.component.props.hitBox}
-              size={villager.component.props.size}
+              hitBox={villager.villager.hitBox}
+              size={villager.villager.size}
               selected={villager.villager.selected}
             >
               {villager.component}
