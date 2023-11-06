@@ -11,13 +11,12 @@ type props = {
   children: JSX.Element;
   entityId: string;
   onClick: (e: SyntheticEvent, id: string) => void;
-  // onRightClick: (e: SyntheticEvent, id: string) => void;
+  onRightClick: (e: SyntheticEvent, id: string) => void;
 };
 
-const EntityWrapper = React.memo(({ children, selected, size, onClick, hitBox, entityId }: props) => {
+const EntityWrapper = React.memo(({ children, selected, size, onClick, onRightClick, hitBox, entityId }: props) => {
   const handleClick = (e: SyntheticEvent) => onClick(e, entityId);
-  const handleRightClick = (e: any) => {
-  };
+  const handleRightClick = (e: any) => onRightClick(e, entityId);
   return (
     <div
       key={entityId}

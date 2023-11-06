@@ -1,50 +1,73 @@
-import { EntityElementType } from "../models/EntityElementType";
+import { BuildingEntity } from "../models/BuildingEntity";
+import { BuildingProps } from "../models/BuildingProps";
 import { GameTickResult } from "../models/GameTickResult";
-import { InventoryItem } from "../models/InventoryItem";
+import { Inventory } from "../models/Inventory";
+import { MapObjectEntity } from "../models/MapObjectEntity";
+import { MapObjectProps } from "../models/MapObjectProps";
+import { VillagerEntity } from "../models/VillagerEntity";
 import { VillagerProps } from "../models/VillagerProps";
 
 export function getEmptyGameTickResultObject() {
   return {
-    villagers: undefined,
-    buildings: undefined,
-    mapObjects: undefined,
-    inventoryItems: undefined,
+    villagers: [],
+    buildings: [],
+    mapObjects: [],
+    inventory: undefined,
+    updatedVillagers: []
   };
 }
 
-export function executeTasks(
-  villagers: EntityElementType[],
-  inventoryItems: InventoryItem[],
-  mapObjects: EntityElementType[],
-  buildings: EntityElementType[]
+export function getVillagerActionsResult(
+  villagers: VillagerProps[],
+  inventory: Inventory,
+  mapObjects: MapObjectProps[],
+  buildings: BuildingProps[]
 ): GameTickResult {
+  console.log(villagers);
   let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
-  let villagersCopy = [...villagers];
-  let inventoryItemsCopy = [...inventoryItems];
-  let mapObjectsCopy = [...mapObjects];
-  let buildingsCopy = [...buildings];
 
+  let updatedVillagers: VillagerProps[] = [...villagers];
+  let updatedBuildings: BuildingProps[] = [...buildings];
+  let updatedMapObjects: MapObjectProps[] = [...mapObjects];
+  let updatedInventory: Inventory;
+  // console.log(villagers);
   villagers.forEach((villager) => {
-    let toUseVillagers = gameTickResult.villagers || villagersCopy;
-    let toUseInventoryItems = gameTickResult.inventoryItems || inventoryItemsCopy;
-    let toUseMapObjects = gameTickResult.mapObjects || mapObjectsCopy;
-    let toUseBuildings = gameTickResult.buildings || buildingsCopy;
+    let toUseVillagers = gameTickResult.villagers.length > 0 ? gameTickResult.villagers : updatedVillagers;
+    let toUseInventory = gameTickResult.inventory || updatedInventory;
+    let toUseMapObjects = gameTickResult.mapObjects.length > 0 ? gameTickResult.mapObjects : updatedMapObjects;
+    let toUseBuildings = gameTickResult.buildings.length > 0 ? gameTickResult : updatedBuildings;
 
-    if (villager.component.props.currentTask) {
-      let resultFromVillager = villager.component.props.currentTask(toUseVillagers, villager.component.props.id, toUseInventoryItems, toUseBuildings, toUseMapObjects);
-      if (resultFromVillager.villagers) {
-        gameTickResult.villagers = resultFromVillager.villagers;
-      }
-      if (resultFromVillager.buildings) {
-        gameTickResult.buildings = resultFromVillager.buildings;
-      }
-      if (resultFromVillager.inventoryItems) {
-        gameTickResult.inventoryItems = resultFromVillager.inventoryItems;
-      }
-      if (resultFromVillager.mapObjects) {
-        gameTickResult.mapObjects = resultFromVillager.mapObjects;
-      }
+    if (villager.currentAction) {
+      let resultFromVillager: GameTickResult = villager.currentAction(toUseVillagers, villager.id, toUseInventory, toUseBuildings, toUseMapObjects);
+      console.log("result from action");
+      // console.log(resultFromVillager);
+      // resultFromVillager.villagers.forEach(villager => {
+      //   if (!updatedVillagers.find(vill => vill.id === villager.id)) updatedVillagers.push(villager);
+      // })
+
+      // if (resultFromVillager.villagers) {
+      //   gameTickResult.villagers = resultFromVillager.villagers;
+      //   resultFromVillager.forEach((x: any) => {
+      //     if (!updatedVillagers.includes(resultFromVillager.updatedVillagerIds)) {
+      //       updatedVillagers.push(x);
+      //     }
+      //   })
+      // }
+      // if (resultFromVillager.buildings) {
+      //   gameTickResult.buildings = resultFromVillager.buildings;
+      // }
+      // if (resultFromVillager.inventory) {
+      //   gameTickResult.inventory = resultFromVillager.inventory;
+      // }
+      // if (resultFromVillager.mapObjects) {
+      //   gameTickResult.mapObjects = resultFromVillager.mapObjects;
+      // }
     }
   });
+
+  // console.log(updatedVillagers);
+
+
+  // console.log(gameTickResult);
   return gameTickResult;
 }

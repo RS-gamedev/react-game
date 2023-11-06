@@ -16,5 +16,6 @@ export type MapObjectProps = {
   type: VillagerType;
   inventory: InventoryItem[];
   inventoryMax: number;
+  selected: boolean;
   size: Size;
 };

@@ -2,44 +2,54 @@ import { useReducer } from "react";
 import MapObject from "../components/MapObject/MapObject";
 import { MapObjectsContext } from "../context/mapObjects/mapObjectsContext";
 import { MapObjectContextProps } from "../context/mapObjects/mapObjectsContextProps";
-import { EntityElementType } from "../models/EntityElementType";
+import { MapObjectEntity } from "../models/MapObjectEntity";
 import { MapObjectProps } from "../models/MapObjectProps";
 import { Position } from "../models/Position";
+
+const createMapObjectEntity = (mapObject: MapObjectProps): MapObjectEntity => {
+  return {
+    component: <MapObject {...mapObject} />,
+    mapObject: mapObject,
+  };
+};
 
 // Action types
 type ActionType =
   | { type: "SELECT"; payload: string }
   | { type: "OVERWRITE"; payload: MapObjectProps[] }
   | { type: "DESELECT"; payload: string }
-  | { type: "SET"; payload: EntityElementType[] }
+  | { type: "SET"; payload: MapObjectEntity[] }
   | { type: "DESELECT_ALL"; payload: null }
-  | { type: "ADD"; payload: { mapObject: MapObjectProps; position: Position } };
+  | { type: "ADD"; payload: MapObjectProps };
 
-function mapObjectsReducer(state: EntityElementType[], action: ActionType): EntityElementType[] {
+function mapObjectsReducer(state: MapObjectEntity[], action: ActionType): MapObjectEntity[] {
   switch (action.type) {
     case "SELECT":
-      const result = state.map((mapObject) => (mapObject.component.props.id === action.payload ? { ...mapObject, selected: true } : mapObject));
-      return result;
+      return [
+        ...state.map((mapObjectEntity) => {
+          if (mapObjectEntity.mapObject.id === action.payload) {
+            return createMapObjectEntity({ ...mapObjectEntity.mapObject, selected: true });
+          }
+          return mapObjectEntity;
+        }),
+      ];
     case "ADD":
-      const newBuilding: EntityElementType = {
-        component: <MapObject {...action.payload.mapObject} />,
-        selected: true,
-      };
+      const newBuilding = createMapObjectEntity(action.payload);
       return [...state.map((mapObject) => ({ ...mapObject, selected: false })), newBuilding];
     case "OVERWRITE":
       return action.payload.map((mapObject) => {
-        return { component: <MapObject {...mapObject} />, selected: false, updated: false };
+        return createMapObjectEntity(mapObject);
       });
     case "DESELECT_ALL":
-      if (state.find((mapObject) => mapObject.selected)) {
+      if (state.find((mapObject) => mapObject.mapObject.selected)) {
         return [
-          ...state.map((mapObject) => {
-            return mapObject.selected ? { ...mapObject, selected: false } : mapObject;
+          ...state.map((mapObjectEntity) => {
+            if (mapObjectEntity.mapObject.selected) return createMapObjectEntity({ ...mapObjectEntity.mapObject, selected: false });
+            return mapObjectEntity;
           }),
         ];
       }
       return state;
-
     case "SET":
       return action.payload;
     default:
@@ -51,8 +61,8 @@ type Props = { children: any };
 const MapObjectsProvider = ({ children }: Props) => {
   const [mapObjects, dispatch] = useReducer(mapObjectsReducer, []);
 
-  const addMapObject = (mapObject: MapObjectProps, position: Position) => {
-    dispatch({ type: "ADD", payload: { mapObject, position } });
+  const addMapObject = (mapObject: MapObjectProps) => {
+    dispatch({ type: "ADD", payload: mapObject });
   };
 
   const deselectAllMapObjects = () => {
@@ -67,7 +77,7 @@ const MapObjectsProvider = ({ children }: Props) => {
     dispatch({ type: "OVERWRITE", payload: mapObjects });
   };
 
-  const setMapObjects = (mapObjectsEntities: EntityElementType[]) => {
+  const setMapObjects = (mapObjectsEntities: MapObjectEntity[]) => {
     dispatch({ type: "SET", payload: mapObjectsEntities });
   };
 

@@ -25,5 +25,6 @@ export type BuildingProps = {
   buyOptions: BuyOption[];
   hitBox: Hitbox;
   image: string;
+  inventoryMax: number;
   inventory: InventoryItem[];
 };

@@ -1,10 +1,10 @@
-import { EntityElementType } from "../models/EntityElementType";
+import { BuildingProps } from "../models/BuildingProps";
 import { Status } from "../models/enums/Status";
 import { GameTickResult } from "../models/GameTickResult";
 import { Hitbox } from "../models/Hitbox";
-import { InventoryItem } from "../models/InventoryItem";
+import { Inventory } from "../models/Inventory";
+import { MapObjectProps } from "../models/MapObjectProps";
 import { Position } from "../models/Position";
-import { VillagerEntity } from "../models/VillagerEntity";
 import { VillagerProps } from "../models/VillagerProps";
 import { getHitBoxCenter, onGoal } from "./HitboxUtils";
 import { getEmptyGameTickResultObject } from "./StatusUtils";
@@ -37,38 +37,27 @@ export function getNewPosition(startPosition: Hitbox, goalPosition: Position): H
 }
 
 export function doMoveToLocation(
-  villagers: VillagerEntity[],
+  villagers: VillagerProps[],
   villagerId: string,
-  inventoryItems: InventoryItem[],
-  buildings: EntityElementType[],
-  mapObjects: EntityElementType[],
+  inventory: Inventory,
+  buildings: BuildingProps[],
+  mapObjects: MapObjectProps[],
   goalPosition: Position,
-): VillagerProps | undefined {
-  // let villagersCopy = [...villagers];
-  let updatedVillager = villagers.find(villager => villager.villager.id === villagerId)?.villager;
-  // let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
+): GameTickResult | undefined {
+  let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
+  const villagerProps = villagers.find(villager => villager.id === villagerId);
+  console.log(villagerProps);
+  if (!villagerProps) return gameTickResult;
 
-  if (updatedVillager) {
-    updatedVillager.status = Status.WALKING;
-    if (onGoal(updatedVillager.hitBox, goalPosition)) {
-      updatedVillager.status = Status.IDLE;
-      updatedVillager.currentAction = undefined;
-    } else {
-      updatedVillager.hitBox = getNewPosition(updatedVillager.hitBox, goalPosition);
-    }
-    // villagersCopy = villagersCopy.map((vill) => {
-    //   if (updatedVillager && vill.id === updatedVillager.id) {
-    //     return updatedVillager;
-    //   }
-    //   return vill;
-    // });
-    return updatedVillager;
+  villagerProps.status = Status.WALKING;
+  if (onGoal(villagerProps.hitBox, goalPosition)) {
+    villagerProps.status = Status.IDLE;
+    villagerProps.currentAction = undefined;
+  } else {
+    villagerProps.hitBox = getNewPosition(villagerProps.hitBox, goalPosition);
   }
-  // villagersCopy = villagersCopy.map((vill) => {
-  //   if (updatedVillager && vill.id === updatedVillager.id) {
-  //     return updatedVillager;
-  //   }
-  //   return vill;
-  // });
-  return undefined;
+
+  gameTickResult.villagers = [villagerProps];
+  // console.log(gameTickResult);
+  return gameTickResult;
 }

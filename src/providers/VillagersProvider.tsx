@@ -2,8 +2,10 @@ import { useReducer } from "react";
 import Villager from "../components/Villager/Villager";
 import { VillagersContext } from "../context/villagers/villagersContext";
 import { VillagersContextProps } from "../context/villagers/villagersContextProps";
-import { EntityElementType } from "../models/EntityElementType";
+import { BuildingEntity } from "../models/BuildingEntity";
+import { GameTickResult } from "../models/GameTickResult";
 import { Inventory } from "../models/Inventory";
+import { MapObjectEntity } from "../models/MapObjectEntity";
 import { Position } from "../models/Position";
 import { VillagerEntity } from "../models/VillagerEntity";
 import { VillagerProps } from "../models/VillagerProps";
@@ -27,7 +29,7 @@ type ActionType =
   | { type: "ADD"; payload: { villager: VillagerProps; position: Position } }
   | {
       type: "PERFORM_ACTIONS";
-      payload: { villagers: VillagerEntity[]; inventory: Inventory; buildings: EntityElementType[]; mapObjects: EntityElementType[] };
+      payload: { villagers: VillagerEntity[]; inventory: Inventory; buildings: BuildingEntity[]; mapObjects: MapObjectEntity[] };
     }
   | { type: "SET_ACTION"; payload: { villager: VillagerProps; action: Function } };
 
@@ -36,7 +38,7 @@ function reducer(state: VillagerEntity[], action: ActionType): VillagerEntity[] 
     case "SELECT":
       return [
         ...state.map((villagerEntity) => {
-          if(villagerEntity.villager.id === action.payload){
+          if (villagerEntity.villager.id === action.payload) {
             const updatedVillagerProps = { ...villagerEntity.villager, selected: true };
             return createVillagerEntity(updatedVillagerProps);
           }
@@ -71,6 +73,7 @@ function reducer(state: VillagerEntity[], action: ActionType): VillagerEntity[] 
         }),
       ];
     case "PERFORM_ACTIONS":
+      console.log("performing action");
       return [
         ...state.map((villagerEntity) => {
           if (!villagerEntity.villager.currentAction) return villagerEntity;
@@ -85,6 +88,7 @@ function reducer(state: VillagerEntity[], action: ActionType): VillagerEntity[] 
         }),
       ];
     case "SET_ACTION":
+      console.log("setting action");
       return [
         ...state.map((villagerEntity) => {
           if (villagerEntity.villager.id === action.payload.villager.id) {
@@ -126,13 +130,20 @@ const VillagersProvider = ({ children }: Props) => {
     dispatch({ type: "ADD", payload: { position: position, villager: newVillager } });
   };
 
-  const performVillagerActions = (
-    villagers: VillagerEntity[],
-    inventory: Inventory,
-    buildings: EntityElementType[],
-    mapObjects: EntityElementType[]
-  ) => {
+  const performVillagerActions = (villagers: VillagerEntity[], inventory: Inventory, buildings: BuildingEntity[], mapObjects: MapObjectEntity[]) => {
+    // const
+    // const gameTickResult: GameTickResult = {
+    //   buildings:
+    // }
+    // foreach villager
+    // const gameTickResult = villager.currentTask(all)
+    // return gameTickResult
     dispatch({ type: "PERFORM_ACTIONS", payload: { villagers, inventory, buildings, mapObjects } });
+    return {
+      buildings: undefined,
+      mapObjects: undefined,
+      inventory: undefined,
+    }
   };
 
   const setVillagerAction = (villager: VillagerProps, action: Function) => {
