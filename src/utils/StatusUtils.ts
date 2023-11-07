@@ -1,5 +1,5 @@
 import { BuildingProps } from "../models/BuildingProps";
-import { GameTickResult, GameTickResultVillager } from "../models/GameTickResult";
+import { GameTickResult } from "../models/GameTickResult";
 import { Inventory } from "../models/Inventory";
 import { MapObjectProps } from "../models/MapObjectProps";
 import { Position } from "../models/Position";
@@ -24,19 +24,6 @@ export function getEmptyGameTickResultObject(
     }),
     inventory: { inventory: inventory, updated: false },
   };
-}
-
-function updateArray1WithArray2(allVillagers: GameTickResultVillager[], updatedVillagers: VillagerProps[]): void {
-  // Create a Set of the IDs of Villagers in Array2 for efficient lookup
-  const villagerIdsInArray2 = new Set(updatedVillagers.map((v) => v.id));
-  // Update Array1 based on Array2
-  allVillagers.forEach((villagerGameTickResult) => {
-    if (villagerIdsInArray2.has(villagerGameTickResult.villager.id)) {
-      villagerGameTickResult.updated = true;
-    } else {
-      villagerGameTickResult.updated = false;
-    }
-  });
 }
 
 export function getVillagerActionsResult(
