@@ -37,27 +37,20 @@ export function getNewPosition(startPosition: Hitbox, goalPosition: Position): H
 }
 
 export function doMoveToLocation(
-  villagers: VillagerProps[],
   villagerId: string,
-  inventory: Inventory,
-  buildings: BuildingProps[],
-  mapObjects: MapObjectProps[],
   goalPosition: Position,
-): GameTickResult | undefined {
-  let gameTickResult: GameTickResult = getEmptyGameTickResultObject();
-  const villagerProps = villagers.find(villager => villager.id === villagerId);
-  console.log(villagerProps);
-  if (!villagerProps) return gameTickResult;
+  gameTickResult: GameTickResult,
+): GameTickResult {
+  const villagerPropsGameTick = gameTickResult?.villagers.find((villager) => villager.villager.id === villagerId);
+  if (!villagerPropsGameTick) return gameTickResult!;
+  villagerPropsGameTick.updated = true;
 
-  villagerProps.status = Status.WALKING;
-  if (onGoal(villagerProps.hitBox, goalPosition)) {
-    villagerProps.status = Status.IDLE;
-    villagerProps.currentAction = undefined;
+  if (onGoal(villagerPropsGameTick.villager.hitBox, goalPosition)) {
+    villagerPropsGameTick.villager.status = Status.IDLE;
+    villagerPropsGameTick.villager.currentAction = undefined;
   } else {
-    villagerProps.hitBox = getNewPosition(villagerProps.hitBox, goalPosition);
+    villagerPropsGameTick.villager.status = Status.WALKING;
+    villagerPropsGameTick.villager.hitBox = getNewPosition(villagerPropsGameTick.villager.hitBox, goalPosition);
   }
-
-  gameTickResult.villagers = [villagerProps];
-  // console.log(gameTickResult);
   return gameTickResult;
 }

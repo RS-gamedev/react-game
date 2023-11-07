@@ -1,6 +1,7 @@
-import { BuildingEntity } from "../../models/BuildingEntity";
+import { BuildingProps } from "../../models/BuildingProps";
+import { GameTickResult } from "../../models/GameTickResult";
 import { Inventory } from "../../models/Inventory";
-import { MapObjectEntity } from "../../models/MapObjectEntity";
+import { MapObjectProps } from "../../models/MapObjectProps";
 import { Position } from "../../models/Position";
 import { VillagerEntity } from "../../models/VillagerEntity";
 import { VillagerProps } from "../../models/VillagerProps";
@@ -10,9 +11,17 @@ export type VillagersContextProps = {
   setVillagers: (villagers: VillagerEntity[]) => void;
   selectVillager: (villagerId: string) => void;
   deselectAllVillagers: () => void;
-  moveVillager: (villagerId: string, position: Position) => void;
   trainVillager: (position: Position) => void;
-  updateVillager: (villager: VillagerEntity) => void
-  performVillagerActions: (villagers: VillagerEntity[], inventory: Inventory, buildings: BuildingEntity[], mapObjects: MapObjectEntity[]) => { inventory: Inventory | undefined, buildings: BuildingEntity | undefined, mapObjects: MapObjectEntity | undefined } | void
-  setVillagerAction: (villager: VillagerProps, action: Function) => void;
+  setVillagerAction: (
+    villager: VillagerProps,
+    action: (
+      villagers: VillagerProps[],
+      villagerId: string,
+      inventory: Inventory,
+      buildings: BuildingProps[],
+      mapObjects: MapObjectProps[],
+      gameTickResult: GameTickResult
+    ) => GameTickResult
+  ) => void;
+  updateVillagers: (villagers: VillagerProps[]) => void;
 };

@@ -4,7 +4,6 @@ import { MapObjectsContext } from "../context/mapObjects/mapObjectsContext";
 import { MapObjectContextProps } from "../context/mapObjects/mapObjectsContextProps";
 import { MapObjectEntity } from "../models/MapObjectEntity";
 import { MapObjectProps } from "../models/MapObjectProps";
-import { Position } from "../models/Position";
 
 const createMapObjectEntity = (mapObject: MapObjectProps): MapObjectEntity => {
   return {

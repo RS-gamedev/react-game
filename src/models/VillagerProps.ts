@@ -7,6 +7,9 @@ import { InventoryItem } from "./InventoryItem";
 import { Position } from "./Position";
 import { Price } from "./Price";
 import { VillagerProfession } from "./VillagerProfession";
+import { Inventory } from "./Inventory";
+import { BuildingProps } from "./BuildingProps";
+import { MapObjectProps } from "./MapObjectProps";
 
 export type VillagerProps = {
   id: string;
@@ -17,7 +20,7 @@ export type VillagerProps = {
   inventoryItems: InventoryItem[];
   price: Price[];
   selected: boolean;
-  currentAction: Function | undefined;
+  currentAction?: (Villagers: VillagerProps[], villagerId: string, inventory: Inventory, buildings: BuildingProps[], mapObjects: MapObjectProps[], gameTickResult: GameTickResult) => GameTickResult;
   buyOptions: BuyOption[];
   hitBox: Hitbox;
   size: { width: number; height: number };

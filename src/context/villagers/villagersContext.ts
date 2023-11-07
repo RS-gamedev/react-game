@@ -3,14 +3,12 @@ import { VillagersContextProps } from "./villagersContextProps";
 
 const initialContext: VillagersContextProps = {
   villagers: [],
-  setVillagers: () => { },
-  deselectAllVillagers: () => { },
-  moveVillager: () => { },
-  selectVillager: () => { },
-  trainVillager: () => { },
-  updateVillager: () => { },
-  performVillagerActions: () => { },
-  setVillagerAction: () => { }
+  setVillagers: () => {},
+  deselectAllVillagers: () => {},
+  selectVillager: () => {},
+  trainVillager: () => {},
+  setVillagerAction: () => {},
+  updateVillagers: () => {},
 };
 
 export const VillagersContext = createContext<VillagersContextProps>(initialContext);

@@ -29,14 +29,15 @@ import { VillagerProps } from "../../models/VillagerProps";
 import { createBuilding } from "../../utils/BuildingUtils";
 import { doMoveToLocation } from "../../utils/MovementUtils";
 import { reduceResourcesFromInventory } from "../../utils/ResourceUtils";
-import { getVillagerActionsResult } from "../../utils/StatusUtils";
+import { VillagerActionType, createVillagerAction, getVillagerActionsResult } from "../../utils/StatusUtils";
 import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
 import styles from "./Game.module.css";
+import { GameTickResult } from "../../models/GameTickResult";
 
 const Game = () => {
   const { buildings, addBuilding, setBuildings, selectBuilding, deselectAllBuildings } = useBuildings();
   const { mapObjects, createMapObjects, setMapObjects, selectMapObject, deselectAllMapObjects } = useMapObjects();
-  const { villagers, setVillagers, deselectAllVillagers, selectVillager, setVillagerAction, performVillagerActions } = useVillagers();
+  const { villagers, setVillagers, deselectAllVillagers, selectVillager, setVillagerAction, updateVillagers } = useVillagers();
 
   const { inventory, setInventory } = useInventory();
 
@@ -57,8 +58,7 @@ const Game = () => {
   var selectedMapObject = mapObjects.find((mapObject) => mapObject.mapObject.selected);
 
   useEffect(() => {
-    console.log()
-    const gameTickResult = getVillagerActionsResult(
+    const gameTickResult: GameTickResult = getVillagerActionsResult(
       [
         ...villagers.map((entity) => {
           return { ...entity.villager };
@@ -68,10 +68,7 @@ const Game = () => {
       mapObjects.map((x) => JSON.parse(JSON.stringify(x.mapObject))),
       buildings.map((x) => JSON.parse(JSON.stringify(x.building)))
     );
-    // const x = performVillagerActions(villagers, inventory, buildings, mapObjects);
-    // console.log(x);
-
-    // const gameTickResult = performVillagerActions(villagers, inventory, buildings, mapObjects);
+    updateVillagers(gameTickResult.villagers.filter((x) => x.updated).map((x) => x.villager));
   }, [gameTick]);
 
   const selectShape = useCallback((shapeId: string) => {
@@ -117,25 +114,28 @@ const Game = () => {
       if (selectedVillager) {
         setVillagerAction(
           selectedVillager.villager,
-          (_villagers: VillagerProps[], _villagerId: string, _inventory: Inventory, _buildings: BuildingProps[], _mapObjects: MapObjectProps[]) =>
-            doMoveToLocation(_villagers, _villagerId, _inventory, _buildings, _mapObjects, { x: xPos, y: yPos })
+          createVillagerAction({ type: VillagerActionType.MOVE_TO_POSITION, clickedPosition: { x: xPos, y: yPos } })
+          // (_villagers: VillagerProps[], _villagerId: string, _inventory: Inventory, _buildings: BuildingProps[], _mapObjects: MapObjectProps[]) =>
+          //   doMoveToLocation(_villagers, _villagerId, _inventory, _buildings, _mapObjects,)
         );
       }
     },
     [selectedVillager]
   );
+  const setVillagerCurrentAction = (villager: VillagerProps, additionalParams: any) => {
+    villager.currentAction = createVillagerAction(additionalParams);
+  };
 
   const handleMapObjectRightClick = useCallback((event: any, mapObjectId: string) => {
-    event.preventDefault();
-    event.stopPropagation();
-    console.log("yesh");
-    if (selectedVillager) {
-      setVillagerAction(
-        selectedVillager.villager,
-        (_villagers: VillagerEntity[], _villagerId: string, _inventory: Inventory, _buildings: BuildingEntity[], _mapObjects: MapObjectEntity[]) =>
-          doGatheringTask(_villagers, selectedVillager?.villager.id || "", _inventory, _buildings, _mapObjects, false, mapObjectId, mapObjectId)
-      );
-    }
+    // event.preventDefault();
+    // event.stopPropagation();
+    // if (selectedVillager) {
+    //   setVillagerAction(
+    //     selectedVillager.villager,
+    //     (_villagers: VillagerEntity[], _villagerId: string, _inventory: Inventory, _buildings: BuildingEntity[], _mapObjects: MapObjectEntity[]) =>
+    //       doGatheringTask(_villagers, selectedVillager?.villager.id || "", _inventory, _buildings, _mapObjects, false, mapObjectId, mapObjectId)
+    //   );
+    // }
   }, []);
 
   // function handleVillagerRightClick() {}
