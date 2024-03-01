@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useMemo } from "react";
 import { BuildingsContextProps } from "../context/buildings/buildingsContextProps";
 import { InventoryContextProps } from "../context/inventory/InventoryContextProps";
 import { MapObjectContextProps } from "../context/mapObjects/mapObjectsContextProps";
@@ -11,29 +11,26 @@ import { BuildingEntity } from "../models/BuildingEntity";
 import { Inventory } from "../models/Inventory";
 import { MapObjectEntity } from "../models/MapObjectEntity";
 import { VillagerEntity } from "../models/VillagerEntity";
+import { VillagerProps } from "../models/VillagerProps";
 
-interface GameState {
-  inventory: { [resource: string]: number };
-  // Add other game state properties
-}
-
-const initialGameState: GameState = {
-  inventory: { wood: 0, stone: 0 /* add more resources */ },
-  // Initialize other game state properties
-};
-
-type GameContextType = InventoryContextProps &
-  MapObjectContextProps &
-  BuildingsContextProps &
-  VillagersContextProps;
+type GameContextType = InventoryContextProps & MapObjectContextProps & BuildingsContextProps & VillagersContextProps;
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children } ) => {
   const inventoryProviderValue = useInventory();
   const mapObjectsProviderValue = useMapObjects();
   const villagerProviderValue = useVillagers();
   const buildingsProviderValue = useBuildings();
+
+  const MVillagerData = useMemo(() => {
+    return villagerProviderValue;
+    // Code to create villagers array
+  }, [villagerProviderValue.villagers]);
+
+  useEffect(() => {
+    console.log("MVillagerData changed");
+  }, [MVillagerData])
 
   useEffect(() => {
     // Game logic, tick updates, and subscriptions go here
@@ -41,7 +38,7 @@ const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   }, [inventoryProviderValue.inventory, mapObjectsProviderValue.mapObjects, villagerProviderValue.villagers, buildingsProviderValue.buildings]);
 
   return (
-    <GameContext.Provider value={{ ...inventoryProviderValue, ...mapObjectsProviderValue, ...villagerProviderValue, ...buildingsProviderValue }}>
+    <GameContext.Provider value={{ ...inventoryProviderValue, ...mapObjectsProviderValue, ...MVillagerData, ...buildingsProviderValue }}>
       {children}
     </GameContext.Provider>
   );

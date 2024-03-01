@@ -1,12 +1,11 @@
 import { EntityElementType } from "../../models/EntityElementType";
-import { MapObjectEntity } from "../../models/MapObjectEntity";
 import { MapObjectProps } from "../../models/MapObjectProps";
 import { Position } from "../../models/Position";
 
 export type MapObjectContextProps = {
-  mapObjects: MapObjectEntity[];
+  mapObjects: MapObjectProps[];
   createMapObjects: (mapObjects: MapObjectProps[]) => void;
-  setMapObjects: (mapObjectEntities: MapObjectEntity[]) => void;
+  setMapObjects: (mapObjectEntities: MapObjectProps[]) => void;
   selectMapObject: (mapObjectId: string) => void;
   deselectAllMapObjects: () => void;
   addMapObject: (mapObject: MapObjectProps, position: Position) => void;

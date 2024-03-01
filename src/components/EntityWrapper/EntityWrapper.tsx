@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from "react";
+import React, { SyntheticEvent, useCallback, useEffect } from "react";
 import { useVillagers } from "../../hooks/useVillagers";
 import { Hitbox } from "../../models/Hitbox";
 import { Size } from "../../models/Size";
@@ -8,20 +8,24 @@ type props = {
   selected: boolean;
   hitBox: Hitbox;
   size: Size;
-  children: JSX.Element;
   entityId: string;
-  onClick: (e: SyntheticEvent, id: string) => void;
-  onRightClick: (e: SyntheticEvent, id: string) => void;
+  children: React.ReactNode;
+  onClick?: (e: SyntheticEvent) => void;
+  onRightClick?: (e: SyntheticEvent) => void;
 };
 
-const EntityWrapper = React.memo(({ children, selected, size, onClick, onRightClick, hitBox, entityId }: props) => {
-  const handleClick = (e: SyntheticEvent) => onClick(e, entityId);
-  const handleRightClick = (e: any) => onRightClick(e, entityId);
+const EntityWrapper = React.memo(({ selected, size, onClick, onRightClick, hitBox, entityId, children }: props) => {
+
+  useEffect(() => {
+    console.log("EntityWrapper useEffect");
+  }, [children])
+
+  console.log("rendering entitywrapper");
   return (
     <div
       key={entityId}
-      onClick={handleClick}
-      onContextMenu={handleRightClick}
+      onClick={onClick}
+      onContextMenu={onRightClick}
       className={styles[selected ? `active` : `not-active`] + " " + styles["entity"]}
       style={{
         width: size.width + "px",

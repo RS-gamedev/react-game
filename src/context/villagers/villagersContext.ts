@@ -7,7 +7,6 @@ const initialContext: VillagersContextProps = {
   deselectAllVillagers: () => {},
   selectVillager: () => {},
   trainVillager: () => {},
-  setVillagerAction: () => {},
   updateVillagers: () => {},
 };
 

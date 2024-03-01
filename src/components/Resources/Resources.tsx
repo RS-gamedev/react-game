@@ -5,6 +5,7 @@ import styles from "./Resources.module.css";
 
 const Resources = React.memo(() => {
   const { inventory } = useInventory();
+
   return (
     <div className={styles.resources}>
       {inventory?.resources.map((item, index) => {

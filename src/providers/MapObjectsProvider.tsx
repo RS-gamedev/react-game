@@ -1,49 +1,40 @@
 import { useReducer } from "react";
-import MapObject from "../components/MapObject/MapObject";
 import { MapObjectsContext } from "../context/mapObjects/mapObjectsContext";
 import { MapObjectContextProps } from "../context/mapObjects/mapObjectsContextProps";
-import { MapObjectEntity } from "../models/MapObjectEntity";
 import { MapObjectProps } from "../models/MapObjectProps";
-
-const createMapObjectEntity = (mapObject: MapObjectProps): MapObjectEntity => {
-  return {
-    component: <MapObject {...mapObject} />,
-    mapObject: mapObject,
-  };
-};
 
 // Action types
 type ActionType =
   | { type: "SELECT"; payload: string }
   | { type: "OVERWRITE"; payload: MapObjectProps[] }
   | { type: "DESELECT"; payload: string }
-  | { type: "SET"; payload: MapObjectEntity[] }
+  | { type: "SET"; payload: MapObjectProps[] }
   | { type: "DESELECT_ALL"; payload: null }
   | { type: "ADD"; payload: MapObjectProps };
 
-function mapObjectsReducer(state: MapObjectEntity[], action: ActionType): MapObjectEntity[] {
+function mapObjectsReducer(state: MapObjectProps[], action: ActionType): MapObjectProps[] {
   switch (action.type) {
     case "SELECT":
       return [
         ...state.map((mapObjectEntity) => {
-          if (mapObjectEntity.mapObject.id === action.payload) {
-            return createMapObjectEntity({ ...mapObjectEntity.mapObject, selected: true });
+          if (mapObjectEntity.id === action.payload) {
+            return { ...mapObjectEntity, selected: true };
           }
           return mapObjectEntity;
         }),
       ];
     case "ADD":
-      const newBuilding = createMapObjectEntity(action.payload);
+      const newBuilding = action.payload;
       return [...state.map((mapObject) => ({ ...mapObject, selected: false })), newBuilding];
     case "OVERWRITE":
       return action.payload.map((mapObject) => {
-        return createMapObjectEntity(mapObject);
+        return mapObject;
       });
     case "DESELECT_ALL":
-      if (state.find((mapObject) => mapObject.mapObject.selected)) {
+      if (state.find((mapObject) => mapObject.selected)) {
         return [
           ...state.map((mapObjectEntity) => {
-            if (mapObjectEntity.mapObject.selected) return createMapObjectEntity({ ...mapObjectEntity.mapObject, selected: false });
+            if (mapObjectEntity.selected) return { ...mapObjectEntity, selected: false };
             return mapObjectEntity;
           }),
         ];
@@ -76,7 +67,7 @@ const MapObjectsProvider = ({ children }: Props) => {
     dispatch({ type: "OVERWRITE", payload: mapObjects });
   };
 
-  const setMapObjects = (mapObjectsEntities: MapObjectEntity[]) => {
+  const setMapObjects = (mapObjectsEntities: MapObjectProps[]) => {
     dispatch({ type: "SET", payload: mapObjectsEntities });
   };
 
