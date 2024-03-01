@@ -15,73 +15,76 @@ type ActionType =
   | { type: "UPDATE"; payload: VillagerProps[] }
   | { type: "ADD"; payload: { villager: VillagerProps; position: Position } };
 
-  function reducer(state: VillagerProps[], action: ActionType): VillagerProps[] {
-    switch (action.type) {
-      case "SELECT":
-        const newStateSelect = state.map((villagerEntity) => {
-          if (villagerEntity.id === action.payload) {
-            return { ...villagerEntity, selected: true };
-          }
-          return villagerEntity;
-        });
-        return areArraysEqual(state, newStateSelect) ? state : newStateSelect;
-      case "ADD":
-        const newVillagerEntity = action.payload.villager;
-        return [...state, newVillagerEntity];
-      case "OVERWRITE":
-        return action.payload({ x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 });
-      case "DESELECT_ALL":
-        const newStateDeselect = state.map((villagerEntity) => {
-          if (villagerEntity.selected) {
-            return { ...villagerEntity, selected: false };
-          }
-          return villagerEntity;
-        });
-        return areArraysEqual(state, newStateDeselect) ? state : newStateDeselect;
-      case "SET":
-        return action.payload;
-      case "UPDATE":
-        const updatedVillagerIds = new Set(action.payload.map((v) => v.id));
-        const newStateUpdate = state.map((villagerEntity) => {
-          if (updatedVillagerIds.has(villagerEntity.id)) {
-            return action.payload.find((vill) => vill.id === villagerEntity.id) || villagerEntity;
-          }
-          return villagerEntity;
-        });
-        return areArraysEqual(state, newStateUpdate) ? state : newStateUpdate;
-      default:
-        return state;
-    }
+function reducer(state: VillagerProps[], action: ActionType): VillagerProps[] {
+  switch (action.type) {
+    case "SELECT":
+      console.log("in reducer - selecting with id: " + action.payload);
+      const newStateSelect = state.map((villagerEntity) => {
+        if (villagerEntity.id === action.payload) {
+          return { ...villagerEntity, selected: true };
+        }
+        return villagerEntity;
+      });
+      return areArraysEqual(state, newStateSelect) ? state : newStateSelect;
+    case "ADD":
+      const newVillagerEntity = action.payload.villager;
+      return [...state, newVillagerEntity];
+    case "OVERWRITE":
+      return action.payload({ x: document.documentElement.clientHeight / 2, y: document.documentElement.clientHeight / 2 });
+    case "DESELECT_ALL":
+      const newStateDeselect = state.map((villagerEntity) => {
+        if (villagerEntity.selected) {
+          return { ...villagerEntity, selected: false };
+        }
+        return villagerEntity;
+      });
+      return areArraysEqual(state, newStateDeselect) ? state : newStateDeselect;
+    case "SET":
+      return action.payload;
+    case "UPDATE":
+      const updatedVillagerIds = new Set(action.payload.map((v) => v.id));
+      const newStateUpdate = state.map((villagerEntity) => {
+        if (updatedVillagerIds.has(villagerEntity.id)) {
+          return action.payload.find((vill) => vill.id === villagerEntity.id) || villagerEntity;
+        }
+        return villagerEntity;
+      });
+      return areArraysEqual(state, newStateUpdate) ? state : newStateUpdate;
+    default:
+      return state;
   }
+}
 
 function areArraysEqual(arr1: VillagerProps[], arr2: VillagerProps[]): boolean {
-  return JSON.stringify(arr1) === JSON.stringify(arr2);
+  const result = JSON.stringify(arr1) === JSON.stringify(arr2);
+  console.log(result);
+  return result;
 }
 type Props = { children: any };
 
 const VillagersProvider = ({ children }: Props) => {
   const [villagers, dispatch] = useReducer(reducer, []);
 
-  const selectVillager =(villagerId: string) => {
+  const selectVillager = (villagerId: string) => {
     dispatch({ type: "SELECT", payload: villagerId });
   };
 
-  const setVillagers =(villagers: VillagerProps[]) => {
+  const setVillagers = useCallback((villagers: VillagerProps[]) => {
     dispatch({ type: "SET", payload: villagers });
-  };
+  }, []);
 
-  const deselectAllVillagers = () => {
+  const deselectAllVillagers = useCallback(() => {
     dispatch({ type: "DESELECT_ALL", payload: null });
-  };
+  }, []);
 
-  const trainVillager = (position: Position) => {
+  const trainVillager = useCallback((position: Position) => {
     const newVillager = createVillager(position);
     dispatch({ type: "ADD", payload: { position: position, villager: newVillager } });
-  };
+  }, []);
 
-  const updateVillagers = (villagers: VillagerProps[]) => {
+  const updateVillagers = useCallback((villagers: VillagerProps[]) => {
     dispatch({ type: "UPDATE", payload: villagers });
-  };
+  }, []);
 
   // const setVillagerAction = (
   //   villager: VillagerProps,

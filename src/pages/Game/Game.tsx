@@ -1,11 +1,10 @@
-import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import BuySection from "../../components/BuySection/BuySection";
-import MapObject from "../../components/MapObject/MapObject";
 import MapObjectArea from "../../components/MapObjectArea/MapObjectArea";
 import PlacementOverlay from "../../components/PlacementOverlay/PlacementOverlay";
 import Resources from "../../components/Resources/Resources";
 import UpgradeMenu from "../../components/UpgradeMenu/UpgradeMenu";
-import Villager from "../../components/Villager/Villager";
+import Villager, { Villager2 } from "../../components/Villager/Villager";
 import { shapes } from "../../config/Shapes";
 import { useBuildings } from "../../hooks/useBuildings";
 import useInterval from "../../hooks/useInterval";
@@ -22,7 +21,6 @@ import { Shape } from "../../models/Shape";
 import { Size } from "../../models/Size";
 import { VillagerProfession } from "../../models/VillagerProfession";
 import { VillagerProps } from "../../models/VillagerProps";
-import { useGame } from "../../providers/GameProvider";
 import { createBuilding } from "../../utils/BuildingUtils";
 import { reduceResourcesFromInventory } from "../../utils/ResourceUtils";
 import { createVillagerAction } from "../../utils/StatusUtils";
@@ -87,6 +85,7 @@ const Game = () => {
 
   useEffect(() => {
     console.log("new villagers value");
+    console.log(villagers);
   }, [villagers]);
 
   useEffect(() => {
@@ -257,32 +256,14 @@ const Game = () => {
     }
   };
 
-  const deselectAll = () => {
-    deselectAllBuildings();
-    deselectAllMapObjects();
-    deselectAllVillagers();
-  };
-
-  const handleSelectMapObject = useCallback((e: SyntheticEvent, mapObjectId: string) => {
-    deselectAll();
-    selectMapObject(mapObjectId);
-    e.stopPropagation();
-  }, []);
-
-  const handleSelectBuilding = useCallback((e: SyntheticEvent, buildingId: string) => {
-    deselectAll();
-    selectBuilding(buildingId);
-    e.stopPropagation();
-  }, []);
-
-  const handleSelectVillager = useCallback((e: SyntheticEvent, villagerId: string) => {
-    // deselectAll();
-    // selectVillager(villagerId);
-    // e.stopPropagation();
-  }, []);
-
   const handleBuildingRightClick = useCallback((e: any) => {}, []);
   const handleRightClickVIllager = useCallback(() => {}, []);
+
+  const onSelectVillager = useCallback((e: string) => {
+    selectVillager(e);
+    console.log(e);
+    console.log("villager selected");
+  }, []);
 
   return (
     <div className={styles.background}>
@@ -381,6 +362,7 @@ const Game = () => {
               professions={villager.professions}
               selected={villager.selected}
             />
+            // <Villager2 key={villager.id} id={villager.id} name={villager.name} onClick={onSelectVillager} selected={villager.selected} />
           );
         })}
       </div>

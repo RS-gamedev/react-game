@@ -24,8 +24,7 @@ type props = {
 
 const MapObject = memo(({ id, name, hitBox, inventoryMax, inventory, selected, size }: props) => {
   // const [showTaskAssigned, setShowTaskAssigned] = useState<boolean>(false);
-  console.log("rendering mapobject");
-
+  console.log("rendered mapobject");
   const { selectMapObject } = useMapObjects();
 
   const handleSelect = useCallback(
@@ -46,7 +45,7 @@ const MapObject = memo(({ id, name, hitBox, inventoryMax, inventory, selected, s
 
   useEffect(() => {
     console.log("MapObject useEffect");
-  }, [id, name, hitBox, inventoryMax, inventory, selected, size]);
+  }, [id, name, hitBox, inventoryMax, inventory, selected, size, handleSelect, handleRightClick]);
 
   return (
     <EntityWrapper entityId={id} hitBox={hitBox} onClick={handleSelect} onRightClick={handleRightClick} selected={selected} size={size}>

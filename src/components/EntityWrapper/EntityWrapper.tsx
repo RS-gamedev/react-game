@@ -15,12 +15,11 @@ type props = {
 };
 
 const EntityWrapper = React.memo(({ selected, size, onClick, onRightClick, hitBox, entityId, children }: props) => {
+  console.log("rendered entity wrapper");
 
   useEffect(() => {
-    console.log("EntityWrapper useEffect");
-  }, [children])
-
-  console.log("rendering entitywrapper");
+    console.log("Entity Wrapper useEffect");
+  }, [selected, size, hitBox, entityId, children])
   return (
     <div
       key={entityId}

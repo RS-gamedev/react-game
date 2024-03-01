@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useCallback, useReducer } from "react";
 import { MapObjectsContext } from "../context/mapObjects/mapObjectsContext";
 import { MapObjectContextProps } from "../context/mapObjects/mapObjectsContextProps";
 import { MapObjectProps } from "../models/MapObjectProps";
@@ -59,9 +59,9 @@ const MapObjectsProvider = ({ children }: Props) => {
     dispatch({ type: "DESELECT_ALL", payload: null });
   };
 
-  const selectMapObject = (mapObjectId: string) => {
+  const selectMapObject = useCallback((mapObjectId: string) => {
     dispatch({ type: "SELECT", payload: mapObjectId });
-  };
+  }, []);
 
   const createMapObjects = (mapObjects: MapObjectProps[]) => {
     dispatch({ type: "OVERWRITE", payload: mapObjects });

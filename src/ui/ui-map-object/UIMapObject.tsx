@@ -10,6 +10,7 @@ type Props = {
 };
 
 const UIMapObject = ({ showTaskAssigned, stockMax, stockRemaining, name }: Props) => {
+    console.log("rendered UIMapObject");
   return (
     <div className={styles.mapObject + " " + (showTaskAssigned ? styles.taskAssigned : styles.taskAssignedAfter)}>
       <Icon fontSize="1em" imageName={name}></Icon>

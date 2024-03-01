@@ -9,10 +9,6 @@ type Props = {
 const MapObjectArea = React.memo(({ mapObjects }: Props) => {
   console.log("rendering mapObjectArea");
 
-  useEffect(() => {
-    console.log("MapObjectArea rendered");
-  }, [mapObjects]);
-
   const memoArray = useMemo(() => {
     return mapObjects.map((mapObject) => {
       return (
