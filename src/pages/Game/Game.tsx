@@ -10,34 +10,27 @@ import useInterval from "../../hooks/useInterval";
 import { useInventory } from "../../hooks/useInventory";
 import { useMapObjects } from "../../hooks/useMapObjects";
 import { useVillagers } from "../../hooks/useVillagers";
-import { BuildingEntity } from "../../models/BuildingEntity";
 import { BuildingProps } from "../../models/BuildingProps";
 import { BuyOption } from "../../models/BuyOption";
-import { EntityElementType } from "../../models/EntityElementType";
 import { Availability } from "../../models/enums/Availability";
 import { Status } from "../../models/enums/Status";
-import { Inventory } from "../../models/Inventory";
-import { MapObjectEntity } from "../../models/MapObjectEntity";
-import { MapObjectProps } from "../../models/MapObjectProps";
+import { GameTickResult } from "../../models/GameTickResult";
 import { PlacementOverlayConfig } from "../../models/PlacementOverlayConfig";
 import { Position } from "../../models/Position";
 import { Shape } from "../../models/Shape";
 import { Size } from "../../models/Size";
-import { VillagerEntity } from "../../models/VillagerEntity";
 import { VillagerProfession } from "../../models/VillagerProfession";
 import { VillagerProps } from "../../models/VillagerProps";
+import { useGame } from "../../providers/GameProvider";
 import { createBuilding } from "../../utils/BuildingUtils";
-import { doMoveToLocation } from "../../utils/MovementUtils";
 import { reduceResourcesFromInventory } from "../../utils/ResourceUtils";
-import { VillagerActionType, createVillagerAction, getVillagerActionsResult } from "../../utils/StatusUtils";
-import { doGatheringTask } from "../../utils/villagerUtils/VillagerTaskUtils";
+import { createVillagerAction, getVillagerActionsResult, VillagerActionType } from "../../utils/StatusUtils";
 import styles from "./Game.module.css";
-import { GameTickResult } from "../../models/GameTickResult";
 
 const Game = () => {
   const { buildings, addBuilding, setBuildings, selectBuilding, deselectAllBuildings } = useBuildings();
   const { mapObjects, createMapObjects, setMapObjects, selectMapObject, deselectAllMapObjects } = useMapObjects();
-  const { villagers, setVillagers, deselectAllVillagers, selectVillager, setVillagerAction, updateVillagers } = useVillagers();
+  const { villagers, setVillagers, deselectAllVillagers, selectVillager, setVillagerAction, updateVillagers } = useGame();
 
   const { inventory, setInventory } = useInventory();
 
@@ -263,9 +256,9 @@ const Game = () => {
   }, []);
 
   const handleSelectVillager = useCallback((e: SyntheticEvent, villagerId: string) => {
-    deselectAll();
-    selectVillager(villagerId);
-    e.stopPropagation();
+    // deselectAll();
+    // selectVillager(villagerId);
+    // e.stopPropagation();
   }, []);
 
   const handleBuildingRightClick = useCallback((e: any) => {}, []);

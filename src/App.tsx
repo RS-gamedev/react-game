@@ -8,6 +8,7 @@ import InventoryProvider from "./providers/InventoryProvider";
 import VillagersProvider from "./providers/VillagersProvider";
 import BuildingsProvider from "./providers/BuildingsProvider";
 import MapObjectsProvider from "./providers/MapObjectsProvider";
+import GameProvider from "./providers/GameProvider";
 
 function App() {
   const [map, setMap] = useState<MapObjectProps[]>([]);
@@ -31,7 +32,9 @@ function App() {
       <VillagersProvider>
         <BuildingsProvider>
           <MapObjectsProvider>
-            <GameManager initialMapObjects={map} />
+            <GameProvider>
+              <GameManager initialMapObjects={map} />
+            </GameProvider>
           </MapObjectsProvider>
         </BuildingsProvider>
       </VillagersProvider>
